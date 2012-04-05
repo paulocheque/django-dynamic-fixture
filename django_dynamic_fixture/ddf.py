@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import logging
 import sys
 
@@ -15,26 +16,34 @@ from django_dynamic_fixture.django_helper import get_related_model, \
 
 LOGGER = logging.getLogger('DDFLog')
 
+
 class UnsupportedFieldError(Exception):
     "DynamicFixture does not support this field."
+
 
 class InvalidCopierExpressionError(Exception):
     "The specified expression used in a Copier is invalid."
 
+
 class InvalidConfigurationError(Exception):
     "The specified configuration for the field can not be applied or it is bugged."
+
 
 class InvalidManyToManyConfigurationError(Exception):
     "M2M attribute configuration must be a number or a list of DynamicFixture or model instances."
 
+
 class BadDataError(Exception):
     "The data passed to a field has some problem (not unique or invalid) or a required attribute is in ignore list."
+
 
 class InvalidModelError(Exception):
     "Invalid Model: The class is not a model or it is abstract."
 
+
 class InvalidDDFSetupError(Exception):
     "ddf_setup.py has execution errors"
+
 
 class PendingField(Exception):
     "Internal exception to control pending fields when using Copier."
@@ -43,7 +52,7 @@ class PendingField(Exception):
 class DataFixture(object):
     """
     Responsibility: return a valid data for a Django Field, according to its type, model class, constraints etc.
-    
+
     You must create a separated method to generate data for an specific field. For a field called 'MyField', 
     the method must be: 
     def myfield_config(self, field, key): return 'some value'
@@ -110,6 +119,7 @@ class Copier(object):
             raise InvalidCopierExpressionError(self.expression, e), None, sys.exc_info()[2]
 
 _LOADED_DDF_SETUP_MODULES = []
+
 
 class DDFLibrary(object):
     instance = None
@@ -324,6 +334,7 @@ class DynamicFixture(object):
 
     _DDF_CONFIGS = ['fill_nullable_fields', 'ignore_fields', 'data_fixture', 'number_of_laps', 'use_library',
                     'validate_models', 'validate_args', 'print_errors']
+
     def _validate_kwargs(self, model_class, kwargs):
         "validate all kwargs match Model.fields."
         for field_name in kwargs.keys():
@@ -467,4 +478,3 @@ class DynamicFixture(object):
                 except Exception as e:
                     raise InvalidManyToManyConfigurationError(get_unique_field_name(field), e), None, sys.exc_info()[2]
         return instance
-

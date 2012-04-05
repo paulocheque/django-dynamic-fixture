@@ -12,6 +12,7 @@ from decimal import Decimal
 
 data_fixture = SequentialDataFixture()
 
+
 class DDFTestCase(TestCase):
     def setUp(self):
         self.ddf = DynamicFixture(data_fixture)
