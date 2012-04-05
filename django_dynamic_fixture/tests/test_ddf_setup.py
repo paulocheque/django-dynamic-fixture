@@ -7,11 +7,14 @@ from django_dynamic_fixture.tests.ddf_setup import DDF_LIBRARY_FOR_TESTS
 
 
 EXCLUSIVE_DDF_LIBRARY = DDFLibrary()
+
+
 def setUpModule():
     DDFLibrary.instance = EXCLUSIVE_DDF_LIBRARY
     G(ModelForDDFSetup, integer=9999, shelve=True) # using EXCLUSIVE_DDF_LIBRARY
     # isolating setup module test
     DDFLibrary.instance = DDFLibrary() # hacking singleton: start a new DDFLibrary
+
 
 class ModuleDDFSetUpTest(TestCase):
     def setUp(self):

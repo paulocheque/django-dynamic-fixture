@@ -42,7 +42,7 @@ class ModelWithFieldsWithCustomValidation(models.Model):
     email = models.EmailField(null=True, unique=True)
     url = models.URLField(null=True, unique=True)
     ip = models.IPAddressField(null=True, unique=False)
-    xml = models.XMLField(null=True, unique=True)
+    xml = models.XMLField(null=True, unique=True) #TODO: need check django version for compatibility with django 1.4
 
 
 class ModelWithFileFields(models.Model):
@@ -55,7 +55,6 @@ class ModelWithFileFields(models.Model):
         image = models.ImageField(upload_to='.')
     except ImportError:
         pass
-
 
 
 class ModelWithDefaultValues(models.Model):
@@ -72,6 +71,8 @@ class ModelForNullable(models.Model):
 
 class ModelForIgnoreList2(models.Model):
     nullable = models.IntegerField(null=True)
+
+
 class ModelForIgnoreList(models.Model):
     required = models.IntegerField(null=False)
     required_with_default = models.IntegerField(null=False, default=1)
@@ -84,6 +85,8 @@ class ModelForIgnoreList(models.Model):
 class ModelRelated(models.Model):
     integer = models.IntegerField(null=True)
     integer_b = models.IntegerField(null=True)
+
+
 class ModelWithRelationships(models.Model):
     # relationship
     selfforeignkey = models.ForeignKey('self', null=True)
@@ -99,6 +102,8 @@ class ModelWithRelationships(models.Model):
 
 class ModelWithCyclicDependency(models.Model):
     d = models.ForeignKey('ModelWithCyclicDependency2', null=True)
+
+
 class ModelWithCyclicDependency2(models.Model):
     c = models.ForeignKey(ModelWithCyclicDependency, null=True)
 
@@ -107,23 +112,37 @@ class ModelAbstract(models.Model):
     integer = models.IntegerField(null=True, unique=True)
     class Meta:
         abstract = True
+
+
 class ModelParent(ModelAbstract):
     pass
+
+
 class ModelChild(ModelParent):
     pass
+
+
 class ModelChildWithCustomParentLink(ModelParent):
     my_custom_ref = models.OneToOneField(ModelParent, parent_link=True, related_name='my_custom_ref_x')
+
+
 class ModelWithRefToParent(models.Model):
     parent = models.ForeignKey(ModelParent)
 
 
 class CustomDjangoField(models.IntegerField):
     pass
+
+
 class NewField(models.Field):
     pass
+
+
 class ModelWithCustomFields(models.Model):
     x = CustomDjangoField(null=False)
     y = NewField(null=True)
+
+
 class ModelWithUnsupportedField(models.Model):
     z = NewField(null=False)
 
@@ -143,6 +162,8 @@ class ModelWithAutoDateTimes(models.Model):
 
 class ModelForCopy2(models.Model):
     int_e = models.IntegerField()
+
+
 class ModelForCopy(models.Model):
     int_a = models.IntegerField()
     int_b = models.IntegerField(null=None)
@@ -154,6 +175,8 @@ class ModelForCopy(models.Model):
 class ModelForLibrary2(models.Model):
     integer = models.IntegerField(null=True)
     integer_unique = models.IntegerField(null=True, unique=True)
+
+
 class ModelForLibrary(models.Model):
     integer = models.IntegerField(null=True)
     integer_unique = models.IntegerField(null=True, unique=True)
