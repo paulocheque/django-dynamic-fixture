@@ -44,12 +44,12 @@ Installation
   * It is easy to debug errors
 
 # Other goodies
-
-# Basic Example of Usage
   * Nose plugin that enable a setup for the entire suite (unittest2 includes only setups for class and module)
   * Nose plugin to count how many queries are executed by test
   * Command to count how many queries are executed to save any kind of model instance
   * FileSystemDjangoTestCase that facilitate to create tests for features that use filesystem.
+
+# Basic Example of Usage
 
 ```python
 from django.db import models
@@ -83,4 +83,4 @@ class SearchingBooks(TestCase):
   * Full documentation: <https://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation>
   * Examples of Usage: <https://github.com/paulocheque/django-dynamic-fixture/wiki/Example-of-usage>
   * Patterns and Anti-patterns: <https://github.com/paulocheque/django-dynamic-fixture/wiki/Patterns-and-Anti-Patterns>
-
+  * Wiki: <https://github.com/paulocheque/django-dynamic-fixture/wiki>
