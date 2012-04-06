@@ -1,10 +1,12 @@
 Description
 -----------
 
-A full library to create dynamic model instances for testing purposes.
+A full and popular (more de 10.000 downloads) library to create dynamic model instances for testing purposes.
 
 Installation
 ------------
+
+#### Last Release: 1.6.0
 
 	pip install django-dynamic-fixture
 
@@ -24,13 +26,12 @@ Installation
   * It is a bad idea to use uncontrolled data in tests, like bizarre random data.
 
 # Comparison with another fixture tools
-
   * We tried to use another fixture tools in a big Django project but the experience was not satisfactory. 
   * Either they are incomplete, or bugged or it produces erratic tests, because they use random and uncontrolled data.
   * Also, the syntax of others tools is too verbose, which polutes the tests.
   * Complete, lean and practice documentation.
   * It is hard to debug tests with another tools.
-  * List of other tools: http://djangopackages.com/grids/g/fixtures
+  * List of other tools: <http://djangopackages.com/grids/g/fixtures>
 
 # Features
   * Highly customizable: you can customize fields recursively
@@ -42,183 +43,44 @@ Installation
   * Deal with auto calculated attributes
   * It is easy to debug errors
 
-# Example of Usage
+# Other goodies
 
-	from django_dynamic_fixture import N, G, F, P
-	#or use old default names:
-	#from django_dynamic_fixture import new, get, DynamicFixture as F, 	print_field_values
+# Basic Example of Usage
+  * Nose plugin that enable a setup for the entire suite (unittest2 includes only setups for class and module)
+  * Nose plugin to count how many queries are executed by test
+  * Command to count how many queries are executed to save any kind of model instance
+  * FileSystemDjangoTestCase that facilitate to create tests for features that use filesystem.
 
-### Models:
+```python
+from django.db import models
 
-	from django.db import models
+class Author(models.Model):
+    name = models.CharField(max_length=255)
 
-	class ModelA(models.Model): pass
+class Book(models.Model):
+    name = models.CharField(max_length=255)
+    authors = models.ManyToManyField(Author)
+```
 
-	class ModelY(models.Model):
-    	other_text = models.CharField()
-    	other_list = models.ManyToManyField('ModelA')
+```python
+from django.test import TestCase
+from django_dynamic_fixture import G
 
-	class ModelX(models.Model):
-    	some_text = models.CharField(null=True)
-    	parent_left = models.ForeingKey('self')
-    	y_reference = models.ForeingKey('ModelY')
-    	list_a = models.ManyToManyField('ModelA')
+class SearchingBooks(TestCase):
+    def test_search_book_by_author(self):
+        author1 = G(Author)
+        author2 = G(Author)
+        book1 = G(Book, author=[author1])
+        book2 = G(Book, author=[author2])
+        books = Book.objects.search_by_author(author1.name)
+        self.assertTrue(book1 in books)
+        self.assertTrue(book2 not in books)
+```
 
-### Summary:
+# Links
 
- * **DynamicFixture (F):** receive arguments and create model instances.
- * **new:** it is just a wrapper: it creates a F to create a not saved model instance.
- * **get:** basically, call the new method and save the instance. You can set ManyToMany fields only after the instance is saved.
-
-## Examples:
-
-	instance_of_modelx = N(ModelX)
-	assert instance_of_modelx.some_text != None
-	assert instance_of_modelx.parent_left != None
-	assert instance_of_modelx.parent_left.parent_left == None
-	assert instance_of_modelx.id == None # new do not save the instance
-	assert instance_of_modelx.y_reference.id != None # save dependencies by default
-	assert len(instance_of_modelx.list_a.all()) == 0 # do not create 	many2many fields by default
-
-	instance_of_modelx = N(ModelX, fill_nullable_fields=False) # default = True
-	assert instance_of_modelx.some_text == None
-
-#### You can ignore fields, but do not ignore required fields (with null=False).
-	instance_of_modelx = G(ModelX, ignore_fields=['some_text'])
-	assert instance_of_modelx.some_text == None
-
-#### Very nice feature to work with trees
-	instance_of_modelx = N(ModelX, number_of_laps=2) # default = 1
-	assert instance_of_modelx.parent_left != None
-	assert instance_of_modelx.parent_left.parent_left != None
-	assert instance_of_modelx.parent_left.parent_left.parent_left == None
-
-#### This feature is specially useful to test search methods
-	instance_of_modelx = N(ModelX, some_text='some fixed data') # attribute accepts static data
-	assert instance_of_modelx.some_text == 'some fixed data'
-
-#### Use this with attention. First, check for design mistakes
-	instance_of_modelx = N(ModelX, id=99999) # you can define the id too
-	assert instance_of_modelx.id == 99999
-
-#### You can create your own function to create data..
-	instance_of_modelx = N(ModelX, some_text=lambda field: field.name) # attribute accepts callables
-	assert instance_of_modelx.some_text == 'some_text'
-
-#### Use this with attention, you can get an error if you try to save an 	instance with not saved dependencies
-	instance_of_modelx = N(ModelX, persist_dependencies=False)
-	assert instance_of_modelx.y_reference.id == None
-
-	instance_of_modelx = G(ModelX) # get save the model instance
-	assert instance_of_modelx.id != None
-
-	instance_of_modelx = G(ModelX, list_a=2) # Many2Many can receive a number of instances to be created
-	assert len(instance_of_modelx.list_a.all()) == 2
-
-	instance_of_modelx = G(ModelX, list_a=[F(), F(), F()]) # Many2Many can receive a list of DynamicFixtures
-	assert len(instance_of_modelx.list_a.all()) == 3
-
-	a = G(ModelA)
-	instance_of_modelx = G(ModelX, list_a=[F(), a, F()]) # Many2Many can receive 	a list of instances
-	assert len(instance_of_modelx.list_a.all()) == 3
-
-#### You can pass arguments to F (DynamicFixture) recursively. This works for ForeignKey and ManyToMany Fields! Easy and customizable!
-	instance_of_modelx = G(ModelX, parent_left=F(other_text='wow', other_list=2))
-	assert len(instance_of_modelx.y_reference.other_list.all()) == 2
-
-#### Highly recursivable example:
-	# X has a ForeignKey to A
-	# A has a ForeignKey to B
-	# B has a ForeignKey to C
-	# this will create instances of C, B, A and X (in this order). Attribute d of C will be 'some value'
-	G(X, a=F(b=F(c=F(d='some value'))))
-
-
-#### For Debug:
-	P(instance_of_modelx)
-
-#### Custom FileField:
-	class ModelX(models.Model):
-    	my_file = models.FileField(upload_to='/')
-
-	from tempfile import mkstemp
-	pdf_a = File(open(mkstemp()[1], 'w'), name='a.pdf')
-	G(ModelX, my_file=pdf_a)
-
-#### Copier
-	G(ModelX, my_field=C('my_field_y.x'))
-
-#### Shelve/Library
-	G(ModelX, my_field='x', shelve=True)
-	G(ModelX, use_library=True)
-
-#### Named Shelve
-	G(ModelX, my_field='x', shelve='some name')
-	G(ModelX, use_library=True, named_shelve='some name')
-
-
-#### Shelving before all tests of a module:
-	def setUpModule():
-    	N(ModelX, my_field='x', shelve=True)
-    
-#### Shelving before all tests of all modules:
-	Put the code in the tests.py or tests/__init__.py of specific application.
-	N(ModelX, my_field='x', shelve=True)
-
-**OR**
-
-**Add in ddf_setup.py:**
-	
-	N(ModelX, my_field='x', shelve=True)
-
-**Run with nose plugin:**
-	
-	python manage.py test --with-ddf-setup
-
- 
-Decorators
--------------
-
-	from django_dynamic_fixture.decorators import skip_for_database, only_for_database, SQLITE3 
-
-	@only_for_database(SQLITE3)
-	def test_something1(self): pass
-
-	@skip_for_database(SQLITE3)
-	def test_something2(self): pass
-
-	@only_for_database("some value used in settings.DATABASES['default']['ENGINE']")
-	def test_something3(self): pass
-
-	@skip_for_database("some value used in settings.DATABASES['default']['ENGINE']")
-	def test_something4(self): pass
-
-
-Queries Module
---------------
-
-	python manage.py test --with-queries
-	python manage.py count_queries_on_save
-
-
-Links of Comments
------------------
-
-  * http://www.reddit.com/r/django/comments/fv1re/django_dynamic_fixture
-  * http://djangopackages.com/grids/g/fixtures/
-  * http://news.ycombinator.com/item?id=2275406
-  * http://pythonsmalltalk.blogspot.com/2011/02/django-dynamic-fixture.html
-  * http://pythonsmalltalk.blogspot.com/2011/03/django-dynamic-fixture-121.html
-  * http://pypi.python.org/pypi/django-dynamic-fixture/
-  * http://code.activestate.com/pypm/django-dynamic-fixture
-  * http://groups.google.com/group/django-mptt-dev/browse_thread/thread/d9eb9e22ad4aa656
-  * http://groups.google.com/group/django-users/browse_thread/thread/1346a60008c21a7b
-  * http://groups.google.com/group/django-brasil/browse_thread/thread/757df09d3c3be81d
-  * http://linux.softpedia.com/get/Internet/HTTP-WWW-/django-dynamic-fixture-68711.shtml
-
-
-Testing
--------
-	python manage.py test
-	python manage.py test --with-coverage --cover-inclusive --cover-html --cover-package=django_dynamic_fixture.* --with-queries
+  * Simple documentation: <https://github.com/paulocheque/django-dynamic-fixture/wiki/Simple-Documentation>
+  * Full documentation: <https://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation>
+  * Examples of Usage: <https://github.com/paulocheque/django-dynamic-fixture/wiki/Example-of-usage>
+  * Patterns and Anti-patterns: <https://github.com/paulocheque/django-dynamic-fixture/wiki/Patterns-and-Anti-Patterns>
 
