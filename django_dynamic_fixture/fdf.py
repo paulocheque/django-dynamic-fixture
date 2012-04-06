@@ -137,7 +137,6 @@ class FileSystemDjangoTestCase(TestCase):
         #self.files[django_file.file.name].close()
         return django_file
 
-
     def assertFileExists(self, filepath):
         self.assertTrue(os.path.exists(filepath), msg='%s does not exist' % filepath)
 
