@@ -8,8 +8,7 @@ env:
   - DJANGO=1.4
 install:
   - pip install -q Django==$DJANGO --use-mirrors
-  - pip install django_nose
   - pip install https://github.com/paulocheque/django-dynamic-fixture/tarball/master
-  - pip install -q -e . --use-mirrors
+  - pip install --quiet -e .
 script:
-  - python setup.py test
+  - python runtests.py

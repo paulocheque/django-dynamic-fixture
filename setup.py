@@ -38,6 +38,7 @@ setup(name='django-dynamic-fixture',
       version='1.6.0',
       install_requires=install_requires,
       tests_require=tests_require,
+      test_suite='runtests.runtests',
       extras_require={'test': tests_require},
 
       entry_points={ 'nose.plugins': ['queries = queries:Queries', 'ddf_setup = ddf_setup:DDFSetup'] },

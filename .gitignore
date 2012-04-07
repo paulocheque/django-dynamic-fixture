@@ -8,13 +8,13 @@ cover/
 .settings/org.eclipse.core.runtime.prefs
 .settings/org.eclipse.ltk.core.refactoring.prefs
 .settings/org.eclipse.wst.validation.prefs
-.bat
-.sh
-.coverage
-.hgchurn
-.pyc
-.pyo
+*.bat
+*.sh
+*.coverage
+*.pyc
+*.pyo
 .noseids
 *.sqlite
+virtualenv*
 
 django_dynamic_fixture.egg-info
