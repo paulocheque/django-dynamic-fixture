@@ -42,7 +42,6 @@ class ModelWithFieldsWithCustomValidation(models.Model):
     email = models.EmailField(null=True, unique=True)
     url = models.URLField(null=True, unique=True)
     ip = models.IPAddressField(null=True, unique=False)
-    xml = models.XMLField(null=True, unique=True) #TODO: need check django version for compatibility with django 1.4
 
 
 class ModelWithFileFields(models.Model):

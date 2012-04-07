@@ -71,7 +71,6 @@ class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
         self.assertTrue(isinstance(instance.email, unicode))
         self.assertTrue(isinstance(instance.url, unicode))
         self.assertTrue(isinstance(instance.ip, unicode))
-        self.assertTrue(isinstance(instance.xml, unicode))
 
     def test_new_fill_file_fields_with_basic_strings(self):
         instance = self.ddf.new(ModelWithFileFields)
