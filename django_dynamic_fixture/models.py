@@ -186,3 +186,12 @@ class ModelForLibrary(models.Model):
 
 class ModelForDDFSetup(models.Model):
     integer = models.IntegerField(null=True)
+
+
+class ModelWithClean(models.Model):
+    integer = models.IntegerField()
+
+    def clean(self):
+        if self.integer != 9999: # just for testing
+            raise ValidationError('integer is not 9999')
+

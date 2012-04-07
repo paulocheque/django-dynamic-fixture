@@ -580,6 +580,14 @@ class DDFLibraryTest(TestCase):
         self.assertRaises(Exception, self.lib.get_configuration, ModelForLibrary2, name='x')
 
 
+class ModelWithCustomValidationTest(DDFTestCase):
+    def test_ddf_can_not_create_instance_of_models_with_custom_validations(self):
+        self.ddf.validate_models = True
+        self.assertRaises(BadDataError, self.ddf.get, ModelWithClean)
+        self.ddf.get(ModelWithClean, integer=9999) # this does not raise an exception
+
+
+
 class ExceptionsLayoutMessagesTest(DDFTestCase):
     def test_UnsupportedFieldError(self):
         try:

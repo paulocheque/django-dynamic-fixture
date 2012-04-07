@@ -115,4 +115,3 @@ F = fixture
 C = Copier
 P = print_field_values
 DDFLibrary = DDFLibrary
-

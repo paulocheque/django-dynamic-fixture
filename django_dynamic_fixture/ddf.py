@@ -16,6 +16,7 @@ from django_dynamic_fixture.django_helper import get_related_model, \
 
 
 LOGGER = logging.getLogger('DDFLog')
+_LOADED_DDF_SETUP_MODULES = []
 
 
 class UnsupportedFieldError(Exception):
@@ -119,8 +120,6 @@ class Copier(object):
         except Exception as e:
             raise InvalidCopierExpressionError(self.expression, e), None, sys.exc_info()[2]
 
-_LOADED_DDF_SETUP_MODULES = []
-
 
 class DDFLibrary(object):
     instance = None
@@ -167,6 +166,9 @@ class DynamicFixture(object):
     """
     Responsibility: create a valid model instance according to the given configuration.
     """
+
+    _DDF_CONFIGS = ['fill_nullable_fields', 'ignore_fields', 'data_fixture', 'number_of_laps', 'use_library',
+                    'validate_models', 'validate_args', 'print_errors']
 
     def __init__(self, data_fixture, fill_nullable_fields=True, ignore_fields=[], number_of_laps=1, use_library=False,
                  validate_models=False, validate_args=False, print_errors=True, model_path=[], **kwargs):
@@ -332,9 +334,6 @@ class DynamicFixture(object):
             LOGGER.debug('%s.%s = %s' % (get_unique_model_name(model_class), field.name, data))
             setattr(instance, field.name, data) # Model.field = data
         self.fields_processed.append(field.name)
-
-    _DDF_CONFIGS = ['fill_nullable_fields', 'ignore_fields', 'data_fixture', 'number_of_laps', 'use_library',
-                    'validate_models', 'validate_args', 'print_errors']
 
     def _validate_kwargs(self, model_class, kwargs):
         "validate all kwargs match Model.fields."
