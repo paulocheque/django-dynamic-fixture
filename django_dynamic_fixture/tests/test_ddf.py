@@ -113,9 +113,6 @@ class NewFullFillAttributesWithCustomDataTest(DDFTestCase):
         self.ddf.get(ModelWithNumbers, decimal='9.5')
         self.assertEquals(Decimal('9.5'), ModelWithNumbers.objects.latest('id').decimal)
 
-    def test_decimal_can_be_filled_by_a_float(self):
-        self.assertEquals(Decimal('9.5'), self.ddf.get(ModelWithNumbers, decimal=9.5).decimal)
-
     def test_fields_can_be_filled_by_functions(self):
         instance = self.ddf.new(ModelWithStrings, string=lambda field: field.name)
         self.assertEquals('string', instance.string)
