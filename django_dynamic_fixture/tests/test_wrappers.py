@@ -65,26 +65,28 @@ class FShortcutTest(TestCase):
                      foreignkey=F(integer=1001),
                      selfforeignkey=F(integer=1002),
                      onetoone=F(integer=1003),
-                     manytomany=[F(integer=1004), F(integer=1005)])
+                     manytomany=[F(integer=1004), F(integer=1005), F(selfforeignkey=F(integer=1006))])
         self.assertEquals(1000, instance.integer)
         self.assertEquals(1001, instance.foreignkey.integer)
         self.assertEquals(1002, instance.selfforeignkey.integer)
         self.assertEquals(1003, instance.onetoone.integer)
         self.assertEquals(1004, instance.manytomany.all()[0].integer)
         self.assertEquals(1005, instance.manytomany.all()[1].integer)
+        self.assertEquals(1006, instance.manytomany.all()[2].selfforeignkey.integer)
 
     def test_using_look_up_alias(self):
         instance = G(ModelWithRelationships, integer=1000,
                      foreignkey__integer=1001,
                      selfforeignkey__integer=1002,
                      onetoone__integer=1003,
-                     manytomany=[F(integer=1004), F(integer=1005)])
+                     manytomany=[F(integer=1004), F(integer=1005), F(selfforeignkey__integer=1006)])
         self.assertEquals(1000, instance.integer)
         self.assertEquals(1001, instance.foreignkey.integer)
         self.assertEquals(1002, instance.selfforeignkey.integer)
         self.assertEquals(1003, instance.onetoone.integer)
         self.assertEquals(1004, instance.manytomany.all()[0].integer)
         self.assertEquals(1005, instance.manytomany.all()[1].integer)
+        self.assertEquals(1006, instance.manytomany.all()[2].selfforeignkey.integer)
 
 
 class CShortcutTest(TestCase):

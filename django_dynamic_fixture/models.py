@@ -82,6 +82,7 @@ class ModelForIgnoreList(models.Model):
 
 
 class ModelRelated(models.Model):
+    selfforeignkey = models.ForeignKey('self', null=True)
     integer = models.IntegerField(null=True)
     integer_b = models.IntegerField(null=True)
 

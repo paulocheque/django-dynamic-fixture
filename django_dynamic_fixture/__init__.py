@@ -36,6 +36,7 @@ def fixture(**kwargs):
     DynamicFixture factory: It instantiate a DynamicFixture using global configurations.
     Same as F(...)
     """
+    kwargs = look_up_alias(**kwargs)
     f = DynamicFixture(data_fixture=kwargs.pop('data_fixture', DDF_DEFAULT_DATA_FIXTURE),
                        fill_nullable_fields=kwargs.pop('fill_nullable_fields', DDF_FILL_NULLABLE_FIELDS),
                        ignore_fields=kwargs.pop('ignore_fields', []),
