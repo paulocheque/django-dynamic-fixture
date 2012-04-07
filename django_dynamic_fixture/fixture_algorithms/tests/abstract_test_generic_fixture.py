@@ -49,7 +49,6 @@ class DataFixtureTestCase(object):
         self.assertTrue(isinstance(self.fixture.generate_data(models.EmailField(max_length=100)), unicode))
         self.assertTrue(isinstance(self.fixture.generate_data(models.URLField(max_length=100)), unicode))
         self.assertTrue(isinstance(self.fixture.generate_data(models.IPAddressField(max_length=100)), unicode))
-        self.assertTrue(isinstance(self.fixture.generate_data(models.XMLField(max_length=100)), unicode))
 
     def test_files(self):
         self.assertTrue(isinstance(self.fixture.generate_data(models.FilePathField(max_length=100)), unicode))
