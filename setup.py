@@ -35,7 +35,7 @@ setup(name='django-dynamic-fixture',
           'Topic :: Software Development'
       ],
 
-      version='1.6.0',
+      version='1.6.1',
       install_requires=install_requires,
       tests_require=tests_require,
       test_suite='runtests.runtests',
