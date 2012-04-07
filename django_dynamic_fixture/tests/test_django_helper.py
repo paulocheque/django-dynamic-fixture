@@ -97,6 +97,16 @@ class DjangoHelperModelsTest(TestCase):
                 managed = True
         self.assertEquals(True, is_model_managed(ManagedModel))
 
+    def test_model_has_the_field(self):
+        class ModelWithWithoutFields(models.Model):
+            integer = models.IntegerField()
+            selfforeignkey = models.ForeignKey('self', null=True)
+            manytomany = models.ManyToManyField('self', related_name='m2m')
+        self.assertEquals(True, model_has_the_field(ModelWithWithoutFields, 'integer'))
+        self.assertEquals(True, model_has_the_field(ModelWithWithoutFields, 'selfforeignkey'))
+        self.assertEquals(True, model_has_the_field(ModelWithWithoutFields, 'manytomany'))
+        self.assertEquals(False, model_has_the_field(ModelWithWithoutFields, 'x'))
+
 
 class DjangoHelperFieldsTest(TestCase):
     def test_get_unique_field_name(self):
@@ -141,6 +151,26 @@ class DjangoHelperFieldsTest(TestCase):
             not_unique = models.IntegerField()
         self.assertEquals(True, field_is_unique(get_field_by_name_or_raise(Model4FieldMustBeUnique, 'unique')))
         self.assertEquals(False, field_is_unique(get_field_by_name_or_raise(Model4FieldMustBeUnique, 'not_unique')))
+
+    def test_is_key_field(self):
+        class ModelForKeyField(models.Model):
+            integer = models.IntegerField()
+        self.assertEquals(True, is_key_field(get_field_by_name_or_raise(ModelForKeyField, 'id')))
+        self.assertEquals(False, is_key_field(get_field_by_name_or_raise(ModelForKeyField, 'integer')))
+
+    def test_is_relationship_field(self):
+        class ModelForRelationshipField(models.Model):
+            fk = models.ForeignKey('self')
+            one2one = models.OneToOneField('self')
+        self.assertEquals(True, is_relationship_field(get_field_by_name_or_raise(ModelForRelationshipField, 'fk')))
+        self.assertEquals(True, is_relationship_field(get_field_by_name_or_raise(ModelForRelationshipField, 'one2one')))
+        self.assertEquals(False, is_relationship_field(get_field_by_name_or_raise(ModelForRelationshipField, 'id')))
+
+    def test_is_file_field(self):
+        class ModelForFileField(models.Model):
+            filefield = models.FileField()
+        self.assertEquals(True, is_file_field(get_field_by_name_or_raise(ModelForFileField, 'filefield')))
+        self.assertEquals(False, is_file_field(get_field_by_name_or_raise(ModelForFileField, 'id')))
 
 
 class PrintFieldValuesTest(TestCase):

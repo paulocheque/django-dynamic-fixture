@@ -4,7 +4,8 @@
 Module to wrap dirty stuff of django core.
 """
 from django.db import models
-from django.db.models.fields import NOT_PROVIDED
+from django.db.models import Model, ForeignKey, OneToOneField, FileField
+from django.db.models.fields import NOT_PROVIDED, AutoField, FieldDoesNotExist
 from django.db.models.base import ModelBase
 from django.db.models.query import QuerySet
 
@@ -92,9 +93,9 @@ def get_field_by_name_or_raise(model_class, field_name):
     return model_class._meta.get_field_by_name(field_name)[0]
 
 
-def is_model_class(model_class):
+def is_model_class(instance_or_model_class):
     "True if model_class is a Django Model."
-    return model_class.__class__ == ModelBase
+    return isinstance(instance_or_model_class, Model) or instance_or_model_class.__class__ == ModelBase
 
 
 def is_model_abstract(model):
@@ -105,6 +106,15 @@ def is_model_abstract(model):
 def is_model_managed(model):
     "True if managed is True in Meta class"
     return model._meta.managed
+
+
+def model_has_the_field(model_class, field_name):
+    ""
+    try:
+        get_field_by_name_or_raise(model_class, field_name)
+        return True
+    except FieldDoesNotExist:
+        return False
 
 
 # Fields
@@ -135,16 +145,17 @@ def field_has_default_value(field):
 def field_is_unique(field):
     return field.unique
 
-#TODO:
-#def listeners():
-#    from django.db.models.signals import pre_save, pre_init, pre_delete, post_save, post_delete, post_init, post_syncdb
-#
-#    for signal in [pre_save, pre_init, pre_delete, post_save, post_delete, post_init, post_syncdb]:
-#        # print a List of connected listeners
-#        import pdb; pdb.set_trace()
-#        for rec in signal.receivers:
-#            print rec
-#        print "\n"
+
+def is_key_field(field):
+    return isinstance(field, AutoField)
+
+
+def is_relationship_field(field):
+    return isinstance(field, (ForeignKey, OneToOneField))
+
+
+def is_file_field(field):
+    return isinstance(field, FileField)
 
 
 def print_field_values_of_a_model(model_instance):

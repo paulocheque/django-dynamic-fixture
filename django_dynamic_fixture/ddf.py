@@ -4,15 +4,16 @@ import logging
 import sys
 
 from django.core.files import File
-from django.db.models import ForeignKey, OneToOneField, Model, FileField
-from django.db.models.fields import FieldDoesNotExist, AutoField
 from django.utils.importlib import import_module
 
 from django_dynamic_fixture.django_helper import get_related_model, \
     field_has_choices, field_has_default_value, get_fields_from_model, \
     print_field_values, get_many_to_many_fields_from_model, \
     get_unique_model_name, get_unique_field_name, is_model_abstract, \
-    field_is_a_parent_link, get_field_by_name_or_raise, get_app_name_of_model
+    field_is_a_parent_link, get_field_by_name_or_raise, get_app_name_of_model, \
+    is_model_class, is_relationship_field, is_file_field, is_key_field, \
+    model_has_the_field
+
 
 LOGGER = logging.getLogger('DDFLog')
 
@@ -297,7 +298,7 @@ class DynamicFixture(object):
                 data = field.default
         elif field_has_choices(field):
             data = field.choices[0][0] # key of the first choice
-        elif isinstance(field, (ForeignKey, OneToOneField)):
+        elif is_relationship_field(field):
             data = self._process_foreign_key(model_class, field, persist_dependencies)
         else:
             data = self.data_fixture.generate_data(field)
@@ -315,7 +316,7 @@ class DynamicFixture(object):
         else:
             data = self._process_field_with_default_fixture(field, model_class, persist_dependencies)
 
-        if isinstance(field, FileField) and data:
+        if is_file_field(field) and data:
             django_file = data
             if isinstance(django_file, File):
                 setattr(instance, field.name, data.name) # set the attribute
@@ -340,9 +341,7 @@ class DynamicFixture(object):
         for field_name in kwargs.keys():
             if field_name in self._DDF_CONFIGS:
                 continue
-            try:
-                get_field_by_name_or_raise(model_class, field_name)
-            except FieldDoesNotExist:
+            if not model_has_the_field(model_class, field_name):
                 raise InvalidConfigurationError('Field "%s" does not exist.' % field_name), None, sys.exc_info()[2]
 
     def _configure_params(self, model_class, shelve, named_shelve, **kwargs):
@@ -399,10 +398,10 @@ class DynamicFixture(object):
         LOGGER.debug('>>> [%s] Generating instance.' % get_unique_model_name(model_class))
         configuration = self._configure_params(model_class, shelve, named_shelve, **kwargs)
         instance = model_class()
-        if not isinstance(instance, Model):
+        if not is_model_class(instance):
             raise InvalidModelError(get_unique_model_name(model_class)), None, sys.exc_info()[2]
         for field in get_fields_from_model(model_class):
-            if isinstance(field, AutoField) and 'id' not in configuration: continue
+            if is_key_field(field) and 'id' not in configuration: continue
             if field.name in self.ignore_fields: continue
             self.set_data_for_a_field(model_class, instance, field, persist_dependencies=persist_dependencies, **configuration)
         number_of_pending_fields = len(self.pending_fields)
