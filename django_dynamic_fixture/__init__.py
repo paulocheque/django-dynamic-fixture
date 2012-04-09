@@ -10,7 +10,8 @@ from django_dynamic_fixture.django_helper import print_field_values
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture, \
     StaticSequentialDataFixture
 from django_dynamic_fixture.global_settings import DDF_DEFAULT_DATA_FIXTURE, DDF_FILL_NULLABLE_FIELDS, DDF_NUMBER_OF_LAPS, \
-                                                    DDF_IGNORE_FIELDS, DDF_VALIDATE_MODELS, DDF_VALIDATE_ARGS, DDF_USE_LIBRARY
+                                                    DDF_IGNORE_FIELDS, DDF_VALIDATE_MODELS, DDF_VALIDATE_ARGS, DDF_USE_LIBRARY, \
+                                                    DDF_DEBUG_MODE
 
 
 LOOKUP_SEP = '__'
@@ -45,6 +46,7 @@ def fixture(**kwargs):
                        validate_models=kwargs.pop('validate_models', DDF_VALIDATE_MODELS),
                        validate_args=kwargs.pop('validate_args', DDF_VALIDATE_ARGS),
                        print_errors=kwargs.pop('print_errors', True),
+                       debug_mode=kwargs.pop('debug_mode', DDF_DEBUG_MODE),
                        **kwargs)
     f.ignore_fields.extend(DDF_IGNORE_FIELDS)
     return f
