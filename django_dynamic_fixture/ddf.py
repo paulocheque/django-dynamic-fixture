@@ -171,7 +171,7 @@ class DynamicFixture(object):
                     'validate_models', 'validate_args', 'print_errors']
 
     def __init__(self, data_fixture, fill_nullable_fields=True, ignore_fields=[], number_of_laps=1, use_library=False,
-                 validate_models=False, validate_args=False, print_errors=True, model_path=[], **kwargs):
+                 validate_models=False, validate_args=False, print_errors=True, model_path=[], debug_mode=False, **kwargs):
         """
         @data_fixture: algorithm to fill field data.
         @fill_nullable_fields: flag to decide if nullable fields must be filled with data.
@@ -197,6 +197,7 @@ class DynamicFixture(object):
         self.model_path = model_path
         self.pending_fields = []
         self.fields_processed = []
+        self.debug_mode = debug_mode
         self.kwargs = kwargs
 
     def __str__(self):
@@ -331,7 +332,8 @@ class DynamicFixture(object):
             else: # string (saving just a name in the file, without saving the file to the storage file system
                 setattr(instance, field.name, data) # Model.field = data
         else:
-            LOGGER.debug('%s.%s = %s' % (get_unique_model_name(model_class), field.name, data))
+            if self.debug_mode:
+                LOGGER.debug('%s.%s = %s' % (get_unique_model_name(model_class), field.name, data))
             setattr(instance, field.name, data) # Model.field = data
         self.fields_processed.append(field.name)
 
@@ -394,7 +396,8 @@ class DynamicFixture(object):
         @named_shelve: restore configuration saved in DDF library with a name.
         @persist_dependencies: tell if internal dependencies will be saved in the database or not.
         """
-        LOGGER.debug('>>> [%s] Generating instance.' % get_unique_model_name(model_class))
+        if self.debug_mode:
+            LOGGER.debug('>>> [%s] Generating instance.' % get_unique_model_name(model_class))
         configuration = self._configure_params(model_class, shelve, named_shelve, **kwargs)
         instance = model_class()
         if not is_model_class(instance):
@@ -413,7 +416,8 @@ class DynamicFixture(object):
             i += 1
             if i > 2 * number_of_pending_fields: # dealing with infinite loop too.
                 raise InvalidConfigurationError(get_unique_field_name(field), u'Cyclic dependency of Copiers.'), None, sys.exc_info()[2]
-        LOGGER.debug('<<< [%s] Instance created.' % get_unique_model_name(model_class))
+        if self.debug_mode:
+            LOGGER.debug('<<< [%s] Instance created.' % get_unique_model_name(model_class))
         return instance
 
     def _process_many_to_many_field(self, field, manytomany_field, fixture):
