@@ -83,8 +83,8 @@ class SearchingBooks(TestCase):
     def test_search_book_by_author(self):
         author1 = G(Author)
         author2 = G(Author)
-        book1 = G(Book, author=[author1])
-        book2 = G(Book, author=[author2])
+        book1 = G(Book, authors=[author1])
+        book2 = G(Book, authors=[author2])
         books = Book.objects.search_by_author(author1.name)
         self.assertTrue(book1 in books)
         self.assertTrue(book2 not in books)
