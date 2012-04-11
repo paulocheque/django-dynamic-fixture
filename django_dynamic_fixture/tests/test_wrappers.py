@@ -3,7 +3,7 @@
 from django.test import TestCase
 
 from django_dynamic_fixture.models import EmptyModel, ModelWithRelationships, ModelForLibrary
-from django_dynamic_fixture import N, G, F, C, P, look_up_alias
+from django_dynamic_fixture import N, G, F, C, P, look_up_alias, PRE_SAVE, POST_SAVE
 
 
 class NShortcutTest(TestCase):
@@ -162,3 +162,12 @@ class LookUpSeparatorTest(TestCase):
         self.assertEquals({'a': 1, 'b_c': 2}, look_up_alias(a=1, b_c=2))
         self.assertEquals({'a': 1, 'b': F(c=2)}, look_up_alias(a=1, b__c=2))
         self.assertEquals({'a': F(b=1), 'c': F(d=2)}, look_up_alias(a__b=1, c__d=2))
+
+
+class PreAndPostSaveTest(TestCase):
+    def test_pre_save(self):
+        PRE_SAVE(EmptyModel, lambda x: x)
+
+    def test_post_save(self):
+        POST_SAVE(EmptyModel, lambda x: x)
+

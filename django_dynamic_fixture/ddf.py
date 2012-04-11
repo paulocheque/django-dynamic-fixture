@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import inspect
 import logging
 import sys
 
@@ -16,7 +17,9 @@ from django_dynamic_fixture.django_helper import get_related_model, \
 
 
 LOGGER = logging.getLogger('DDFLog')
-_LOADED_DDF_SETUP_MODULES = []
+_LOADED_DDF_SETUP_MODULES = [] # control to avoid a ddf_setup module be loaded more than one time.
+_PRE_SAVE = {} # receivers to be executed before saving a instance;
+_POST_SAVE = {} # receivers to be executed after saving a instance;
 
 
 class UnsupportedFieldError(Exception):
@@ -47,8 +50,32 @@ class InvalidDDFSetupError(Exception):
     "ddf_setup.py has execution errors"
 
 
+class InvalidReceiverError(Exception):
+    "Receiver is not a function that receive only the instance as parameter."
+
+
 class PendingField(Exception):
     "Internal exception to control pending fields when using Copier."
+
+
+def set_pre_save_receiver(model_class, callback_function):
+    """
+    @model_class: a model_class can have only one receiver. Do not complicate yourself.
+    @callback_function must be a function that receive the instance as unique parameter.
+    """
+    if not is_model_class(model_class) or not inspect.isfunction(callback_function) or len(inspect.getargspec(callback_function).args) != 1:
+        raise InvalidReceiverError(model_class), None, sys.exc_info()[2]
+    _PRE_SAVE[model_class] = callback_function
+
+
+def set_post_save_receiver(model_class, callback_function):
+    """
+    @model_class: a model_class can have only one receiver. Do not complicate yourself.
+    @callback_function must be a function that receive the instance as unique parameter.
+    """
+    if not is_model_class(model_class) or not inspect.isfunction(callback_function) or len(inspect.getargspec(callback_function).args) != 1:
+        raise InvalidReceiverError(model_class), None, sys.exc_info()[2]
+    _POST_SAVE[model_class] = callback_function
 
 
 class DataFixture(object):
@@ -462,7 +489,17 @@ class DynamicFixture(object):
         try:
             if self.validate_models:
                 instance.full_clean()
+            if model_class in _PRE_SAVE:
+                try:
+                    _PRE_SAVE[model_class](instance)
+                except Exception as e:
+                    raise InvalidReceiverError(e), None, sys.exc_info()[2]
             instance.save()
+            if model_class in _POST_SAVE:
+                try:
+                    _POST_SAVE[model_class](instance)
+                except Exception as e:
+                    raise InvalidReceiverError(e), None, sys.exc_info()[2]
         except Exception as e:
             if self.print_errors:
                 print_field_values(instance)

@@ -195,3 +195,10 @@ class ModelWithClean(models.Model):
         if self.integer != 9999: # just for testing
             raise ValidationError('integer is not 9999')
 
+
+class ModelForSignals(models.Model):
+    pass
+
+
+class ModelForSignals2(models.Model):
+    pass
