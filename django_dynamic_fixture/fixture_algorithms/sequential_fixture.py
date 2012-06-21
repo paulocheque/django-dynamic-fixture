@@ -137,7 +137,7 @@ class SequentialDataFixture(DataFixture):
         return unicode(self.get_value(field, key))
 
 
-class SequentialUniqueDataFixture(DataFixture):
+class SequentialUniqueDataFixture(SequentialDataFixture):
 
     def get_value(self, field, key):
         return self.filler.next('global')
