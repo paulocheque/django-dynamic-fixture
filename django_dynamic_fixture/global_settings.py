@@ -10,7 +10,7 @@ from django.conf import settings
 from django.core.urlresolvers import get_mod_func
 from django.utils.importlib import import_module
 
-from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture, StaticSequentialDataFixture
+from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture, StaticSequentialDataFixture, GlobalSequentialDataFixture
 from django_dynamic_fixture.fixture_algorithms.random_fixture import RandomDataFixture
 
 
@@ -29,10 +29,11 @@ def get_boolean_config(config_name, default=False):
 
 
 # DDF_DEFAULT_DATA_FIXTURE default = 'sequential'
-# It must be 'sequential', 'static_sequential', 'random' or 'path.to.CustomDataFixtureClass'
+# It must be 'sequential', 'static_sequential', 'global_sequential', 'random' or 'path.to.CustomDataFixtureClass'
 try:
     INTERNAL_DATA_FIXTURES = {'sequential': SequentialDataFixture(),
                               'static_sequential': StaticSequentialDataFixture(),
+                              'global_sequential': GlobalSequentialDataFixture(),
                               'random': RandomDataFixture()}
     if hasattr(settings, 'DDF_DEFAULT_DATA_FIXTURE'):
         if settings.DDF_DEFAULT_DATA_FIXTURE in INTERNAL_DATA_FIXTURES.keys():
@@ -46,7 +47,7 @@ try:
     else:
         DDF_DEFAULT_DATA_FIXTURE = INTERNAL_DATA_FIXTURES['sequential']
 except:
-    raise DDFImproperlyConfigured("DDF_DEFAULT_DATA_FIXTURE (%s) must be 'sequential', 'static_sequential', 'random' or 'path.to.CustomDataFixtureClass'." % settings.DDF_DEFAULT_DATA_FIXTURE), None, sys.exc_info()[2]
+    raise DDFImproperlyConfigured("DDF_DEFAULT_DATA_FIXTURE (%s) must be 'sequential', 'static_sequential', 'global_sequential', 'random' or 'path.to.CustomDataFixtureClass'." % settings.DDF_DEFAULT_DATA_FIXTURE), None, sys.exc_info()[2]
 
 
 # DDF_IGNORE_FIELDS default = []
@@ -68,5 +69,4 @@ DDF_VALIDATE_MODELS = get_boolean_config('DDF_VALIDATE_MODELS', default=False)
 DDF_VALIDATE_ARGS = get_boolean_config('DDF_VALIDATE_ARGS', default=False)
 DDF_USE_LIBRARY = get_boolean_config('DDF_USE_LIBRARY', default=False)
 DDF_DEBUG_MODE = get_boolean_config('DDF_DEBUG_MODE', default=False)
-
 
