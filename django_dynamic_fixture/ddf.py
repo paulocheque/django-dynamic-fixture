@@ -364,7 +364,7 @@ class DynamicFixture(object):
             # If we're writing an integer as a foreign key, assume we're using
             # the primary key of an instance, not the instance itself.
             # TODO: This won't pickup cases where the primary key is not an integer.
-            if False and is_relationship_field(field) and data is not None and isinstance(data, (int, long)):
+            if is_relationship_field(field) and data is not None and isinstance(data, (int, long)):
                 setattr(instance, field.name + '_id', data)  # Model.field_id = data
             else:
                 setattr(instance, field.name, data) # Model.field = data
