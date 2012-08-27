@@ -361,7 +361,13 @@ class DynamicFixture(object):
         else:
             if self.debug_mode:
                 LOGGER.debug('%s.%s = %s' % (get_unique_model_name(model_class), field.name, data))
-            setattr(instance, field.name, data) # Model.field = data
+            # If we're writing an integer as a foreign key, assume we're using
+            # the primary key of an instance, not the instance itself.
+            # TODO: This won't pickup cases where the primary key is not an integer.
+            if is_relationship_field(field) and data is not None and isinstance(data, (int, long)):
+                setattr(instance, field.name + '_id', data)  # Model.field_id = data
+            else:
+                setattr(instance, field.name, data) # Model.field = data
         self.fields_processed.append(field.name)
 
     def _validate_kwargs(self, model_class, kwargs):
