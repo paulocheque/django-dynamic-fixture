@@ -5,14 +5,14 @@ Django Dynamic Fixture
 
 A full and popular (more than 10.000 downloads) library to create dynamic model instances for testing purposes.
 
-[Installation](#installation)
-[Motivation](#motivation)
-[Comparison with another fixture tools](#comparison-with-another-fixture-tools)
-[Features](#features)
-[Other goodies](#other-goodies)
-[Basic Example of Usage](#basic-example-of-usage)
-[Lknks](#links)
-[FAQ](#faq)
+  * [Installation](#installation)
+  * [Motivation](#motivation)
+  * [Comparison with another fixture tools](#comparison-with-another-fixture-tools)
+  * [Features](#features)
+  * [Other goodies](#other-goodies)
+  * [Basic Example of Usage](#basic-example-of-usage)
+  * [Lknks](#links)
+  * [FAQ](#faq)
 
 
 Installation
