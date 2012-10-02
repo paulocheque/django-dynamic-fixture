@@ -5,6 +5,16 @@ Django Dynamic Fixture
 
 A full and popular (more than 10.000 downloads) library to create dynamic model instances for testing purposes.
 
+[Installation](#installation)
+[Motivation](#motivation)
+[Comparison with another fixture tools](#comparison-with-another-fixture-tools)
+[Features](#features)
+[Other goodies](#other-goodies)
+[Basic Example of Usage](#basic-example-of-usage)
+[Lknks](#links)
+[FAQ](#faq)
+
+
 Installation
 ------------
 
@@ -97,3 +107,8 @@ class SearchingBooks(TestCase):
   * Examples of Usage: <https://github.com/paulocheque/django-dynamic-fixture/wiki/Example-of-usage>
   * Patterns and Anti-patterns: <https://github.com/paulocheque/django-dynamic-fixture/wiki/Patterns-and-Anti-Patterns>
   * Wiki: <https://github.com/paulocheque/django-dynamic-fixture/wiki>
+
+# FAQ
+
+  * http://stackoverflow.com/questions/12487337/optimizing-setup-and-teardown-for-sample-django-model-using-django-nose-and-djan
+  * http://stackoverflow.com/questions/4400609/initial-data-fixture-management-in-django
