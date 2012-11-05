@@ -18,3 +18,5 @@ cover/
 virtualenv*
 
 django_dynamic_fixture.egg-info
+DEV_README.txt
+env/
