@@ -6,6 +6,11 @@ import threading
 from django_dynamic_fixture.ddf import DataFixture
 from django_dynamic_fixture.django_helper import field_is_unique
 
+try:
+    from django.utils.timezone import now
+except ImportError:
+    now = datetime.now
+
 
 class AutoDataFiller(object):
     """
@@ -101,11 +106,11 @@ class SequentialDataFixture(DataFixture):
 
     def timefield_config(self, field, key):
         data = self.get_value(field, key)
-        return datetime.now() - timedelta(seconds=data)
+        return now() - timedelta(seconds=data)
 
     def datetimefield_config(self, field, key):
         data = self.get_value(field, key)
-        return datetime.now() - timedelta(seconds=data)
+        return now() - timedelta(seconds=data)
 
     # FORMATTED STRINGS
     def emailfield_config(self, field, key):
