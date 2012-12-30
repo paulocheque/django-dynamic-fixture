@@ -4,6 +4,11 @@ from decimal import Decimal
 import random
 import string
 
+try:
+    from django.utils.timezone import now
+except ImportError:
+    now = datetime.now
+
 from django_dynamic_fixture.ddf import DataFixture
 
 
@@ -67,10 +72,10 @@ class RandomDataFixture(DataFixture):
         return date.today() - timedelta(days=random.randint(1, 36500))
 
     def timefield_config(self, field, key):
-        return datetime.now() - timedelta(seconds=random.randint(1, 36500))
+        return now() - timedelta(seconds=random.randint(1, 36500))
 
     def datetimefield_config(self, field, key):
-        return datetime.now() - timedelta(seconds=random.randint(1, 36500))
+        return now() - timedelta(seconds=random.randint(1, 36500))
 
     # FORMATTED STRINGS
     def emailfield_config(self, field, key):
