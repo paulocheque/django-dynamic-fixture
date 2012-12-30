@@ -87,12 +87,21 @@ class ModelRelated(models.Model):
     integer_b = models.IntegerField(null=True)
 
 
+def default_fk_value():
+    try:
+        return ModelRelated.objects.get(id=1)
+    except ModelRelated.DoesNotExist:
+        return None
+
+
 class ModelWithRelationships(models.Model):
     # relationship
     selfforeignkey = models.ForeignKey('self', null=True)
     foreignkey = models.ForeignKey('ModelRelated', related_name='fk', null=True)
     onetoone = models.OneToOneField('ModelRelated', related_name='o2o', null=True)
     manytomany = models.ManyToManyField('ModelRelated', related_name='m2m')
+
+    foreignkey_with_default = models.ForeignKey('ModelRelated', related_name='fk2', null=True, default=default_fk_value)
 
     integer = models.IntegerField(null=True)
     integer_b = models.IntegerField(null=True)
