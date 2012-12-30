@@ -13,7 +13,7 @@ from django_dynamic_fixture.django_helper import get_related_model, \
     get_unique_model_name, get_unique_field_name, is_model_abstract, \
     field_is_a_parent_link, get_field_by_name_or_raise, get_app_name_of_model, \
     is_model_class, is_relationship_field, is_file_field, is_key_field, \
-    model_has_the_field
+    model_has_the_field, enable_auto_now, disable_auto_now, enable_auto_now_add, disable_auto_now_add
 
 
 LOGGER = logging.getLogger('DDFLog')
@@ -82,8 +82,8 @@ class DataFixture(object):
     """
     Responsibility: return a valid data for a Django Field, according to its type, model class, constraints etc.
 
-    You must create a separated method to generate data for an specific field. For a field called 'MyField', 
-    the method must be: 
+    You must create a separated method to generate data for an specific field. For a field called 'MyField',
+    the method must be:
     def myfield_config(self, field, key): return 'some value'
     @field: Field object.
     @key: string that represents a unique name for a Field, considering app, model and field names.
@@ -226,6 +226,8 @@ class DynamicFixture(object):
         self.fields_processed = []
         self.debug_mode = debug_mode
         self.kwargs = kwargs
+        self.fields_to_disable_auto_now = []
+        self.fields_to_disable_auto_now_add = []
 
     def __str__(self):
         return u'F(%s)' % (u', '.join(u'%s=%s' % (key, value) for key, value in self.kwargs.iteritems()))
@@ -263,13 +265,12 @@ class DynamicFixture(object):
         return data
 
     def _get_data_from_static_data(self, field, fixture):
-        "return data of a static value: field=3"
+        "return date from a static value: field=3"
         if hasattr(field, 'auto_now_add') and field.auto_now_add:
-            field.auto_now_add = False
+            self.fields_to_disable_auto_now_add.append(field)
         if hasattr(field, 'auto_now') and field.auto_now:
-            field.auto_now = False
-        data = fixture
-        return data
+            self.fields_to_disable_auto_now.append(field)
+        return fixture
 
     def _process_field_with_customized_fixture(self, instance, field, fixture, persist_dependencies):
         "Set a custom value to a field."
@@ -477,6 +478,17 @@ class DynamicFixture(object):
         else:
             raise InvalidManyToManyConfigurationError('Field: %s' % field.name, str(fixture)), None, sys.exc_info()[2]
 
+    def _save_the_instance(self, instance):
+        for field in self.fields_to_disable_auto_now:
+            disable_auto_now(field)
+        for field in self.fields_to_disable_auto_now_add:
+            disable_auto_now_add(field)
+        instance.save()
+        for field in self.fields_to_disable_auto_now:
+            enable_auto_now(field)
+        for field in self.fields_to_disable_auto_now_add:
+            enable_auto_now_add(field)
+
     def get(self, model_class, shelve=False, named_shelve=None, **kwargs):
         """
         Create an instance with data and persist it.
@@ -494,7 +506,7 @@ class DynamicFixture(object):
                     _PRE_SAVE[model_class](instance)
                 except Exception as e:
                     raise InvalidReceiverError(e), None, sys.exc_info()[2]
-            instance.save()
+            self._save_the_instance(instance)
             if model_class in _POST_SAVE:
                 try:
                     _POST_SAVE[model_class](instance)

@@ -14,7 +14,7 @@ from django.db.models.query import QuerySet
 def get_apps(application_labels=[], exclude_application_labels=[]):
     """
     - if not @application_labels and not @exclude_application_labels, it returns all applications.
-    - if @application_labels is not None, it returns just these applications, 
+    - if @application_labels is not None, it returns just these applications,
     except applications with label in exclude_application_labels.
     """
     if application_labels:
@@ -179,3 +179,20 @@ def print_field_values(model_instance_or_list_of_model_instances_or_queryset):
     else:
         model_instance = model_instance_or_list_of_model_instances_or_queryset
         print_field_values_of_a_model(model_instance)
+
+
+def enable_auto_now(field):
+    if hasattr(field, 'auto_now'):
+        field.auto_now = True
+
+def disable_auto_now(field):
+    if hasattr(field, 'auto_now'):
+        field.auto_now = False
+
+def enable_auto_now_add(field):
+    if hasattr(field, 'auto_now_add'):
+        field.auto_now_add = True
+
+def disable_auto_now_add(field):
+    if hasattr(field, 'auto_now_add'):
+        field.auto_now_add = False

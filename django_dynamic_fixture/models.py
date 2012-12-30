@@ -167,6 +167,7 @@ class ModelWithValidators(models.Model):
 class ModelWithAutoDateTimes(models.Model):
     auto_now_add = models.DateField(auto_now_add=True)
     auto_now = models.DateField(auto_now=True)
+    manytomany = models.ManyToManyField('ModelWithAutoDateTimes', related_name='m2m')
 
 
 class ModelForCopy2(models.Model):
