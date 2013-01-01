@@ -19,6 +19,9 @@ class ModelWithNumbers(models.Model):
     float = models.FloatField(null=True, unique=True)
     decimal = models.DecimalField(max_digits=2, decimal_places=1, null=True, unique=False)
 
+    class Meta:
+        verbose_name = 'Numbers'
+
 
 class ModelWithStrings(models.Model):
     string = models.CharField(max_length=1, null=True, unique=True)
@@ -26,10 +29,16 @@ class ModelWithStrings(models.Model):
     slug = models.SlugField(null=True, unique=True)
     commaseparated = models.CommaSeparatedIntegerField(max_length=100, null=True, unique=True)
 
+    class Meta:
+        verbose_name = 'Strings'
+
 
 class ModelWithBooleans(models.Model):
     boolean = models.BooleanField()
     nullboolean = models.NullBooleanField()
+
+    class Meta:
+        verbose_name = 'Booleans'
 
 
 class ModelWithDateTimes(models.Model):
@@ -37,11 +46,17 @@ class ModelWithDateTimes(models.Model):
     datetime = models.DateTimeField(null=True, unique=True)
     time = models.TimeField(null=True, unique=True)
 
+    class Meta:
+        verbose_name = 'DateTimes'
+
 
 class ModelWithFieldsWithCustomValidation(models.Model):
     email = models.EmailField(null=True, unique=True)
     url = models.URLField(null=True, unique=True)
     ip = models.IPAddressField(null=True, unique=False)
+
+    class Meta:
+        verbose_name = 'Custom validation'
 
 
 class ModelWithFileFields(models.Model):
@@ -55,6 +70,9 @@ class ModelWithFileFields(models.Model):
     except ImportError:
         pass
 
+    class Meta:
+        verbose_name = 'File fields'
+
 
 class ModelWithDefaultValues(models.Model):
     integer_with_default = models.IntegerField(null=True, default=3)
@@ -62,14 +80,23 @@ class ModelWithDefaultValues(models.Model):
     string_with_choices_and_default = models.CharField(max_length=5, null=True, default='b', choices=(('a', 'A'), ('b', 'B')))
     foreign_key_with_default = models.ForeignKey(EmptyModel, null=True, default=None)
 
+    class Meta:
+        verbose_name = 'Default values'
+
 
 class ModelForNullable(models.Model):
     nullable = models.IntegerField(null=True)
     not_nullable = models.IntegerField(null=False)
 
+    class Meta:
+        verbose_name = 'Nullable'
+
 
 class ModelForIgnoreList2(models.Model):
     nullable = models.IntegerField(null=True)
+
+    class Meta:
+        verbose_name = 'Ignore list 2'
 
 
 class ModelForIgnoreList(models.Model):
@@ -80,11 +107,17 @@ class ModelForIgnoreList(models.Model):
     self_reference = models.ForeignKey('ModelForIgnoreList', null=True)
     different_reference = models.ForeignKey(ModelForIgnoreList2, null=True)
 
+    class Meta:
+        verbose_name = 'Ignore list'
+
 
 class ModelRelated(models.Model):
     selfforeignkey = models.ForeignKey('self', null=True)
     integer = models.IntegerField(null=True)
     integer_b = models.IntegerField(null=True)
+
+    class Meta:
+        verbose_name = 'Related'
 
 
 def default_fk_value():
@@ -108,35 +141,53 @@ class ModelWithRelationships(models.Model):
     # generic field
     # TODO
 
+    class Meta:
+        verbose_name = 'Relationships'
+
 
 class ModelWithCyclicDependency(models.Model):
     d = models.ForeignKey('ModelWithCyclicDependency2', null=True)
 
+    class Meta:
+        verbose_name = 'Cyclic dependency'
+
 
 class ModelWithCyclicDependency2(models.Model):
     c = models.ForeignKey(ModelWithCyclicDependency, null=True)
+
+    class Meta:
+        verbose_name = 'Cyclic dependency 2'
 
 
 class ModelAbstract(models.Model):
     integer = models.IntegerField(null=True, unique=True)
     class Meta:
         abstract = True
+        verbose_name = 'Abstract'
 
 
 class ModelParent(ModelAbstract):
-    pass
+    class Meta:
+        verbose_name = 'Parent'
 
 
 class ModelChild(ModelParent):
-    pass
+    class Meta:
+        verbose_name = 'Child'
 
 
 class ModelChildWithCustomParentLink(ModelParent):
     my_custom_ref = models.OneToOneField(ModelParent, parent_link=True, related_name='my_custom_ref_x')
 
+    class Meta:
+        verbose_name = 'Custom child'
+
 
 class ModelWithRefToParent(models.Model):
     parent = models.ForeignKey(ModelParent)
+
+    class Meta:
+        verbose_name = 'Child with parent'
 
 
 class CustomDjangoField(models.IntegerField):
@@ -151,14 +202,24 @@ class ModelWithCustomFields(models.Model):
     x = CustomDjangoField(null=False)
     y = NewField(null=True)
 
+    class Meta:
+        verbose_name = 'Custom fields'
+
 
 class ModelWithUnsupportedField(models.Model):
     z = NewField(null=False)
+
+    class Meta:
+        verbose_name = 'Unsupported field'
 
 
 class ModelWithValidators(models.Model):
     field_validator = models.CharField(max_length=3, validators=[RegexValidator(regex=r'ok')])
     clean_validator = models.CharField(max_length=3)
+
+    class Meta:
+        verbose_name = 'Validators'
+
     def clean(self):
         if self.clean_validator != 'ok':
             raise ValidationError('ops')
@@ -169,9 +230,15 @@ class ModelWithAutoDateTimes(models.Model):
     auto_now = models.DateField(auto_now=True)
     manytomany = models.ManyToManyField('ModelWithAutoDateTimes', related_name='m2m')
 
+    class Meta:
+        verbose_name = 'Auto DateTime'
+
 
 class ModelForCopy2(models.Model):
     int_e = models.IntegerField()
+
+    class Meta:
+        verbose_name = 'Copy 2'
 
 
 class ModelForCopy(models.Model):
@@ -181,10 +248,16 @@ class ModelForCopy(models.Model):
     int_d = models.IntegerField()
     e = models.ForeignKey(ModelForCopy2)
 
+    class Meta:
+        verbose_name = 'Copy'
+
 
 class ModelForLibrary2(models.Model):
     integer = models.IntegerField(null=True)
     integer_unique = models.IntegerField(null=True, unique=True)
+
+    class Meta:
+        verbose_name = 'Library 2'
 
 
 class ModelForLibrary(models.Model):
@@ -193,13 +266,22 @@ class ModelForLibrary(models.Model):
     selfforeignkey = models.ForeignKey('self', null=True)
     foreignkey = models.ForeignKey('ModelForLibrary2', related_name='fk', null=True)
 
+    class Meta:
+        verbose_name = 'Library'
+
 
 class ModelForDDFSetup(models.Model):
     integer = models.IntegerField(null=True)
 
+    class Meta:
+        verbose_name = 'DDF setup'
+
 
 class ModelWithClean(models.Model):
     integer = models.IntegerField()
+
+    class Meta:
+        verbose_name = 'Clean'
 
     def clean(self):
         if self.integer != 9999: # just for testing
@@ -207,8 +289,10 @@ class ModelWithClean(models.Model):
 
 
 class ModelForSignals(models.Model):
-    pass
+    class Meta:
+        verbose_name = 'Signals'
 
 
 class ModelForSignals2(models.Model):
-    pass
+    class Meta:
+        verbose_name = 'Signals 2'
