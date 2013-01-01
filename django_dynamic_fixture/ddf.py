@@ -448,7 +448,7 @@ class DynamicFixture(object):
             LOGGER.debug('<<< [%s] Instance created.' % get_unique_model_name(model_class))
         return instance
 
-    def _process_many_to_many_field(self, field, manytomany_field, fixture):
+    def _process_many_to_many_field(self, field, manytomany_field, fixture, instance):
         """
         Set ManyToManyField fields with or without 'trough' option.
         @field: model field.
@@ -460,10 +460,7 @@ class DynamicFixture(object):
             amount = fixture
             for _ in range(amount):
                 next_instance = self.get(next_model)
-                try:
-                    manytomany_field.add(next_instance)
-                except AttributeError: # M2M with trough: ManyRelatedManager
-                    next_instance.save()
+                self._create_manytomany_relationship(manytomany_field, instance, next_instance)
         elif isinstance(fixture, (list, tuple)):
             items = fixture
             for item in items:
@@ -471,12 +468,24 @@ class DynamicFixture(object):
                     next_instance = item.get(next_model, **item.kwargs) # need to pass F.kwargs recursively.
                 else:
                     next_instance = item
-                try:
-                    manytomany_field.add(next_instance)
-                except AttributeError: # M2M with trough: ManyRelatedManager
-                    next_instance.save()
+
+                self._create_manytomany_relationship(manytomany_field, instance, next_instance)
         else:
             raise InvalidManyToManyConfigurationError('Field: %s' % field.name, str(fixture)), None, sys.exc_info()[2]
+
+    def _create_manytomany_relationship(self, manytomany_field, instance, next_instance):
+        try:
+            manytomany_field.add(next_instance)
+        except AttributeError:
+            next_instance.save()
+
+            # Create an instance of the "through" model using the current data fixture
+            through_model = manytomany_field.through
+            through_instance = DynamicFixture(data_fixture=self.data_fixture) \
+                    .get(through_model, **{
+                        manytomany_field.source_field_name: instance,
+                        manytomany_field.target_field_name: next_instance
+                    })
 
     def _save_the_instance(self, instance):
         for field in self.fields_to_disable_auto_now:
@@ -523,7 +532,7 @@ class DynamicFixture(object):
                 manytomany_field = getattr(instance, field.name)
                 fixture = kwargs[field.name]
                 try:
-                    self._process_many_to_many_field(field, manytomany_field, fixture)
+                    self._process_many_to_many_field(field, manytomany_field, fixture, instance)
                 except InvalidManyToManyConfigurationError as e:
                     raise e, None, sys.exc_info()[2]
                 except Exception as e:
