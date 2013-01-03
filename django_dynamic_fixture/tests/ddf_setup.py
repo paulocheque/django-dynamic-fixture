@@ -1,5 +1,5 @@
 from django_dynamic_fixture import N, DDFLibrary
-from django_dynamic_fixture.models import ModelForDDFSetup
+from django_dynamic_fixture.test_models import ModelForDDFSetup
 
 
 DDF_LIBRARY_FOR_TESTS = DDFLibrary()

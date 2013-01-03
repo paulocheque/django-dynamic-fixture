@@ -2,7 +2,7 @@
 from unittest import TestCase
 
 from django_dynamic_fixture import G, DDFLibrary
-from django_dynamic_fixture.models import ModelForDDFSetup
+from django_dynamic_fixture.test_models import ModelForDDFSetup
 from django_dynamic_fixture.tests.ddf_setup import DDF_LIBRARY_FOR_TESTS
 
 

@@ -2,7 +2,7 @@
 
 from django.test import TestCase
 
-from django_dynamic_fixture.models import *
+from django_dynamic_fixture.test_models import *
 from django_dynamic_fixture.ddf import *
 from django_dynamic_fixture.ddf import _PRE_SAVE, _POST_SAVE
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture
@@ -711,7 +711,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.get(ModelAbstract)
             self.fail()
         except InvalidModelError as e:
-            self.assertEquals("""django_dynamic_fixture.ModelAbstract""",
+            self.assertEquals("""django_dynamic_fixture.test_models.ModelAbstract""",
                               str(e))
 
     def test_InvalidModelError_for_common_object(self):
