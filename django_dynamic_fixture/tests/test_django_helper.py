@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.db import models
 
 from django_dynamic_fixture import N, G
-from django_dynamic_fixture.models import *
+from django_dynamic_fixture.test_models import *
 from django_dynamic_fixture.django_helper import *
 
 
