@@ -163,10 +163,10 @@ def print_field_values_of_a_model(model_instance):
     if model_instance == None:
         print('\n:: Model Unknown: None')
     else:
-        print('\n:: Model %s (%s)' % (get_unique_model_name(model_instance.__class__), model_instance.id))
+        print('\n:: Model %s (%s)' % (get_unique_model_name(model_instance.__class__), model_instance.pk))
         for field in get_fields_from_model(model_instance.__class__):
             print('%s: %s' % (field.name, getattr(model_instance, field.name)))
-        if model_instance.id is not None:
+        if model_instance.pk is not None:
             for field in get_many_to_many_fields_from_model(model_instance.__class__):
                 print('%s: %s' % (field.name, getattr(model_instance, field.name).all()))
 
