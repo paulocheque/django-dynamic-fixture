@@ -18,8 +18,6 @@ A full and popular (more than 10.000 downloads) library to create dynamic model 
 Installation
 ------------
 
-#### Lastest Release: 1.6.3
-
 ```
 pip install django-dynamic-fixture
 ```
@@ -27,7 +25,7 @@ pip install django-dynamic-fixture
 #### or
 
 ```
-1. Download zip file 
+1. Download zip file
 2. Extract it
 3. Execute in the extracted directory: python setup.py install
 ```
@@ -44,12 +42,12 @@ pip install django-dynamic-fixture --upgrade --no-deps
 * Django 1.2, 1.3 or 1.4
 
 # Motivation
-  * It is a TERRIBLE practice to use STATIC data in tests. 
+  * It is a TERRIBLE practice to use STATIC data in tests.
   * Create dynamic fixture for each model is boring and it produces a lot of replicated code.
   * It is a bad idea to use uncontrolled data in tests, like bizarre random data.
 
 # Comparison with another fixture tools
-  * We tried to use another fixture tools in a big Django project but the experience was not satisfactory. 
+  * We tried to use another fixture tools in a big Django project but the experience was not satisfactory.
   * Either they are incomplete, or bugged or it produces erratic tests, because they use random and uncontrolled data.
   * Also, the syntax of others tools is too verbose, which polutes the tests.
   * Complete, lean and practice documentation.
