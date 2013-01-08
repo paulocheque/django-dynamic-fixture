@@ -9,7 +9,8 @@ env:
 install:
   - pip install -q Django==$DJANGO --use-mirrors
   - pip install nose==1.1.2
-  - pip install django-nose==0.1.3
+  # It must be the same used in requirements.txt
+  - pip install https://github.com/jbalogh/django-nose/tarball/master
   - pip install coverage==3.5.1
   - pip install https://github.com/paulocheque/django-dynamic-fixture/tarball/master
   - pip install --quiet -e .
