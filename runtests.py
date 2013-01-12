@@ -16,6 +16,9 @@ if not settings.configured:
 
 from django_nose import NoseTestSuiteRunner
 
+# Django-Nose must import test_models to avoid 'no such table' problem
+from django_dynamic_fixture import test_models
+
 
 def runtests(*test_args, **kwargs):
     kwargs.setdefault('interactive', False)

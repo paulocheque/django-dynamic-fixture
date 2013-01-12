@@ -34,7 +34,7 @@ def get_app_name(app):
     """
     app is the object returned by get_apps method
     """
-    return app.__name__.replace('.models', '')
+    return app.__name__.split('.')[0]
 
 
 def get_models_of_an_app(app):
@@ -56,7 +56,7 @@ def get_model_name(model_class):
 
 def get_unique_model_name(model_class):
     "Example: app.packages.ModelName"
-    return model_class.__module__.replace('.models', '') + '.' + model_class.__name__
+    return model_class.__module__ + '.' + model_class.__name__
 
 
 def get_fields_from_model(model_class):

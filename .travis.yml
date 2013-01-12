@@ -15,4 +15,5 @@ install:
   - pip install https://github.com/paulocheque/django-dynamic-fixture/tarball/master
   - pip install --quiet -e .
 script:
-  - python runtests.py
+  #- python runtests.py
+  - python manage.py test

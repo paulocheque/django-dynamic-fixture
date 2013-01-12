@@ -7,10 +7,10 @@ DATABASES = {
 }
 
 INSTALLED_APPS = (
-    'django_nose',
     'coverage',
     'queries',
     'django_dynamic_fixture',
+    'django_nose',
 )
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
