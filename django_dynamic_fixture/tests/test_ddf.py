@@ -678,7 +678,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.new(ModelWithUnsupportedField)
             self.fail()
         except UnsupportedFieldError as e:
-            self.assertEquals("""django_dynamic_fixture.ModelWithUnsupportedField.z""",
+            self.assertEquals("""django_dynamic_fixture.test_models.ModelWithUnsupportedField.z""",
                               str(e))
 
     def test_BadDataError(self):
@@ -687,7 +687,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.get(ModelForIgnoreList)
             self.fail()
         except BadDataError as e:
-            self.assertEquals("""('django_dynamic_fixture.ModelForIgnoreList', IntegrityError('django_dynamic_fixture_modelforignorelist.required may not be NULL',))""",
+            self.assertEquals("""('django_dynamic_fixture.test_models.ModelForIgnoreList', IntegrityError('django_dynamic_fixture_modelforignorelist.required may not be NULL',))""",
                               str(e))
 
     def test_InvalidConfigurationError(self):
@@ -695,7 +695,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.new(ModelWithNumbers, integer=lambda x: ''.invalidmethod())
             self.fail()
         except InvalidConfigurationError as e:
-            self.assertEquals("""('django_dynamic_fixture.ModelWithNumbers.integer', AttributeError("'str' object has no attribute 'invalidmethod'",))""",
+            self.assertEquals("""('django_dynamic_fixture.test_models.ModelWithNumbers.integer', AttributeError("'str' object has no attribute 'invalidmethod'",))""",
                               str(e))
 
     def test_InvalidManyToManyConfigurationError(self):

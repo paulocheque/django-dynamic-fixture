@@ -5,15 +5,16 @@ python:
 env:
   - DJANGO=1.2.7
   - DJANGO=1.3.1
-  - DJANGO=1.4
+  - DJANGO=1.4.3
 install:
   - pip install -q Django==$DJANGO --use-mirrors
-  - pip install nose==1.1.2
-  # It must be the same used in requirements.txt
-  - pip install https://github.com/jbalogh/django-nose/tarball/master
-  - pip install coverage==3.5.1
-  - pip install https://github.com/paulocheque/django-dynamic-fixture/tarball/master
-  - pip install --quiet -e .
+  - pip install -r requirements.txt
+  # - pip install nose==1.1.2
+  # # It must be the same used in requirements.txt
+  # - pip install https://github.com/jbalogh/django-nose/tarball/master
+  # - pip install coverage==3.5.1
+  # - pip install https://github.com/paulocheque/django-dynamic-fixture/tarball/master
+  # - pip install --quiet -e .
 script:
   #- python runtests.py
   - python manage.py test
