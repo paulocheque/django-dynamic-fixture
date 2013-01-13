@@ -2,7 +2,7 @@ Django Dynamic Fixture
 -----------
 
 ![Continuous Integration Status](https://secure.travis-ci.org/paulocheque/django-dynamic-fixture.png)
-![!](http://travis-ci.org/#!/paulocheque/django-dynamic-fixture)
+[!](http://travis-ci.org/#!/paulocheque/django-dynamic-fixture)
 
 A full and popular (more than 10.000 downloads) library to create dynamic model instances for testing purposes.
 
