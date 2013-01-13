@@ -245,6 +245,14 @@ class ManyToManyRelationshipTest(DDFTestCase):
     def test_invalid_many_to_many_configuration(self):
         self.assertRaises(InvalidManyToManyConfigurationError, self.ddf.get, ModelWithRelationships, manytomany='a')
 
+    def test_many_to_many_through(self):
+        b1 = self.ddf.get(ModelRelated, integer=1000)
+        b2 = self.ddf.get(ModelRelated, integer=1001)
+        instance = self.ddf.get(ModelWithRelationships, manytomany_through=[b1, b2])
+        self.assertEquals(2, instance.manytomany_through.all().count())
+        self.assertEquals(1000, instance.manytomany_through.all()[0].integer)
+        self.assertEquals(1001, instance.manytomany_through.all()[1].integer)
+
 
 class NewDealWithCyclicDependenciesTest(DDFTestCase):
     def test_new_create_by_default_only_1_lap_in_cycle(self):

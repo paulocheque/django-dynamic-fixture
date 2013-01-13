@@ -120,6 +120,11 @@ class ModelRelated(models.Model):
         verbose_name = 'Related'
 
 
+class ModelRelatedThrough(models.Model):
+    related = models.ForeignKey('ModelRelated')
+    relationship = models.ForeignKey('ModelWithRelationships')
+
+
 def default_fk_value():
     try:
         return ModelRelated.objects.get(id=1)
@@ -133,6 +138,7 @@ class ModelWithRelationships(models.Model):
     foreignkey = models.ForeignKey('ModelRelated', related_name='fk', null=True)
     onetoone = models.OneToOneField('ModelRelated', related_name='o2o', null=True)
     manytomany = models.ManyToManyField('ModelRelated', related_name='m2m')
+    manytomany_through = models.ManyToManyField('ModelRelated', related_name='m2m_through', through=ModelRelatedThrough)
 
     foreignkey_with_default = models.ForeignKey('ModelRelated', related_name='fk2', null=True, default=default_fk_value)
 
