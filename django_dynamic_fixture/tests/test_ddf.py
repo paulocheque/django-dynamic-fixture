@@ -104,6 +104,10 @@ class NewFullFillAttributesWithDefaultDataTest(DDFTestCase):
         instance = self.ddf.new(ModelWithDefaultValues)
         self.assertEquals('b', instance.string_with_choices_and_default)
 
+    def test_fill_field_with_possible_optgroup_choices(self):
+        instance = self.ddf.new(ModelWithDefaultValues)
+        self.assertEquals('a', instance.string_with_optgroup_choices)
+
 
 class NewFullFillAttributesWithCustomDataTest(DDFTestCase):
     def test_fields_are_filled_with_custom_attributes(self):

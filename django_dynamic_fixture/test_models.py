@@ -78,6 +78,7 @@ class ModelWithDefaultValues(models.Model):
     integer_with_default = models.IntegerField(null=True, default=3)
     string_with_choices = models.CharField(max_length=5, null=True, choices=(('a', 'A'), ('b', 'B')))
     string_with_choices_and_default = models.CharField(max_length=5, null=True, default='b', choices=(('a', 'A'), ('b', 'B')))
+    string_with_optgroup_choices = models.CharField(max_length=5, null=True, choices=(('group1', (('a', 'A'), ('b', 'B'))), ('group2', (('c', 'C'), ('d', 'D')))))
     foreign_key_with_default = models.ForeignKey(EmptyModel, null=True, default=None)
 
     class Meta:
