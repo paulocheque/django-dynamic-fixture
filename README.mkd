@@ -2,17 +2,19 @@ Django Dynamic Fixture
 -----------
 
 ![Continuous Integration Status](https://secure.travis-ci.org/paulocheque/django-dynamic-fixture.png)
-[Info](http://travis-ci.org/#!/paulocheque/django-dynamic-fixture)
+
+[Travis](http://travis-ci.org/#!/paulocheque/django-dynamic-fixture)
 
 A full and popular (more than 10.000 downloads) library to create dynamic model instances for testing purposes.
 
   * [Installation](#installation)
   * [Motivation](#motivation)
   * [Comparison with another fixture tools](#comparison-with-another-fixture-tools)
+  * <https://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation>
   * [Features](#features)
   * [Other goodies](#other-goodies)
   * [Basic Example of Usage](#basic-example-of-usage)
-  * [Documentation](#documentation)
+  * [Documentation Links](#documentation)
   * [FAQ](#faq)
 
 
@@ -100,7 +102,7 @@ class SearchingBooks(TestCase):
         self.assertTrue(book2 not in books)
 ```
 
-# Documentation
+# Documentation Links
 
   * Simple documentation: <https://github.com/paulocheque/django-dynamic-fixture/wiki/Simple-Documentation>
   * Full documentation: <https://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation>
