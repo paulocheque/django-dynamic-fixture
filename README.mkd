@@ -33,17 +33,17 @@ A complete library to create dynamic model instances for testing purposes.
     * [Debug Mode](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#wiki-debug_mode)
     * [List of Exceptions](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#wiki-exceptions)
   * **Other goodies**
-  * [Decorators](#decorators)
-  * [FileSystemDjangoTestCase](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#wiki-filesystem)
-  * [DDF Setup Nose Plugin](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#wiki-setup_nose_plugin)
-  * [Queries Nose Plugin](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#wiki-queries_nose_plugin)
+    * [Decorators](#decorators)
+    * [FileSystemDjangoTestCase](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#wiki-filesystem)
+    * [DDF Setup Nose Plugin](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#wiki-setup_nose_plugin)
+    * [Queries Nose Plugin](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#wiki-queries_nose_plugin)
   * **Other Links**
-  * [Comparison with another fixture tools](#comparison-with-another-fixture-tools)
-  * [Features](#features)
-  * [Other goodies](#other-goodies)
-  * [Documentation Links](#documentation-links)
-  * [FAQ](#faq)
-  * [Travis](http://travis-ci.org/#!/paulocheque/django-dynamic-fixture)
+    * [Comparison with another fixture tools](#comparison-with-another-fixture-tools)
+    * [Features](#features)
+    * [Other goodies](#other-goodies)
+    * [Documentation Links](#documentation-links)
+    * [FAQ](#faq)
+    * [Travis](http://travis-ci.org/#!/paulocheque/django-dynamic-fixture)
 
 
 
