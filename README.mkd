@@ -7,14 +7,45 @@ A complete library to create dynamic model instances for testing purposes.
 
   * [Motivation](#motivation)  
   * [Basic Example of Usage](#basic-example-of-usage)  
-  * [Documentation](https://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation)
   * [Installation](#installation)
+  * [Documentation](https://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation)
+  * **Django Dynamic Fixture**
+    * [Get function (G)](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#g)
+    * [New function (N)](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#n)
+    * [Fixture function (F)](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#f)
+    * [Many To Many Fields](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#m2m)
+    * [Django Look Up fields](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#django_syntax)
+  * **Data generation options**
+    * [Data Fixtures](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#data_fixtures)
+    * [Custom Fields](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#custom_fields)
+    * [Fill Nullable Fields](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#fill_nullable_fields)
+    * [Ignoring Fields](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#ignoring_fields)
+    * [Number of Laps](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#number_of_laps)
+    * [Copier](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#copier)
+    * [Default Shelve](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#default_shelve)
+    * [Named Shelve](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#named_shelve)
+  * **Other configurations**
+    * [Validate Models](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#validate_models)
+    * [Validate Arguments](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#validate_arguments)
+    * [Signals PRE_SAVE and POST_SAVE](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#signals)
+  * **Debugging**
+    * [Print function (P)](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#p)
+    * [Debug Mode](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#debug_mode)
+    * [List of Exceptions](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#exceptions)
+  * **Other goodies**
+    * [Decorators](#decorators)
+    * [FileSystemDjangoTestCase](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#filesystem)
+    * [DDF Setup Nose Plugin](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#setup_nose_plugin)
+    * [Queries Nose Plugin](http://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation#queries_nose_plugin)
+
   * [Comparison with another fixture tools](#comparison-with-another-fixture-tools)
   * [Features](#features)
   * [Other goodies](#other-goodies)
   * [Documentation Links](#documentation-links)
   * [FAQ](#faq)
   * [Travis](http://travis-ci.org/#!/paulocheque/django-dynamic-fixture)
+
+
 
 
 # Motivation
