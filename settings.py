@@ -9,6 +9,8 @@ DATABASES = {
     }
 }
 
+SECRET_KEY = 'ddf-secret-key'
+
 INSTALLED_APPS = (
     'coverage',
     'queries',
