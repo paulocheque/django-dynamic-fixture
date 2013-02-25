@@ -102,6 +102,14 @@ pip install django-dynamic-fixture
 pip install -e git+git@github.com:paulocheque/django-dynamic-fixture.git#egg=django-dynamic-fixture
 ```
 
+#### requirements.txt
+
+```
+django-dynamic-fixture==1.6.4
+# or use the development version
+git+git://github.com/paulocheque/django-dynamic-fixture.git#egg=django-dynamic-fixture
+```
+
 #### Upgrade:
 
 ```
