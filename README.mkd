@@ -96,6 +96,12 @@ pip install django-dynamic-fixture
 3. Execute in the extracted directory: python setup.py install
 ```
 
+#### Development version
+
+```
+pip install -e git+git@github.com:paulocheque/django-dynamic-fixture.git#egg=django-dynamic-fixture
+```
+
 #### Upgrade:
 
 ```
