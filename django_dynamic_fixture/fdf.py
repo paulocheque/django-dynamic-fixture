@@ -1,12 +1,24 @@
 # -*- coding: utf-8 -*-
 
 import os
-from shutil import rmtree
-from tempfile import mkdtemp, mkstemp
-from shutil import copy2
+import tempfile
+
+from shutil import rmtree, copy2
 from django.core.files import File
 
 from django.test import TestCase
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+
+
+TEMP_PATH = tempfile.gettempdir() or os.environ.get('TEMP')
+TEMP_PATH_DDF = os.path.join(TEMP_PATH, 'DDF_TEMP')
+
+
+class CustomFileSystemStorage(FileSystemStorage):
+    def __init__(self, *args, **kwargs):
+        super(CustomFileSystemStorage, self).\
+        __init__(location=TEMP_PATH_DDF, *args, **kwargs)
 
 
 class FileSystemDjangoTestCase(TestCase):
@@ -30,6 +42,7 @@ class FileSystemDjangoTestCase(TestCase):
     def fdf_setup(self):
         self.directories = []
         self.files = {}
+        setattr(settings, 'DEFAULT_FILE_STORAGE', 'django_dynamic_fixture.fdf.CustomFileSystemStorage')
 
     def fdf_teardown(self):
         if self.TEAR_DOWN_ENABLED:
@@ -37,10 +50,12 @@ class FileSystemDjangoTestCase(TestCase):
                 self.remove_temp_file(self.files.keys()[0])
             while self.directories:
                 self.remove_temp_directory(self.directories[0])
+            if os.path.exists(TEMP_PATH_DDF):
+                rmtree(TEMP_PATH_DDF)
 
     def create_temp_directory(self, prefix='file_system_test_case_dir_'):
         "Create a temporary directory and returns the directory pathname."
-        directory = mkdtemp(prefix=prefix)
+        directory = tempfile.mkdtemp(prefix=prefix)
         self.directories.append(directory)
         return directory
 
@@ -48,14 +63,17 @@ class FileSystemDjangoTestCase(TestCase):
         "Remove a directory."
         rmtree(directory_pathname)
         if directory_pathname in self.directories:
-            self.directories.remove(directory_pathname)
+            try:
+                self.directories.remove(directory_pathname)
+            except WindowsError:
+                pass
 
     def create_temp_file(self, directory=None, prefix='file_system_test_case_file_', suffix='.tmp'):
         """
         Create a temporary file with a option prefix and suffix in a temporary or custom directory.
         Returns the filepath
         """
-        tmp_file = mkstemp(prefix=prefix, dir=directory, suffix=suffix)
+        tmp_file = tempfile.mkstemp(prefix=prefix, dir=directory, suffix=suffix)
         file_obj = os.fdopen(tmp_file[0])
         self.files[tmp_file[1]] = file_obj
         return tmp_file[1]
@@ -85,7 +103,10 @@ class FileSystemDjangoTestCase(TestCase):
             fileobj = self.files.pop(filepath)
             fileobj.close()
         if os.path.exists(filepath):
-            os.remove(filepath)
+            try:
+                os.unlink(filepath)
+            except WindowsError:
+                pass
 
     def copy_file_to_dir(self, filepath, directory):
         "Copy a file to a specified directory."
