@@ -5,8 +5,8 @@ Django Dynamic Fixture
 
 A complete library to create dynamic model instances for testing purposes.
 
-  * [Motivation](#motivation)  
-  * [Basic Example of Usage](#basic-example-of-usage)  
+  * [Motivation](#motivation)
+  * [Basic Example of Usage](#basic-example-of-usage)
   * [Installation](#installation)
   * [Documentation](https://github.com/paulocheque/django-dynamic-fixture/wiki/Documentation)
   * **Django Dynamic Fixture**
@@ -105,7 +105,7 @@ pip install -e git+git@github.com:paulocheque/django-dynamic-fixture.git#egg=dja
 #### requirements.txt
 
 ```
-django-dynamic-fixture==1.6.4
+django-dynamic-fixture==1.6.5
 # or use the development version
 git+git://github.com/paulocheque/django-dynamic-fixture.git#egg=django-dynamic-fixture
 ```
