@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-
-from tempfile import mkdtemp, mkstemp
-
 from django_dynamic_fixture.fdf import *
 from django.core.files import File
 
@@ -19,7 +16,7 @@ class FileSystemDjangoTestCaseDealWithDirectoriesTest(FileSystemDjangoTestCase):
         self.assertDirectoryDoesNotExists(directory)
 
     def test_remove_temp_directory_must_remove_directories_created_out_of_the_testcase_too(self):
-        directory = mkdtemp()
+        directory = tempfile.mkdtemp()
         self.remove_temp_directory(directory)
         self.assertDirectoryDoesNotExists(directory)
 
