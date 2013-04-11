@@ -1,23 +1,2 @@
-# virtualenv virtualenv-26 -p PATH_TO_PYTHON26
-# pip install -r requirements.txt
-
-# virtualenv virtualenv-27 -p PATH_TO_PYTHON27
-# pip install -r requirements.txt
-
 # Dependencies
-# django==1.4.3
-
-# Testing
-nose==1.1.2
-#django_nose==0.1.3
-# It must be the same used in .travis.yaml
-#git+git://github.com/jbalogh/django-nose.git@7fd0132090256e752119f90a3d4568203c486f2e#egg=django_nose
-git+git://github.com/jbalogh/django-nose.git#egg=django_nose
-nosexcover==1.0.4
-
-# Metrics
-coverage==3.5.1
-
-# Code Style
-pep8==1.0.1
-
+django==1.4.3
