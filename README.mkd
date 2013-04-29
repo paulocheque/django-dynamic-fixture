@@ -3,6 +3,8 @@ Django Dynamic Fixture
 
 ![Continuous Integration Status](https://secure.travis-ci.org/paulocheque/django-dynamic-fixture.png)
 
+#### Latest version: 1.6.5 (2013/02/27)
+
 A complete library to create dynamic model instances for testing purposes.
 
   * [Motivation](#motivation)
