@@ -89,7 +89,7 @@ class UniqueRandomDataFixture(DataFixture):
         max_value = 10 ** number_of_digits
         value = self.random_integer(field, key) % max_value
         value = float(value) + random.random()
-        return Decimal(value)
+        return Decimal(str(value))
 
     # STRINGS
     def charfield_config(self, field, key):
