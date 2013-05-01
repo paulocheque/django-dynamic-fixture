@@ -5,6 +5,7 @@ import random
 import socket
 import string
 import struct
+from warnings import warn
 
 from django_dynamic_fixture.ddf import DataFixture
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import \
@@ -20,12 +21,19 @@ class UniqueRandomDataFixture(DataFixture):
 
     DEFAULT_LENGTH = 10
     OBJECT_COUNT = 512
+    WARNING_MESSAGE_TMPL = (
+        'Maximum number of objects (%d) is exceeded in '
+        'unique_random_fixture. Uniqueness is not guaranteed.'
+    )
 
     def __init__(self):
         self.filler = AutoDataFiller()
 
     def get_counter(self, field, key):
-        return self.filler.next(key)
+        result = self.filler.next(key)
+        if result > self.OBJECT_COUNT:
+            warn(self.WARNING_MESSAGE_TMPL % self.OBJECT_COUNT, RuntimeWarning)
+        return result
 
     def random_string(self, field, key, n=None):
         counter = unicode(self.get_counter(field, key))

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from warnings import catch_warnings
+
 from django.db import models
 from django.test import TestCase
 
@@ -38,3 +40,14 @@ class RandomDataFixtureTestCase(TestCase, DataFixtureTestCase):
             self.assertTrue(integer > prev)
             prev = integer
         self.assertEqual(len(results), self.fixture.OBJECT_COUNT)
+
+    def test_warning(self):
+        with catch_warnings(record=True) as w:
+            for _ in xrange(self.fixture.OBJECT_COUNT + 1):
+                self.fixture.generate_data(models.CharField(max_length=10))
+            warning = w[-1]
+            self.assertTrue(issubclass(warning.category, RuntimeWarning))
+            expected_message = (
+                self.fixture.WARNING_MESSAGE_TMPL % self.fixture.OBJECT_COUNT
+            )
+            self.assertTrue(expected_message in str(warning.message))
