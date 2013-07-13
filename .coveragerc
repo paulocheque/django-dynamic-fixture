@@ -1,0 +1,19 @@
+[run]
+source = django_dynamic_fixture
+omit = */migrations/*
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self.debug:
+    if settings.DEBUG
+    raise AssertionError
+    raise NotImplementedError
+    if 0:
+    if __name__ == .__main__.:
+    def __iter__
+    def __len__
+    __metaclass__
+    def __init__
+    class MetaChoice
