@@ -60,8 +60,8 @@ class PendingField(Exception):
 
 def set_pre_save_receiver(model_class, callback_function):
     """
-    @model_class: a model_class can have only one receiver. Do not complicate yourself.
-    @callback_function must be a function that receive the instance as unique parameter.
+    :model_class: a model_class can have only one receiver. Do not complicate yourself.
+    :callback_function must be a function that receive the instance as unique parameter.
     """
     if not is_model_class(model_class) or not inspect.isfunction(callback_function) or len(inspect.getargspec(callback_function).args) != 1:
         raise InvalidReceiverError(model_class), None, sys.exc_info()[2]
@@ -70,8 +70,8 @@ def set_pre_save_receiver(model_class, callback_function):
 
 def set_post_save_receiver(model_class, callback_function):
     """
-    @model_class: a model_class can have only one receiver. Do not complicate yourself.
-    @callback_function must be a function that receive the instance as unique parameter.
+    :model_class: a model_class can have only one receiver. Do not complicate yourself.
+    :callback_function must be a function that receive the instance as unique parameter.
     """
     if not is_model_class(model_class) or not inspect.isfunction(callback_function) or len(inspect.getargspec(callback_function).args) != 1:
         raise InvalidReceiverError(model_class), None, sys.exc_info()[2]
@@ -84,9 +84,11 @@ class DataFixture(object):
 
     You must create a separated method to generate data for an specific field. For a field called 'MyField',
     the method must be:
+
     def myfield_config(self, field, key): return 'some value'
-    @field: Field object.
-    @key: string that represents a unique name for a Field, considering app, model and field names.
+
+    :field: Field object.
+    :key: string that represents a unique name for a Field, considering app, model and field names.
     """
 
     def _field_fixture_template(self, field_class):
@@ -200,15 +202,15 @@ class DynamicFixture(object):
     def __init__(self, data_fixture, fill_nullable_fields=True, ignore_fields=[], number_of_laps=1, use_library=False,
                  validate_models=False, validate_args=False, print_errors=True, model_path=[], debug_mode=False, **kwargs):
         """
-        @data_fixture: algorithm to fill field data.
-        @fill_nullable_fields: flag to decide if nullable fields must be filled with data.
-        @ignore_fields: list of field names that must not be filled with data.
-        @number_of_laps: number of laps for each cyclic dependency.
-        @use_library: flag to decide if DDF library will be used to load default fixtures.
-        @validate_models: flag to decide if the model_instance.full_clean() must be called before saving the object.
-        @validate_args: flag to enable field name validation of custom fixtures.
-        @print_errors: flag to determine if the model data must be printed to console on errors. For some scripts is interesting to disable it.
-        @model_path: internal variable used to control the cycles of dependencies.
+        :data_fixture: algorithm to fill field data.
+        :fill_nullable_fields: flag to decide if nullable fields must be filled with data.
+        :ignore_fields: list of field names that must not be filled with data.
+        :number_of_laps: number of laps for each cyclic dependency.
+        :use_library: flag to decide if DDF library will be used to load default fixtures.
+        :validate_models: flag to decide if the model_instance.full_clean() must be called before saving the object.
+        :validate_args: flag to enable field name validation of custom fixtures.
+        :print_errors: flag to determine if the model data must be printed to console on errors. For some scripts is interesting to disable it.
+        :model_path: internal variable used to control the cycles of dependencies.
         """
         # custom config of fixtures
         self.data_fixture = data_fixture
@@ -420,9 +422,10 @@ class DynamicFixture(object):
         1) validate all kwargs match Model.fields.
         2) validate model is a model.Model class.
         3) Iterate model fields: for each field, fill it with data.
-        @shelve: the current configuration will be stored in the DDF library. It can be True or a string (named shelve).
-        @named_shelve: restore configuration saved in DDF library with a name.
-        @persist_dependencies: tell if internal dependencies will be saved in the database or not.
+
+        :shelve: the current configuration will be stored in the DDF library. It can be True or a string (named shelve).
+        :named_shelve: restore configuration saved in DDF library with a name.
+        :persist_dependencies: tell if internal dependencies will be saved in the database or not.
         """
         if self.debug_mode:
             LOGGER.debug('>>> [%s] Generating instance.' % get_unique_model_name(model_class))
@@ -451,9 +454,10 @@ class DynamicFixture(object):
     def _process_many_to_many_field(self, field, manytomany_field, fixture, instance):
         """
         Set ManyToManyField fields with or without 'trough' option.
-        @field: model field.
-        @manytomany_field: ManyRelatedManager of the field.
-        @fixture: value passed by user.
+
+        :field: model field.
+        :manytomany_field: ManyRelatedManager of the field.
+        :fixture: value passed by user.
         """
         next_model = get_related_model(field)
         if isinstance(fixture, int):
@@ -501,8 +505,9 @@ class DynamicFixture(object):
     def get(self, model_class, shelve=False, named_shelve=None, **kwargs):
         """
         Create an instance with data and persist it.
-        @shelve: the current configuration will be stored in the DDF library.
-        @named_shelve: restore configuration saved in DDF library with a name.
+
+        :shelve: the current configuration will be stored in the DDF library.
+        :named_shelve: restore configuration saved in DDF library with a name.
         """
         instance = self.new(model_class, shelve=shelve, named_shelve=named_shelve, **kwargs)
         if is_model_abstract(model_class):
