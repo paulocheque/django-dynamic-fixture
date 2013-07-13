@@ -5,17 +5,16 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': ':memory:',
-        #'NAME': 'ddf.sqlite' # for tests in shell
     }
 }
 
 SECRET_KEY = 'ddf-secret-key'
 
 INSTALLED_APPS = (
-    'coverage',
     'queries',
-    'django_dynamic_fixture',
+    'django_coverage',
     'django_nose',
+    'django_dynamic_fixture',
 )
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
