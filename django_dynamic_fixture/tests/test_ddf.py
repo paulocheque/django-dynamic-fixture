@@ -2,7 +2,7 @@
 
 from django.test import TestCase
 
-from django_dynamic_fixture.test_models import *
+from django_dynamic_fixture.models_test import *
 from django_dynamic_fixture.ddf import *
 from django_dynamic_fixture.ddf import _PRE_SAVE, _POST_SAVE
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture
@@ -690,7 +690,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.new(ModelWithUnsupportedField)
             self.fail()
         except UnsupportedFieldError as e:
-            self.assertEquals("""django_dynamic_fixture.test_models.ModelWithUnsupportedField.z""",
+            self.assertEquals("""django_dynamic_fixture.models_test.ModelWithUnsupportedField.z""",
                               str(e))
 
     def test_BadDataError(self):
@@ -699,7 +699,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.get(ModelForIgnoreList)
             self.fail()
         except BadDataError as e:
-            self.assertEquals("""('django_dynamic_fixture.test_models.ModelForIgnoreList', IntegrityError('django_dynamic_fixture_modelforignorelist.required may not be NULL',))""",
+            self.assertEquals("""('django_dynamic_fixture.models_test.ModelForIgnoreList', IntegrityError('django_dynamic_fixture_modelforignorelist.required may not be NULL',))""",
                               str(e))
 
     def test_InvalidConfigurationError(self):
@@ -707,7 +707,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.new(ModelWithNumbers, integer=lambda x: ''.invalidmethod())
             self.fail()
         except InvalidConfigurationError as e:
-            self.assertEquals("""('django_dynamic_fixture.test_models.ModelWithNumbers.integer', AttributeError("'str' object has no attribute 'invalidmethod'",))""",
+            self.assertEquals("""('django_dynamic_fixture.models_test.ModelWithNumbers.integer', AttributeError("'str' object has no attribute 'invalidmethod'",))""",
                               str(e))
 
     def test_InvalidManyToManyConfigurationError(self):
@@ -723,7 +723,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.get(ModelAbstract)
             self.fail()
         except InvalidModelError as e:
-            self.assertEquals("""django_dynamic_fixture.test_models.ModelAbstract""",
+            self.assertEquals("""django_dynamic_fixture.models_test.ModelAbstract""",
                               str(e))
 
     def test_InvalidModelError_for_common_object(self):
