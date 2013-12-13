@@ -135,7 +135,14 @@ def field_is_a_parent_link(field):
 
 
 def field_has_choices(field):
-    return bool(len(field.choices) > 0 and field.choices)
+    """field.choices may be a tee, which we can't count without converting
+    it to a list, or it may be a large database queryset, in which case we
+    don't want to convert it to a list. We only care if the list is empty
+    or not, so just try to access the first element and return True if that
+    doesn't throw an exception."""
+    for i in field.choices:
+        return True
+    return False
 
 
 def field_has_default_value(field):
