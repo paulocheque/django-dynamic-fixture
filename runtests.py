@@ -17,7 +17,7 @@ if not settings.configured:
 from django_nose import NoseTestSuiteRunner
 
 # Django-Nose must import test_models to avoid 'no such table' problem
-from django_dynamic_fixture import test_models
+from django_dynamic_fixture import models_test
 
 
 def runtests(*test_args, **kwargs):
@@ -28,7 +28,7 @@ def runtests(*test_args, **kwargs):
 
 if __name__ == '__main__':
     parser = OptionParser()
-    parser.add_option('--verbosity', dest='verbosity', action='store', default=1, type=int)
+    parser.add_option('--verbosity', dest='verbosity', action='store', default=2, type=int)
     parser.add_options(NoseTestSuiteRunner.options)
     (options, args) = parser.parse_args()
 
