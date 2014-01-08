@@ -5,6 +5,8 @@ This is the facade of all features of DDF.
 Module that contains wrappers and shortcuts (aliases).
 """
 
+from collections import defaultdict
+
 from django_dynamic_fixture.ddf import DynamicFixture, Copier, DDFLibrary, \
     set_pre_save_receiver, set_post_save_receiver
 from django_dynamic_fixture.django_helper import print_field_values
@@ -20,16 +22,22 @@ LOOKUP_SEP = '__'
 def look_up_alias(**kwargs):
     """
     a__b__c=1 => a=F(b=F(c=1))
+    a__b=1, a__c=2 => a=F(b=1, c=2)
     """
-    field_dict = {}
+    grouped_kwargs = defaultdict(dict)
     for key, value in kwargs.iteritems():
-        parts = key.split(LOOKUP_SEP)
-        current_dict = {parts[-1]: value}
-        first_fields = parts[:-1]
-        first_fields.reverse()
-        for part in first_fields:
-            current_dict = {part: F(**current_dict)}
-        field_dict.update(current_dict)
+        if LOOKUP_SEP in key:
+            first_field, remainder = key.split(LOOKUP_SEP, 1)
+            grouped_kwargs[first_field].update({remainder: value})
+        else:
+            grouped_kwargs[key] = value
+
+    field_dict = {}
+    for key, value in grouped_kwargs.iteritems():
+        if isinstance(value, dict):
+            field_dict[key] = F(**value)
+        else:
+            field_dict[key] = value
     return field_dict
 
 

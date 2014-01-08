@@ -162,6 +162,8 @@ class LookUpSeparatorTest(TestCase):
         self.assertEquals({'a': 1, 'b_c': 2}, look_up_alias(a=1, b_c=2))
         self.assertEquals({'a': 1, 'b': F(c=2)}, look_up_alias(a=1, b__c=2))
         self.assertEquals({'a': F(b=1), 'c': F(d=2)}, look_up_alias(a__b=1, c__d=2))
+        self.assertEquals({'a': F(b=1, c=2)}, look_up_alias(a__b=1, a__c=2))
+        self.assertEquals({'a': F(b=1, c=2), 'd': F(e=3)}, look_up_alias(a__b=1, a__c=2, d__e=3))
 
 
 class PreAndPostSaveTest(TestCase):
