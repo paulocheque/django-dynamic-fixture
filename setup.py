@@ -32,7 +32,9 @@ setup(name='django-dynamic-fixture',
       classifiers=[
           'Framework :: Django',
           'Operating System :: OS Independent',
-          'Topic :: Software Development'
+          'Topic :: Software Development',
+          'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3.3',
       ],
 
       version='1.6.5',
