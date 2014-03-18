@@ -4,6 +4,7 @@ import inspect
 import logging
 import sys
 
+from django.conf import settings
 from django.core.files import File
 from django.utils.importlib import import_module
 
@@ -114,7 +115,12 @@ class DataFixture(object):
             key = get_unique_field_name(field)
             data = eval('self.%s(field, "%s")' % (config, key,))
         else:
-            if field.null:
+            # If the user provided default values for custom fields, try to use them here
+            custom_field_defaults = getattr(settings, 'DDF_CUSTOM_FIELD_DEFAULTS', {})
+            unique_field_name = get_unique_field_name(field)
+            if unique_field_name in custom_field_defaults:
+                data = custom_field_defaults[unique_field_name]
+            elif field.null:
                 data = None # a workaround for versatility
             else:
                 raise UnsupportedFieldError(get_unique_field_name(field)), None, sys.exc_info()[2]

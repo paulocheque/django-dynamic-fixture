@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.test import TestCase
+from django.test.utils import override_settings
 
 from django_dynamic_fixture.models_test import *
 from django_dynamic_fixture.ddf import *
@@ -331,6 +332,11 @@ class CustomFieldsTest(DDFTestCase):
 
     def test_unsupported_field_raise_an_error_if_it_does_not_accept_null_value(self):
         self.assertRaises(UnsupportedFieldError, self.ddf.new, ModelWithUnsupportedField)
+
+    @override_settings(DDF_CUSTOM_FIELD_DEFAULTS={'django_dynamic_fixture.models_test.ModelWithUnsupportedField.z': 'hello'})
+    def test_custom_field_defaults_settings(self):
+        instance = self.ddf.new(ModelWithUnsupportedField)
+        self.assertEquals('hello', instance.z)
 
 
 class ModelValidatorsTest(DDFTestCase):
