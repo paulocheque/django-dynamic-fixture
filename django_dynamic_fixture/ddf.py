@@ -112,7 +112,6 @@ class DataFixture(object):
     def generate_data(self, field):
         "Get a unique and valid data for the field."
         config = self._field_fixture_factory(field.__class__)
-
         is_supported_field = config != None
         if is_supported_field:
             key = get_unique_field_name(field)
