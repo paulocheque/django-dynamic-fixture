@@ -227,7 +227,7 @@ class ModelWithCustomFieldsMultipleInheritance(models.Model):
     y = NewField(null=True)
 
     class Meta:
-        verbose_name = 'Custom fiels with multiple inheritance'
+        verbose_name = 'Custom fields with multiple inheritance'
 
 
 class ModelWithUnsupportedField(models.Model):
