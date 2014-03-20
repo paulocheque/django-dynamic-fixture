@@ -4,8 +4,8 @@ import inspect
 import logging
 import sys
 
-from django.conf import settings
 from django.core.files import File
+from django.db.models import Field
 from django.utils.importlib import import_module
 
 from django_dynamic_fixture.django_helper import get_related_model, \
@@ -102,7 +102,9 @@ class DataFixture(object):
             return fixture
         except AttributeError:
             if len(field_class.__bases__) > 0:
-                parent_class = field_class.__bases__[0] # field must not have multiple inheritance
+                # Pick the first parent class that inherits Field (or use the first parent class)
+                field_subclasses = (cls for cls in field_class.__bases__ if issubclass(cls, Field))
+                parent_class = next(field_subclasses, field_class.__bases__[0])
                 return self._field_fixture_factory(parent_class)
             else:
                 return None
@@ -110,17 +112,13 @@ class DataFixture(object):
     def generate_data(self, field):
         "Get a unique and valid data for the field."
         config = self._field_fixture_factory(field.__class__)
+
         is_supported_field = config != None
         if is_supported_field:
             key = get_unique_field_name(field)
             data = eval('self.%s(field, "%s")' % (config, key,))
         else:
-            # If the user provided default values for custom fields, try to use them here
-            custom_field_defaults = getattr(settings, 'DDF_CUSTOM_FIELD_DEFAULTS', {})
-            unique_field_name = get_unique_field_name(field)
-            if unique_field_name in custom_field_defaults:
-                data = custom_field_defaults[unique_field_name]
-            elif field.null:
+            if field.null:
                 data = None # a workaround for versatility
             else:
                 raise UnsupportedFieldError(get_unique_field_name(field)), None, sys.exc_info()[2]
