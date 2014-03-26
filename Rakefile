@@ -1,6 +1,6 @@
 VERSION = File.open('VERSION').gets.strip
-PYTHON_ENVS = [:env26, :env27, :env32, :env33]
-PYTHON_EXECS = {:env26 => "python2.6", :env27 => "python2.7", :env32 => "python3.2", :env33 => "python3.3"}
+PYTHON_ENVS = [:env27, :env33]
+PYTHON_EXECS = {:env27 => "python2.7", :env33 => "python3.3"}
 
 def colorize(text, color)
   color_codes = {

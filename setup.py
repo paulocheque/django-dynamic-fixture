@@ -17,9 +17,16 @@ from setuptools import setup, find_packages
 tests_require = [
     'nose==1.1.2',
     'django-nose==0.1.3',
+    'coverage==3.7.1',
+    'django-coverage==1.2.4',
+    'nose==1.3.0',
+    'django-nose==1.2',
+    'tox==1.7.0',
+    'flake8==2.1.0',
 ]
 
 install_requires = [
+    'six',
 ]
 
 setup(name='django-dynamic-fixture',
@@ -32,7 +39,9 @@ setup(name='django-dynamic-fixture',
       classifiers=[
           'Framework :: Django',
           'Operating System :: OS Independent',
-          'Topic :: Software Development'
+          'Topic :: Software Development',
+          'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3.3',
       ],
 
       version='1.6.5',

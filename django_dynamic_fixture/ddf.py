@@ -3,8 +3,10 @@
 import inspect
 import logging
 import sys
+import six
 
 from django.core.files import File
+from django.db.models import Field
 from django.utils.importlib import import_module
 
 from django_dynamic_fixture.django_helper import get_related_model, \
@@ -60,21 +62,21 @@ class PendingField(Exception):
 
 def set_pre_save_receiver(model_class, callback_function):
     """
-    @model_class: a model_class can have only one receiver. Do not complicate yourself.
-    @callback_function must be a function that receive the instance as unique parameter.
+    :model_class: a model_class can have only one receiver. Do not complicate yourself.
+    :callback_function must be a function that receive the instance as unique parameter.
     """
     if not is_model_class(model_class) or not inspect.isfunction(callback_function) or len(inspect.getargspec(callback_function).args) != 1:
-        raise InvalidReceiverError(model_class), None, sys.exc_info()[2]
+        raise InvalidReceiverError(model_class)
     _PRE_SAVE[model_class] = callback_function
 
 
 def set_post_save_receiver(model_class, callback_function):
     """
-    @model_class: a model_class can have only one receiver. Do not complicate yourself.
-    @callback_function must be a function that receive the instance as unique parameter.
+    :model_class: a model_class can have only one receiver. Do not complicate yourself.
+    :callback_function must be a function that receive the instance as unique parameter.
     """
     if not is_model_class(model_class) or not inspect.isfunction(callback_function) or len(inspect.getargspec(callback_function).args) != 1:
-        raise InvalidReceiverError(model_class), None, sys.exc_info()[2]
+        raise(InvalidReceiverError(model_class))
     _POST_SAVE[model_class] = callback_function
 
 
@@ -84,9 +86,11 @@ class DataFixture(object):
 
     You must create a separated method to generate data for an specific field. For a field called 'MyField',
     the method must be:
+
     def myfield_config(self, field, key): return 'some value'
-    @field: Field object.
-    @key: string that represents a unique name for a Field, considering app, model and field names.
+
+    :field: Field object.
+    :key: string that represents a unique name for a Field, considering app, model and field names.
     """
 
     def _field_fixture_template(self, field_class):
@@ -99,7 +103,9 @@ class DataFixture(object):
             return fixture
         except AttributeError:
             if len(field_class.__bases__) > 0:
-                parent_class = field_class.__bases__[0] # field must not have multiple inheritance
+                # Pick the first parent class that inherits Field (or use the first parent class)
+                field_subclasses = (cls for cls in field_class.__bases__ if issubclass(cls, Field))
+                parent_class = next(field_subclasses, field_class.__bases__[0])
                 return self._field_fixture_factory(parent_class)
             else:
                 return None
@@ -115,7 +121,7 @@ class DataFixture(object):
             if field.null:
                 data = None # a workaround for versatility
             else:
-                raise UnsupportedFieldError(get_unique_field_name(field)), None, sys.exc_info()[2]
+                raise(UnsupportedFieldError(get_unique_field_name(field)))
         return data
 
 
@@ -145,7 +151,7 @@ class Copier(object):
                 current_instance = getattr(current_instance, field)
             return current_instance
         except Exception as e:
-            raise InvalidCopierExpressionError(self.expression, e), None, sys.exc_info()[2]
+            six.reraise(InvalidCopierExpressionError, InvalidCopierExpressionError(self.expression, e), sys.exc_info()[2])
 
 
 class DDFLibrary(object):
@@ -156,7 +162,7 @@ class DDFLibrary(object):
         self.configs = {} # {Model: {name: config}}"
 
     def __str__(self):
-        return '\n'.join(['%s = %s' % (key, value) for key, value in self.configs.iteritems()])
+        return '\n'.join(['%s = %s' % (key, value) for key, value in self.configs.items()])
 
     @classmethod
     def get_instance(cls):
@@ -200,15 +206,15 @@ class DynamicFixture(object):
     def __init__(self, data_fixture, fill_nullable_fields=True, ignore_fields=[], number_of_laps=1, use_library=False,
                  validate_models=False, validate_args=False, print_errors=True, model_path=[], debug_mode=False, **kwargs):
         """
-        @data_fixture: algorithm to fill field data.
-        @fill_nullable_fields: flag to decide if nullable fields must be filled with data.
-        @ignore_fields: list of field names that must not be filled with data.
-        @number_of_laps: number of laps for each cyclic dependency.
-        @use_library: flag to decide if DDF library will be used to load default fixtures.
-        @validate_models: flag to decide if the model_instance.full_clean() must be called before saving the object.
-        @validate_args: flag to enable field name validation of custom fixtures.
-        @print_errors: flag to determine if the model data must be printed to console on errors. For some scripts is interesting to disable it.
-        @model_path: internal variable used to control the cycles of dependencies.
+        :data_fixture: algorithm to fill field data.
+        :fill_nullable_fields: flag to decide if nullable fields must be filled with data.
+        :ignore_fields: list of field names that must not be filled with data.
+        :number_of_laps: number of laps for each cyclic dependency.
+        :use_library: flag to decide if DDF library will be used to load default fixtures.
+        :validate_models: flag to decide if the model_instance.full_clean() must be called before saving the object.
+        :validate_args: flag to enable field name validation of custom fixtures.
+        :print_errors: flag to determine if the model data must be printed to console on errors. For some scripts is interesting to disable it.
+        :model_path: internal variable used to control the cycles of dependencies.
         """
         # custom config of fixtures
         self.data_fixture = data_fixture
@@ -230,7 +236,7 @@ class DynamicFixture(object):
         self.fields_to_disable_auto_now_add = []
 
     def __str__(self):
-        return u'F(%s)' % (u', '.join(u'%s=%s' % (key, value) for key, value in self.kwargs.iteritems()))
+        return u'F(%s)' % (u', '.join(u'%s=%s' % (key, value) for key, value in self.kwargs.items()))
 
     def __eq__(self, that):
         return self.kwargs == that.kwargs
@@ -343,7 +349,7 @@ class DynamicFixture(object):
             except PendingField:
                 return # ignore this field for a while.
             except Exception as e:
-                raise InvalidConfigurationError(get_unique_field_name(field), e), None, sys.exc_info()[2]
+                six.reraise(InvalidConfigurationError, InvalidConfigurationError(get_unique_field_name(field), e), sys.exc_info()[2])
         else:
             data = self._process_field_with_default_fixture(field, model_class, persist_dependencies)
 
@@ -371,7 +377,7 @@ class DynamicFixture(object):
             if field_name in self._DDF_CONFIGS:
                 continue
             if not model_has_the_field(model_class, field_name):
-                raise InvalidConfigurationError('Field "%s" does not exist.' % field_name), None, sys.exc_info()[2]
+                raise InvalidConfigurationError('Field "%s" does not exist.' % field_name)
 
     def _configure_params(self, model_class, shelve, named_shelve, **kwargs):
         """
@@ -402,7 +408,7 @@ class DynamicFixture(object):
                 except ImportError:
                     pass # ignoring if module does not exist
                 except Exception as e:
-                    raise InvalidDDFSetupError(e), None, sys.exc_info()[2]
+                    six.reraise(InvalidDDFSetupError, InvalidDDFSetupError(e), sys.exc_info()[2])
             configuration_default = library.get_configuration(model_class, name=DDFLibrary.DEFAULT_KEY)
             configuration_custom = library.get_configuration(model_class, name=named_shelve)
             configuration = {}
@@ -420,16 +426,17 @@ class DynamicFixture(object):
         1) validate all kwargs match Model.fields.
         2) validate model is a model.Model class.
         3) Iterate model fields: for each field, fill it with data.
-        @shelve: the current configuration will be stored in the DDF library. It can be True or a string (named shelve).
-        @named_shelve: restore configuration saved in DDF library with a name.
-        @persist_dependencies: tell if internal dependencies will be saved in the database or not.
+
+        :shelve: the current configuration will be stored in the DDF library. It can be True or a string (named shelve).
+        :named_shelve: restore configuration saved in DDF library with a name.
+        :persist_dependencies: tell if internal dependencies will be saved in the database or not.
         """
         if self.debug_mode:
             LOGGER.debug('>>> [%s] Generating instance.' % get_unique_model_name(model_class))
         configuration = self._configure_params(model_class, shelve, named_shelve, **kwargs)
         instance = model_class()
         if not is_model_class(instance):
-            raise InvalidModelError(get_unique_model_name(model_class)), None, sys.exc_info()[2]
+            raise InvalidModelError(get_unique_model_name(model_class))
         for field in get_fields_from_model(model_class):
             if is_key_field(field) and 'id' not in configuration: continue
             if field.name in self.ignore_fields: continue
@@ -443,7 +450,7 @@ class DynamicFixture(object):
             self.set_data_for_a_field(model_class, instance, field, persist_dependencies=persist_dependencies, **configuration)
             i += 1
             if i > 2 * number_of_pending_fields: # dealing with infinite loop too.
-                raise InvalidConfigurationError(get_unique_field_name(field), u'Cyclic dependency of Copiers.'), None, sys.exc_info()[2]
+                raise InvalidConfigurationError(get_unique_field_name(field), u'Cyclic dependency of Copiers.')
         if self.debug_mode:
             LOGGER.debug('<<< [%s] Instance created.' % get_unique_model_name(model_class))
         return instance
@@ -451,9 +458,10 @@ class DynamicFixture(object):
     def _process_many_to_many_field(self, field, manytomany_field, fixture, instance):
         """
         Set ManyToManyField fields with or without 'trough' option.
-        @field: model field.
-        @manytomany_field: ManyRelatedManager of the field.
-        @fixture: value passed by user.
+
+        :field: model field.
+        :manytomany_field: ManyRelatedManager of the field.
+        :fixture: value passed by user.
         """
         next_model = get_related_model(field)
         if isinstance(fixture, int):
@@ -471,7 +479,7 @@ class DynamicFixture(object):
 
                 self._create_manytomany_relationship(manytomany_field, instance, next_instance)
         else:
-            raise InvalidManyToManyConfigurationError('Field: %s' % field.name, str(fixture)), None, sys.exc_info()[2]
+            raise InvalidManyToManyConfigurationError('Field: %s' % field.name, str(fixture))
 
     def _create_manytomany_relationship(self, manytomany_field, instance, next_instance):
         try:
@@ -501,12 +509,13 @@ class DynamicFixture(object):
     def get(self, model_class, shelve=False, named_shelve=None, **kwargs):
         """
         Create an instance with data and persist it.
-        @shelve: the current configuration will be stored in the DDF library.
-        @named_shelve: restore configuration saved in DDF library with a name.
+
+        :shelve: the current configuration will be stored in the DDF library.
+        :named_shelve: restore configuration saved in DDF library with a name.
         """
         instance = self.new(model_class, shelve=shelve, named_shelve=named_shelve, **kwargs)
         if is_model_abstract(model_class):
-            raise InvalidModelError(get_unique_model_name(model_class)), None, sys.exc_info()[2]
+            raise InvalidModelError(get_unique_model_name(model_class))
         try:
             if self.validate_models:
                 instance.full_clean()
@@ -514,17 +523,17 @@ class DynamicFixture(object):
                 try:
                     _PRE_SAVE[model_class](instance)
                 except Exception as e:
-                    raise InvalidReceiverError(e), None, sys.exc_info()[2]
+                    six.reraise(InvalidReceiverError, InvalidReceiverError(e), sys.exc_info()[2])
             self._save_the_instance(instance)
             if model_class in _POST_SAVE:
                 try:
                     _POST_SAVE[model_class](instance)
                 except Exception as e:
-                    raise InvalidReceiverError(e), None, sys.exc_info()[2]
+                    six.reraise(InvalidReceiverError, InvalidReceiverError(e), sys.exc_info()[2])
         except Exception as e:
             if self.print_errors:
                 print_field_values(instance)
-            raise BadDataError(get_unique_model_name(model_class), e), None, sys.exc_info()[2]
+            six.reraise(BadDataError, BadDataError(get_unique_model_name(model_class), e), sys.exc_info()[2])
         self.fields_processed = [] # TODO: need more tests for M2M and Copier
         self.pending_fields = []
         for field in get_many_to_many_fields_from_model(model_class):
@@ -534,7 +543,7 @@ class DynamicFixture(object):
                 try:
                     self._process_many_to_many_field(field, manytomany_field, fixture, instance)
                 except InvalidManyToManyConfigurationError as e:
-                    raise e, None, sys.exc_info()[2]
+                    six.reraise(InvalidManyToManyConfigurationError, e, sys.exc_info()[2])
                 except Exception as e:
-                    raise InvalidManyToManyConfigurationError(get_unique_field_name(field), e), None, sys.exc_info()[2]
+                    six.reraise(InvalidManyToManyConfigurationError, InvalidManyToManyConfigurationError(get_unique_field_name(field), e), sys.exc_info()[2])
         return instance

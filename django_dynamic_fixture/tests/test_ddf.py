@@ -2,7 +2,7 @@
 
 from django.test import TestCase
 
-from django_dynamic_fixture.test_models import *
+from django_dynamic_fixture.models_test import *
 from django_dynamic_fixture.ddf import *
 from django_dynamic_fixture.ddf import _PRE_SAVE, _POST_SAVE
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture
@@ -51,12 +51,12 @@ class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
         self.assertTrue(isinstance(instance.biginteger, int))
         self.assertTrue(isinstance(instance.float, float))
 
-    def test_new_fill_string_fields_with_unicode_strings(self):
+    def test_new_fill_string_fields_with_text_type_strings(self):
         instance = self.ddf.new(ModelWithStrings)
-        self.assertTrue(isinstance(instance.string, unicode))
-        self.assertTrue(isinstance(instance.text, unicode))
-        self.assertTrue(isinstance(instance.slug, unicode))
-        self.assertTrue(isinstance(instance.commaseparated, unicode))
+        self.assertTrue(isinstance(instance.string, six.text_type))
+        self.assertTrue(isinstance(instance.text, six.text_type))
+        self.assertTrue(isinstance(instance.slug, six.text_type))
+        self.assertTrue(isinstance(instance.commaseparated, six.text_type))
 
     def test_new_fill_boolean_fields_with_False_and_None(self):
         instance = self.ddf.new(ModelWithBooleans)
@@ -71,14 +71,14 @@ class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
 
     def test_new_fill_formatted_strings_fields_with_basic_values(self):
         instance = self.ddf.new(ModelWithFieldsWithCustomValidation)
-        self.assertTrue(isinstance(instance.email, unicode))
-        self.assertTrue(isinstance(instance.url, unicode))
-        self.assertTrue(isinstance(instance.ip, unicode))
+        self.assertTrue(isinstance(instance.email, six.text_type))
+        self.assertTrue(isinstance(instance.url, six.text_type))
+        self.assertTrue(isinstance(instance.ip, six.text_type))
 
     def test_new_fill_file_fields_with_basic_strings(self):
         instance = self.ddf.new(ModelWithFileFields)
-        self.assertTrue(isinstance(instance.filepath, unicode))
-        self.assertTrue(isinstance(instance.file.path, unicode))
+        self.assertTrue(isinstance(instance.filepath, six.text_type))
+        self.assertTrue(isinstance(instance.file.path, six.text_type))
         try:
             import pil
             # just test it if the PIL package is installed
@@ -331,6 +331,10 @@ class CustomFieldsTest(DDFTestCase):
 
     def test_unsupported_field_raise_an_error_if_it_does_not_accept_null_value(self):
         self.assertRaises(UnsupportedFieldError, self.ddf.new, ModelWithUnsupportedField)
+
+    def test_new_field_that_double_inherits_django_field_must_be_supported(self):
+        instance = self.ddf.new(ModelWithCustomFieldsMultipleInheritance)
+        self.assertEquals(1, instance.x)
 
 
 class ModelValidatorsTest(DDFTestCase):
@@ -690,7 +694,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.new(ModelWithUnsupportedField)
             self.fail()
         except UnsupportedFieldError as e:
-            self.assertEquals("""django_dynamic_fixture.test_models.ModelWithUnsupportedField.z""",
+            self.assertEquals("""django_dynamic_fixture.models_test.ModelWithUnsupportedField.z""",
                               str(e))
 
     def test_BadDataError(self):
@@ -699,7 +703,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.get(ModelForIgnoreList)
             self.fail()
         except BadDataError as e:
-            self.assertEquals("""('django_dynamic_fixture.test_models.ModelForIgnoreList', IntegrityError('django_dynamic_fixture_modelforignorelist.required may not be NULL',))""",
+            self.assertEquals("""('django_dynamic_fixture.models_test.ModelForIgnoreList', IntegrityError('django_dynamic_fixture_modelforignorelist.required may not be NULL',))""",
                               str(e))
 
     def test_InvalidConfigurationError(self):
@@ -707,7 +711,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.new(ModelWithNumbers, integer=lambda x: ''.invalidmethod())
             self.fail()
         except InvalidConfigurationError as e:
-            self.assertEquals("""('django_dynamic_fixture.test_models.ModelWithNumbers.integer', AttributeError("'str' object has no attribute 'invalidmethod'",))""",
+            self.assertEquals("""('django_dynamic_fixture.models_test.ModelWithNumbers.integer', AttributeError("'str' object has no attribute 'invalidmethod'",))""",
                               str(e))
 
     def test_InvalidManyToManyConfigurationError(self):
@@ -723,7 +727,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.get(ModelAbstract)
             self.fail()
         except InvalidModelError as e:
-            self.assertEquals("""django_dynamic_fixture.test_models.ModelAbstract""",
+            self.assertEquals("""django_dynamic_fixture.models_test.ModelAbstract""",
                               str(e))
 
     def test_InvalidModelError_for_common_object(self):

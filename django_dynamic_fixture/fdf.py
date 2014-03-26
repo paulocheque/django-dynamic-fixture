@@ -47,7 +47,7 @@ class FileSystemDjangoTestCase(TestCase):
     def fdf_teardown(self):
         if self.TEAR_DOWN_ENABLED:
             while self.files:
-                self.remove_temp_file(self.files.keys()[0])
+                self.remove_temp_file(next(iter(self.files.keys())))
             while self.directories:
                 self.remove_temp_directory(self.directories[0])
             if os.path.exists(TEMP_PATH_DDF):

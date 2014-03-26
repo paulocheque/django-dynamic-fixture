@@ -2,6 +2,7 @@
 from datetime import datetime, date, timedelta
 from decimal import Decimal
 import threading
+import six
 
 from django_dynamic_fixture.ddf import DataFixture
 from django_dynamic_fixture.django_helper import field_is_unique
@@ -77,10 +78,10 @@ class SequentialDataFixture(DataFixture):
         data = self.get_value(field, key)
         if field.max_length:
             max_value = (10 ** field.max_length) - 1
-            data = unicode(data % max_value)
+            data = six.text_type(data % max_value)
             data = data[:field.max_length]
         else:
-            data = unicode(data)
+            data = six.text_type(data)
         return data
 
     def textfield_config(self, field, key):
@@ -133,13 +134,13 @@ class SequentialDataFixture(DataFixture):
 
     # FILES
     def filepathfield_config(self, field, key):
-        return unicode(self.get_value(field, key))
+        return six.text_type(self.get_value(field, key))
 
     def filefield_config(self, field, key):
-        return unicode(self.get_value(field, key))
+        return six.text_type(self.get_value(field, key))
 
     def imagefield_config(self, field, key):
-        return unicode(self.get_value(field, key))
+        return six.text_type(self.get_value(field, key))
 
 
 class GlobalSequentialDataFixture(SequentialDataFixture):

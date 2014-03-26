@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from django.db import models
@@ -201,6 +202,14 @@ class CustomDjangoField(models.IntegerField):
     pass
 
 
+class CustomDjangoFieldMixin(object):
+    pass
+
+
+class CustomDjangoFieldMultipleInheritance(CustomDjangoFieldMixin, models.IntegerField):
+    pass
+
+
 class NewField(models.Field):
     pass
 
@@ -211,6 +220,14 @@ class ModelWithCustomFields(models.Model):
 
     class Meta:
         verbose_name = 'Custom fields'
+
+
+class ModelWithCustomFieldsMultipleInheritance(models.Model):
+    x = CustomDjangoFieldMultipleInheritance(null=False)
+    y = NewField(null=True)
+
+    class Meta:
+        verbose_name = 'Custom fields with multiple inheritance'
 
 
 class ModelWithUnsupportedField(models.Model):

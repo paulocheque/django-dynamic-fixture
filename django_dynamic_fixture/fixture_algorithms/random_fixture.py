@@ -3,6 +3,7 @@ from datetime import datetime, date, timedelta
 from decimal import Decimal
 import random
 import string
+import six
 
 try:
     from django.utils.timezone import now
@@ -17,17 +18,19 @@ class RandomDataFixture(DataFixture):
         return u''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(n))
 
     # NUMBERS
-    def integerfield_config(self, field, key):
-        return random.randint(1, 1000000)
+    def integerfield_config(self, field, key, start=1, end=10 ** 6):
+        return random.randint(start, end)
 
     def smallintegerfield_config(self, field, key):
-        return self.integerfield_config(field, key)
+        # Values from -32768 to 32767 are safe in all databases supported by Django.
+        return self.integerfield_config(field, key, -2 ** 15, 2 ** 15 - 1)
 
     def positiveintegerfield_config(self, field, key):
         return self.integerfield_config(field, key)
 
     def positivesmallintegerfield_config(self, field, key):
-        return self.integerfield_config(field, key)
+        # Values up to 32767 are safe in all databases supported by Django.
+        return self.integerfield_config(field, key, end=2 ** 15 - 1)
 
     def bigintegerfield_config(self, field, key):
         return self.integerfield_config(field, key)
@@ -57,7 +60,7 @@ class RandomDataFixture(DataFixture):
         return self.charfield_config(field, key)
 
     def commaseparatedintegerfield_config(self, field, key):
-        return unicode(random.randint(1, field.max_length)) #FIXME:
+        return six.text_type(random.randint(1, field.max_length)) #FIXME:
 
     # BOOLEAN
     def booleanfield_config(self, field, key):

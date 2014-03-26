@@ -4,7 +4,6 @@
 This is the facade of all features of DDF.
 Module that contains wrappers and shortcuts (aliases).
 """
-
 from django_dynamic_fixture.ddf import DynamicFixture, Copier, DDFLibrary, \
     set_pre_save_receiver, set_post_save_receiver
 from django_dynamic_fixture.django_helper import print_field_values
@@ -22,7 +21,7 @@ def look_up_alias(**kwargs):
     a__b__c=1 => a=F(b=F(c=1))
     """
     field_dict = {}
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         parts = key.split(LOOKUP_SEP)
         current_dict = {parts[-1]: value}
         first_fields = parts[:-1]

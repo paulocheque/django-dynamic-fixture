@@ -1,7 +1,9 @@
 Django Dynamic Fixture
 -----------
 
-![Continuous Integration Status](https://secure.travis-ci.org/paulocheque/django-dynamic-fixture.png)
+[![Build Status](https://travis-ci.org/paulocheque/django-dynamic-fixture.png?branch=master)](https://travis-ci.org/paulocheque/django-dynamic-fixture)
+
+#### Latest version: 1.6.5 (2013/02/27)
 
 A complete library to create dynamic model instances for testing purposes.
 
@@ -118,8 +120,12 @@ pip install django-dynamic-fixture --upgrade --no-deps
 
 #### Requirements
 
-* Python 2.6 or 2.7
-* Django 1.2, 1.3 or 1.4
+Legacy: Django 1.2, 1.3 - Python: 2.7
+
+Django 1.4 with Python 2.7
+Django 1.5 with Python 2.7
+Django 1.6 with Python 2.7 or 3.3
+
 
 # Comparison with another fixture tools
   * We tried to use another fixture tools in a big Django project but the experience was not satisfactory.

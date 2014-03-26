@@ -2,7 +2,7 @@
 
 from django.test import TestCase
 
-from django_dynamic_fixture.test_models import EmptyModel, ModelWithRelationships, ModelForLibrary
+from django_dynamic_fixture.models_test import EmptyModel, ModelWithRelationships, ModelForLibrary
 from django_dynamic_fixture import N, G, F, C, P, look_up_alias, PRE_SAVE, POST_SAVE
 
 
