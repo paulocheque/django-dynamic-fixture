@@ -332,6 +332,10 @@ class CustomFieldsTest(DDFTestCase):
     def test_unsupported_field_raise_an_error_if_it_does_not_accept_null_value(self):
         self.assertRaises(UnsupportedFieldError, self.ddf.new, ModelWithUnsupportedField)
 
+    def test_new_field_that_double_inherits_django_field_must_be_supported(self):
+        instance = self.ddf.new(ModelWithCustomFieldsMultipleInheritance)
+        self.assertEquals(1, instance.x)
+
 
 class ModelValidatorsTest(DDFTestCase):
     def test_it_must_create_if_validation_is_disabled(self):

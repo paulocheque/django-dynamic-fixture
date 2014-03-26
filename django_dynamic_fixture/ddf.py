@@ -6,6 +6,7 @@ import sys
 import six
 
 from django.core.files import File
+from django.db.models import Field
 from django.utils.importlib import import_module
 
 from django_dynamic_fixture.django_helper import get_related_model, \
@@ -102,7 +103,9 @@ class DataFixture(object):
             return fixture
         except AttributeError:
             if len(field_class.__bases__) > 0:
-                parent_class = field_class.__bases__[0] # field must not have multiple inheritance
+                # Pick the first parent class that inherits Field (or use the first parent class)
+                field_subclasses = (cls for cls in field_class.__bases__ if issubclass(cls, Field))
+                parent_class = next(field_subclasses, field_class.__bases__[0])
                 return self._field_fixture_factory(parent_class)
             else:
                 return None
