@@ -13,6 +13,7 @@ from setuptools import setup, find_packages
 # Update version and save
 # Go to 'files' link and upload the file
 
+VERSION = '1.7.0'
 
 tests_require = [
     'nose==1.1.2',
@@ -44,7 +45,7 @@ setup(name='django-dynamic-fixture',
           'Programming Language :: Python :: 3.3',
       ],
 
-      version='1.6.5',
+      version=VERSION,
       install_requires=install_requires,
       tests_require=tests_require,
       test_suite='runtests.runtests',

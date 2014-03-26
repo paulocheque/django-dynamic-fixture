@@ -1,4 +1,4 @@
-VERSION = File.open('VERSION').gets.strip
+VERSION = "1.7.0"
 PYTHON_ENVS = ["env2.7", "env3.3"]
 PYTHON_EXECS = {"env2.7" => "python2.7", "env3.3" => "python3.3"}
 
