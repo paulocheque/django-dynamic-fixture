@@ -64,6 +64,13 @@ task :tests => [] do
   }
 end
 
+task :test_travis => [] do
+  PYTHON_ENVS.each { |env|
+    puts colorize("Environment #{env}", :blue)
+    virtual_env("python manage.py test", env)
+  }
+end
+
 task :tag => [:tests] do
   sh "git tag #{VERSION}"
   sh "git push origin #{VERSION}"
