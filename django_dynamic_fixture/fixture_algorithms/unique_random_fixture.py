@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, date, timedelta
 from decimal import Decimal
+from itertools import chain
 import random
 import socket
 import string
 import struct
 from warnings import warn
+import six
 
 from django_dynamic_fixture.ddf import DataFixture
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import \
     AutoDataFiller
+from six.moves import xrange
 
 try:
     from django.utils.timezone import now
@@ -36,7 +39,7 @@ class UniqueRandomDataFixture(DataFixture):
         return result
 
     def random_string(self, field, key, n=None):
-        counter = unicode(self.get_counter(field, key))
+        counter = six.text_type(self.get_counter(field, key))
         length = n or self.DEFAULT_LENGTH
         result = counter
         result += u''.join(
@@ -50,20 +53,20 @@ class UniqueRandomDataFixture(DataFixture):
         counter %= self.OBJECT_COUNT
         if not signed:
             MAX_INT = 2 ** 16
-            multiplier = MAX_INT / self.OBJECT_COUNT
+            multiplier = MAX_INT // self.OBJECT_COUNT
             return random.randrange(
                 multiplier * counter + 1, multiplier * (counter + 1)
             )
 
         MAX_SIGNED_INT = 2 ** 15
-        multiplier = MAX_SIGNED_INT / self.OBJECT_COUNT
+        multiplier = MAX_SIGNED_INT // self.OBJECT_COUNT
         positive_range = range(
             multiplier * counter + 1, multiplier * (counter + 1)
         )
         negative_range = range(
             (-multiplier) * (counter + 1), (-multiplier) * counter
         )
-        return random.choice(positive_range + negative_range)
+        return random.choice(list(chain(positive_range, negative_range)))
 
     # NUMBERS
     def integerfield_config(self, field, key):
@@ -148,7 +151,7 @@ class UniqueRandomDataFixture(DataFixture):
 
         integer = self.random_integer(field, key, signed=False)
         integer %= MAX_IP
-        return unicode(socket.inet_ntoa(struct.pack('!L', integer)))
+        return six.text_type(socket.inet_ntoa(struct.pack('!L', integer)))
 
     def xmlfield_config(self, field, key):
         return u'<a>%s</a>' % self.random_string(field, key)

@@ -3,6 +3,7 @@ from datetime import datetime, date, timedelta
 from decimal import Decimal
 import random
 import string
+import six
 
 try:
     from django.utils.timezone import now
@@ -59,7 +60,7 @@ class RandomDataFixture(DataFixture):
         return self.charfield_config(field, key)
 
     def commaseparatedintegerfield_config(self, field, key):
-        return unicode(random.randint(1, field.max_length)) #FIXME:
+        return six.text_type(random.randint(1, field.max_length)) #FIXME:
 
     # BOOLEAN
     def booleanfield_config(self, field, key):

@@ -51,12 +51,12 @@ class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
         self.assertTrue(isinstance(instance.biginteger, int))
         self.assertTrue(isinstance(instance.float, float))
 
-    def test_new_fill_string_fields_with_unicode_strings(self):
+    def test_new_fill_string_fields_with_text_type_strings(self):
         instance = self.ddf.new(ModelWithStrings)
-        self.assertTrue(isinstance(instance.string, unicode))
-        self.assertTrue(isinstance(instance.text, unicode))
-        self.assertTrue(isinstance(instance.slug, unicode))
-        self.assertTrue(isinstance(instance.commaseparated, unicode))
+        self.assertTrue(isinstance(instance.string, six.text_type))
+        self.assertTrue(isinstance(instance.text, six.text_type))
+        self.assertTrue(isinstance(instance.slug, six.text_type))
+        self.assertTrue(isinstance(instance.commaseparated, six.text_type))
 
     def test_new_fill_boolean_fields_with_False_and_None(self):
         instance = self.ddf.new(ModelWithBooleans)
@@ -71,14 +71,14 @@ class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
 
     def test_new_fill_formatted_strings_fields_with_basic_values(self):
         instance = self.ddf.new(ModelWithFieldsWithCustomValidation)
-        self.assertTrue(isinstance(instance.email, unicode))
-        self.assertTrue(isinstance(instance.url, unicode))
-        self.assertTrue(isinstance(instance.ip, unicode))
+        self.assertTrue(isinstance(instance.email, six.text_type))
+        self.assertTrue(isinstance(instance.url, six.text_type))
+        self.assertTrue(isinstance(instance.ip, six.text_type))
 
     def test_new_fill_file_fields_with_basic_strings(self):
         instance = self.ddf.new(ModelWithFileFields)
-        self.assertTrue(isinstance(instance.filepath, unicode))
-        self.assertTrue(isinstance(instance.file.path, unicode))
+        self.assertTrue(isinstance(instance.filepath, six.text_type))
+        self.assertTrue(isinstance(instance.file.path, six.text_type))
         try:
             import pil
             # just test it if the PIL package is installed
