@@ -71,7 +71,7 @@ task :test_travis => [] do
   }
 end
 
-task :tag => [:tests] do
+task :tag => [] do
   sh "git tag #{VERSION}"
   sh "git push origin #{VERSION}"
 end
@@ -91,7 +91,7 @@ task :publish => [:tests, :tag] do
   # Go to 'edit' link
   # Update version and save
   # Go to 'files' link and upload the file
-  virtual_env("python setup.py sdist upload")
+  virtual_env("python setup.py sdist upload", "env2.7")
 end
 
 task :default => [:tests]
