@@ -1,6 +1,6 @@
 VERSION = File.open('VERSION').gets.strip
-PYTHON_ENVS = [:env27, :env33]
-PYTHON_EXECS = {:env27 => "python2.7", :env33 => "python3.3"}
+PYTHON_ENVS = ["env2.7", "env3.3"]
+PYTHON_EXECS = {"env2.7" => "python2.7", "env3.3" => "python3.3"}
 
 def colorize(text, color)
   color_codes = {
@@ -21,7 +21,7 @@ def colorize(text, color)
   end
 end
 
-def virtual_env(command, env="env33")
+def virtual_env(command, env)
   sh "source #{env}/bin/activate ; #{command}"
 end
 
@@ -50,18 +50,17 @@ task :dev_env => [] do
   }
 end
 
-task :dependencies => [:dev_env] do
+task :deps => [:dev_env] do
   PYTHON_ENVS.each { |env|
     puts colorize("Environment #{env}", :blue)
     virtual_env("pip install -r requirements.txt", "#{env}")
-    virtual_env("pip install -r requirements-test.txt", "#{env}")
   }
 end
 
 task :tests => [] do
   PYTHON_ENVS.each { |env|
     puts colorize("Environment #{env}", :blue)
-    virtual_env("nosetests", env)
+    virtual_env("tox", env)
   }
 end
 
