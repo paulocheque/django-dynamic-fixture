@@ -133,7 +133,7 @@ Django 1.6 with Python 2.7 or 3.3
   * Also, the syntax of others tools is too verbose, which polutes the tests.
   * Complete, lean and practice documentation.
   * It is hard to debug tests with another tools.
-  * List of other tools: <http://djangopackages.com/grids/g/fixtures>
+  * List of other tools: <https://www.djangopackages.com/grids/g/testing/> or <http://djangopackages.com/grids/g/fixtures>
   * The core of the tool is the algorithm, it is not the data generation as all other tools. That mean you can change the data generation logic as you want.
 
 # Features
