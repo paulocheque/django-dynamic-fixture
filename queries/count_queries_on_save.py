@@ -22,12 +22,12 @@ class Report(object):
     def export_csv(self, order_by_quantity_queries=False):
         if order_by_quantity_queries:
             self.data.sort(key=lambda t: t[2], reverse=True)
-        print 'APP.MODEL;QUERIES ON INSERT;QUERIES ON UPDATE'
+        print('APP.MODEL;QUERIES ON INSERT;QUERIES ON UPDATE')
         for app, model, queries_insert, queries_update in self.data:
-            print '%s;%s;%s' % (get_unique_model_name(model), queries_insert, queries_update)
+            print('%s;%s;%s' % (get_unique_model_name(model), queries_insert, queries_update))
 
         for err in self.errors:
-            print err
+            print(err)
 
 
 class CountQueriesOnSave(object):
