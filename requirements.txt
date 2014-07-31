@@ -6,3 +6,6 @@ tox==1.7.0
 
 flake8==2.1.0
 six
+
+sphinx
+sphinx_rtd_theme

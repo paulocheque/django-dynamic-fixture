@@ -1,3 +1,4 @@
+.DS_Store
 .idea/
 dist/
 build/
@@ -20,6 +21,7 @@ virtualenv*
 
 django_dynamic_fixture.egg-info
 env/
+envpypy
 env26
 env27
 env32
