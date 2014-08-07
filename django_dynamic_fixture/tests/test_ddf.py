@@ -862,6 +862,16 @@ class SanityTest(DDFTestCase):
             self.ddf.get(ModelWithNumbers)
 
 
+class PolymorphicModelTest(DDFTestCase):
+    def test_create_polymorphic_model_and_retrieve(self):
+        p = self.ddf.get(ModelPolymorphic)
+        self.assertEqual([p], list(ModelPolymorphic.objects.all()))
+
+    def test_create_polymorphic_model_2_and_retrieve(self):
+        p = self.ddf.get(ModelPolymorphic2)
+        self.assertEqual([p], list(ModelPolymorphic2.objects.all()))
+
+
 class AvoidNameCollisionTest(DDFTestCase):
     def test_avoid_common_name_instance(self):
         self.ddf = DynamicFixture(data_fixture, fill_nullable_fields=False)
