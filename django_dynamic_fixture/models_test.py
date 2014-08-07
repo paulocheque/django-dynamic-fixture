@@ -5,6 +5,8 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
+from polymorphic import PolymorphicModel
+
 
 class EmptyModel(models.Model):
     pass
@@ -320,3 +322,8 @@ class ModelForSignals(models.Model):
 class ModelForSignals2(models.Model):
     class Meta:
         verbose_name = 'Signals 2'
+
+
+class ModelPolymorphic(PolymorphicModel):
+    class Meta:
+        verbose_name = 'Polymorphic Model'

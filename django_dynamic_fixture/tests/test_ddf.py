@@ -744,3 +744,9 @@ class SanityTest(DDFTestCase):
     def test_create_lots_of_models_to_verify_data_unicity_errors(self):
         for i in range(1000):
             self.ddf.get(ModelWithNumbers)
+
+
+class PolymorphicModelTest(DDFTestCase):
+    def test_create_polymorphic_model_and_retrieve(self):
+        p = self.ddf.get(ModelPolymorphic)
+        self.assertEqual([p], list(ModelPolymorphic.objects.all()))

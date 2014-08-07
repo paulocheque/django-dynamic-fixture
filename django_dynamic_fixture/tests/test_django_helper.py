@@ -10,13 +10,13 @@ from django_dynamic_fixture.django_helper import *
 
 class DjangoHelperAppsTest(TestCase):
     def test_get_apps_must_return_all_installed_apps(self):
-        self.assertEquals(1, len(get_apps()))
+        self.assertEquals(2, len(get_apps()))
 
     def test_get_apps_may_be_filtered_by_app_names(self):
         self.assertEquals(1, len(get_apps(application_labels=['django_dynamic_fixture'])))
 
     def test_get_apps_may_ignore_some_apps(self):
-        self.assertEquals(0, len(get_apps(exclude_application_labels=['django_dynamic_fixture'])))
+        self.assertEquals(1, len(get_apps(exclude_application_labels=['django_dynamic_fixture'])))
 
     def test_app_name_must_be_valid(self):
         self.assertRaises(Exception, get_apps, application_labels=['x'])
