@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from django.db import connection
-
 from nose.plugins import Plugin
 
 
@@ -9,7 +7,6 @@ from nose.plugins import Plugin
 class Queries(Plugin):
     "python manage.py test --with-queries"
     name = 'queries'
-    enabled = True
     _queries_by_test_methods = []
 
     def configure(self, options, conf):
@@ -18,15 +15,19 @@ class Queries(Plugin):
         Here, implement any config storage or changes to state or operation that are set by command line options.
         DO NOT return a value from this method unless you want to stop all other plugins from being configured.
         """
-        Plugin.configure(self, options, conf)
-        connection.use_debug_cursor = True
+        super(Queries, self).configure(options, conf)
+        if self.enabled:
+            from django.db import connection
+            connection.use_debug_cursor = True
 
     def beforeTest(self, test):
         "Called before the test is run (before startTest)."
+        from django.db import connection
         self.initial_amount_of_queries = len(connection.queries)
 
     def afterTest(self, test):
         "Called after the test has been run and the result recorded (after stopTest)."
+        from django.db import connection
         self.final_amount_of_queries = len(connection.queries)
         self._queries_by_test_methods.append((test, self.final_amount_of_queries - self.initial_amount_of_queries))
 
