@@ -164,6 +164,11 @@ class NewIgnoreFieldsInIgnoreListTest(DDFTestCase):
         instance = self.ddf.new(ModelForIgnoreList)
         self.assertNotEquals(None, instance.different_reference.nullable)
 
+    def test_ignore_fields_are_not_ignored_if_explicitely_given(self):
+        self.ddf = DynamicFixture(data_fixture, not_required=3, ignore_fields=['not_required', 'nullable'])
+        instance = self.ddf.new(ModelForIgnoreList)
+        self.assertEqual(3, instance.not_required)
+
 
 class NewAlsoCreatesRelatedObjectsTest(DDFTestCase):
     def test_new_fill_foreignkey_fields(self):

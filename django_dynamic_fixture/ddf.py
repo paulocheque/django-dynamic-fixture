@@ -439,7 +439,7 @@ class DynamicFixture(object):
             raise InvalidModelError(get_unique_model_name(model_class))
         for field in get_fields_from_model(model_class):
             if is_key_field(field) and 'id' not in configuration: continue
-            if field.name in self.ignore_fields: continue
+            if field.name in self.ignore_fields and field.name not in self.kwargs: continue
             self.set_data_for_a_field(model_class, instance, field, persist_dependencies=persist_dependencies, **configuration)
         number_of_pending_fields = len(self.pending_fields)
         # For Copier fixtures: dealing with pending fields that need to receive values of another fields.
