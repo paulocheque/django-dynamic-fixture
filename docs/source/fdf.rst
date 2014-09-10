@@ -9,7 +9,7 @@ FileSystemDjangoTestCase (New in 1.3.0)
         def test_x(self):
             print(dir(self))
 
-It also has a collection of methods to simplificate tests that use files, like:
+It also has a collection of methods to simplify tests that use files, like:
 
 * create_temp_directory
 * remove_temp_directory

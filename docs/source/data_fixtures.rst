@@ -23,7 +23,7 @@ In the test file or shell::
 Sequential Data Fixture
 ===============================================================================
 
-Useful to use in test suites. This store an independent counter for each model field that is incremented every time this field has to be populated. If for some reason the field has some restriction (*max_length*, *max_digits* etc), the counter restarts. This counter is used to populated fields of numbers (*Integer*, *BigDecimal* etc) and strings (*CharField*, *TextField* etc). For *BooleanFields*, it will always return False. For *NullBooleanFields*, it will always return None. For date and time fields, it will always return Today minus 'counter' days or Now minus 'counter' seconds, respectively.
+Useful to use in test suites. Sequential Data Fixture stores an independent counter for each model field that is incremented every time this field has to be populated. If for some reason the field has some restriction (*max_length*, *max_digits* etc), the counter restarts. This counter is used to populate fields of numbers (*Integer*, *BigDecimal* etc) and strings (*CharField*, *TextField* etc). For *BooleanFields*, it will always return False. For *NullBooleanFields*, it will always return None. For date and time fields, it will always return Today minus 'counter' days or Now minus 'counter' seconds, respectively.
 
 In settings.py::
 
@@ -53,7 +53,7 @@ In the test file::
 Static Sequential Data Fixture
 ===============================================================================
 
-Useful to use in test suites. This is the same of Sequential Data Fixture, except it only increase the counter if the field has *unique=True*.
+Useful to use in test suites. Static Sequential Data Fixture is the same as Sequential Data Fixture, except it will increase the counter only if the field has *unique=True*.
 
 In settings.py::
 
@@ -73,9 +73,9 @@ In the test file::
 Random Data Fixture
 ===============================================================================
 
-Useful to use in python shells. In shell you may want to do some manual tests, and DDF may help you to generated models too. If you are using shell with a not-in-memory database, you may have problems with *SequentialDataFixture* because the sequence will always be resetted every time you closes the shell, but the already generated data was persisted.
+Useful to use in python shells. In shell you may want to do some manual tests, and DDF may help you to generate models too. If you are using shell with a not-in-memory database, you may have problems with *SequentialDataFixture* because the sequence will be reset every time you close the shell, but the data already generated is persisted.
 
-It is dangerous to use this data fixture in a test suite because it can produce erratic tests. For example, depends on the quantity of tests and the *max_length* of a *CharField*, there is a high probability to generate an identical value which will generate invalid data for fields with *unique=True*. With boolean fields the probability increase.
+It is dangerous to use this data fixture in a test suite because it can produce erratic tests. For example, depending on the quantity of tests and *max_length* of a *CharField*, there is a high probability to generate an identical value which will result in invalid data for fields with *unique=True*.
 
 In settings.py::
 

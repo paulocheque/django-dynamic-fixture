@@ -6,17 +6,18 @@ Main features
 Get: G
 ===============================================================================
 
-The **G** function is the main feature of DDF. It receives a model class and it will return a valid and persisted instance filled with dynamic generated data::
+The **G** function is the main feature of DDF. It receives a model class and it will return a valid and persisted instance filled with dynamically generated data::
 
 
     from django_dynamic_fixture import G, get
     instance = G(MyModel)
-    # instance = or get(MyModel)
-    print instance.id # this will print the ID, thus the instance was saved
+    # The same as:
+    # instance = get(MyModel)
+    print instance.id # this will print the ID, indicating the instance was saved
     print instance.some_field # this will print the auto generated data
 
 
-This will facilitate writing tests and it will hide all dummy data that polute the source code. But all important data of the test scenario must be explicitily defined::
+This facilitates writing tests and it hides all dummy data that polutes the source code. But all important data of the test must be explicitily defined::
 
 
     instance = G(MyModel, my_field=123, another_field='abc')
@@ -27,19 +28,20 @@ This will facilitate writing tests and it will hide all dummy data that polute t
 Important details:
 
 * The id (AutoField) is auto filled, unless you set a value to it.
-* if a field has default value, it will be used by default.
-* if a field has choices, it select each the first option by default.
+* if a field has default value, it is used by default.
+* if a field has choices, first option is selected by default.
 
 
 New: N
 ===============================================================================
 
-This function **N** is similar to **G**, except it will not save the generated instance, only all internal dependencies of *ForeignKey* and *OneToOneField* fields. Since the instance does not have an ID, it can not insert instances in *ManyToManyField* fields. This function may be useful mainly in one of the following situations: create a unit test, independent of the database; or
-create a not persisted instance that will be manipulated by the programmer before saving it. Usually a programmer may want to manipulate the instance to deal with custom fields, custom validations etc::
+This function **N** is similar to **G**, except it will not save the generated instance, only all internal dependencies of *ForeignKey* and *OneToOneField* fields. Since the instance does not have an ID, it can not insert instances in *ManyToManyField* fields. This function may be useful mainly in one of the following situations: create a unit test independent of the database; or
+create a not persisted instance that will be manipulated before saving it (usually dealing with custom fields, custom validations etc)::
 
     from django_dynamic_fixture import N, new
     instance = N(MyModel)
-    # or instance = new(MyModel)
+    # The same as:
+    # instance = new(MyModel)
     print instance.id # this will print None
     print instance.some_field # this will print the auto generated data
 
@@ -54,11 +56,12 @@ It is possible to disable saving all instances, but it has to be disabled manual
 Fixture: F
 ===============================================================================
 
-It is possible to explicitly set a value for a field of a dependency (*ForeingKey*, *OneToOneField* and *ManyToManyField*) using the **F** function::
+It is possible to explicitly set a value for a relationship field(*ForeingKey*, *OneToOneField* and *ManyToManyField*) using the **F** function::
 
     from django_dynamic_fixture import G, F, fixture
     instance = G(MyModel, my_fk_field=F(my_field=1000))
-    # or instance = G(MyModel, my_fk_field=fixture(my_field=1000))
+    # The same as:
+    # instance = G(MyModel, my_fk_field=fixture(my_field=1000))
     print instance.my_fk_field.my_field # this will print 1000
 
 This is the equivalent to::
@@ -82,7 +85,7 @@ This is the equivalent to::
 Many to Many fields
 ===============================================================================
 
-DDF can add instances in *ManyToManyFields*, but only if the instance has been persisted to the database (Django requirement). DDF deal with *ManyToManyFields* with through too.
+DDF can add instances in *ManyToManyFields*, but only if the instance has been persisted to the database (Django requirement). DDF handles *ManyToManyFields* with *through* table as well.
 
 It is possible to define how many instances will be created dynamically::
 
@@ -117,5 +120,5 @@ This is an alias to F function, but it follows the Django pattern of filters tha
     instance = G(MyModel, myfkfield__myfield=1000)
     print instance.myfkfield__myfield # this will print 1000
 
-Just be careful because DDF do not interpret related names yet.
+Just be careful because DDF does not interpret related names yet.
 
