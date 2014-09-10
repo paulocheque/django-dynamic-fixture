@@ -34,7 +34,7 @@ In the test file::
 Ignoring Fields (New in 1.2.0)
 ===============================================================================
 
-This option define a list of fields DDF will ignore. In other words, DDF will not fill it with dynamic data. This option can be useful for fields auto calculated by models, like [MPTT](https://github.com/django-mptt/django-mptt) models. Ignored fields are propagated ONLY to self references.
+This option defines a list of fields DDF will ignore. In other words, DDF will not fill it with dynamic data. This option can be useful for fields auto calculated by models, like [MPTT](https://github.com/django-mptt/django-mptt) models. Ignored fields are propagated ONLY to self references.
 
 In settings.py::
 
@@ -49,7 +49,7 @@ It is not possible to override the global configuration, just extend the list. S
 Number of Laps
 ===============================================================================
 
-This option is used by DDF to control cyclic dependencies (*ForeignKey* by *self*, denormalizations, bad design etc). DDF do not enter in infinite loop of instances generation. This options define how many laps DDF will create for each cyclic dependency. This option can also be used to create trees with different lengths.
+This option is used by DDF to control cyclic dependencies (*ForeignKey* by *self*, denormalizations, bad design etc). DDF does not enter infinite loop of instances generation. This option defines how many laps DDF will create for each cyclic dependency. This option can also be used to create trees with different lengths.
 
 In settings.py::
 
@@ -87,7 +87,7 @@ It is possible to copy values of internal relationships, but only in the bottom-
 Default Shelve (New in 1.6.0)
 ===============================================================================
 
-Sometimes DDF can not generate a valid and persisted instance because it contains custom fields or custom validations (field or model validation). In these cases it is possible to teach DDF how to build a valid instance. It is necessary to create a valid configuration and shelve it in a internal and global DDF library of configurations. All future instances of that model will use the shelved configuration as base. All custom configurations will override the shelved option just for the current model instance generation. But to use the default configuration it is necessary to enable the use of the DDF library.
+Sometimes DDF can not generate a valid and persisted instance because it contains custom fields or custom validations (field or model validation). In these cases it is possible to teach DDF how to build a valid instance. It is necessary to create a valid configuration and shelve it in an internal and global DDF library of configurations. All future instances of that model will use the shelved configuration as base. All custom configurations will override the shelved option just for the current model instance generation. But to use the default configuration it is necessary to enable the use of the DDF library.
 
 In settings.py::
 
@@ -125,13 +125,13 @@ It is possible to store Copiers too::
     instance = G(Model, use_library=True, y=5)
     print instance.x # this will print 5
 
-If the model is used by another applications, it is important to put the code that shelve configurations in the file *your_app.tests.ddf_setup.py* because DDF can not control the order tests will be executed, so a test of other application can be executed before the valid configuration is shelved. The file *ddf_setup.py* prevents that because it will be loaded before DDF starts to generated the instance of a particular model. It works like a "setup suite", like the DDF Setup Nose plugin.
+If the model is used by another applications, it is important to put the code that shelve configurations in the file *your_app.tests.ddf_setup.py* because DDF can not control the order tests will be executed, so a test of other application can be executed before the valid configuration is shelved. The file *ddf_setup.py* prevents this, because it is loaded before DDF starts to generate the instance of a particular model. It works like a "setup suite", like the DDF Setup Nose plugin.
 
 
 Named Shelve (New in 1.6.0)
 ===============================================================================
 
-The named shelve works like default shelve, but it have to have a name. It turns possible to store more than one configuration by model type.
+The named shelve works like default shelve, but it has to have a name. It is possible to store more than one configuration by model type.
 
 In settings.py::
 

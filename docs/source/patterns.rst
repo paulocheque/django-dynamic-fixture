@@ -18,7 +18,7 @@ Patterns
 Anti-Patterns
 ===============================================================================
 
-  * Use a auto generated data in an assertion method.
+  * Using auto generated data in an assertion method.
   * Shelving a static value for a field with *unique=True*. Raise an error.
   * Overriding a shelved *Copier* with None.
   * Using *Copier* to fix a bad design of the code.

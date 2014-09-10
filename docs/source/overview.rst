@@ -87,43 +87,43 @@ List of features
 ===============================================================================
 
   * Highly customizable: you can customize fields recursively
-  * Deal with unique=True
-  * Deal with cyclic dependencies (including self references)
-  * Deal with many to many relationship (common M2M or M2M with additional data, i.e. through='table')
-  * Deal with custom fields (specially if the custom field inherit of a django field)
-  * It is supported for parallel tests
-  * Deal with auto calculated attributes
+  * Deals with unique=True
+  * Deals with cyclic dependencies (including self references)
+  * Deals with many to many relationship (common M2M or M2M with additional data, i.e. through='table')
+  * Deals with custom fields (especially if the custom field inherits from a django field)
+  * Support for parallel tests
+  * Deals with auto calculated attributes
   * It is easy to debug errors
 
 Motivation
 ===============================================================================
 
-  * It is a TERRIBLE practice to use STATIC data in tests.
-  * Create dynamic fixture for each model is boring and it produces a lot of replicated code.
+  * It is a terrible practice to use static data in tests.
+  * Creating dynamic fixture for each model is boring and it produces a lot of replicated code.
   * It is a bad idea to use uncontrolled data in tests, like bizarre random data.
 
 Comparison with other tools
 ===============================================================================
 
-The DDF was created in a context of a project with a very complex design with many cyclic dependencies. In that context, no available tool was satisfactory. Or we stumbled in some infinite loop or some bug caused by a custom field. For these reasons, the tests starting to fail and it was very hard to understand why.
+The DDF was created in a context of a project with a very complex design with many cyclic dependencies. In that context, no available tool was satisfactory. Or we stumbled in some infinite loop or some bug caused by a custom field. For these reasons, the tests started to fail and it was very hard to understand why.
 
-Another thing, the DDF was planned to have a lean and clean syntax. We believe that automated tests must be developer quickly with the minimum overhead. For that reason we are in favor of less verbose approach, except in the documentation ;)
+Another thing, the DDF was planned to have a lean and clean syntax. We believe that automated tests must be developed quickly with the minimum overhead. For that reason we are in favor of less verbose approach, except in the documentation ;)
 
 Also, DDF is flexible, since it is possible to customize the entire data generation or by field.
 
   * Either they are incomplete, or bugged or it produces erratic tests, because they use random and uncontrolled data.
-  * Also, the syntax of others tools is too verbose, which polutes the tests.
+  * The syntax of others tools is too verbose, which polutes the tests.
   * Complete, lean and practice documentation.
   * It is hard to debug tests with another tools.
   * List of other tools: <https://www.djangopackages.com/grids/g/testing/> or <http://djangopackages.com/grids/g/fixtures>
-  * The core of the tool is the algorithm, it is not the data generation as all other tools. That mean you can change the data generation logic as you want.
+  * The core of the tool is the algorithm, it is not the data generation as all other tools. This means you can change the data generation logic.
 
 Plus:
 
-  * Nose plugin that enable a setup for the entire suite (unittest2 includes only setups for class and module)
+  * Nose plugin that enables a setup for the entire suite (unittest2 includes only setups for class and module)
   * Nose plugin to count how many queries are executed by test
   * Command to count how many queries are executed to save any kind of model instance
-  * FileSystemDjangoTestCase that facilitate to create tests for features that use filesystem.
+  * FileSystemDjangoTestCase that facilitates to create tests for features that use filesystem.
 
 External references
 ===============================================================================
