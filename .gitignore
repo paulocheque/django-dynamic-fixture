@@ -15,6 +15,7 @@ cover/
 *.coverage
 *.pyc
 *.pyo
+*.log
 .noseids
 *.sqlite
 virtualenv*

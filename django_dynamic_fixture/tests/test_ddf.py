@@ -708,8 +708,13 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.get(ModelForIgnoreList)
             self.fail()
         except BadDataError as e:
-            self.assertEquals("""('django_dynamic_fixture.models_test.ModelForIgnoreList', IntegrityError('django_dynamic_fixture_modelforignorelist.required may not be NULL',))""",
-                              str(e))
+            model_msg = 'django_dynamic_fixture.models_test.ModelForIgnoreList'
+            error_msg = 'django_dynamic_fixture_modelforignorelist.required may not be NULL'
+            error_msg2 = 'NOT NULL constraint failed: django_dynamic_fixture_modelforignorelist.required'
+            template1 = "('%s', IntegrityError('%s',))" % (model_msg, error_msg)
+            template2 = "('%s', IntegrityError('%s',))" % (model_msg, error_msg2) # py34
+            template3 = "('%s', IntegrityError(u'%s',))" % (model_msg, error_msg) # pypy
+            self.assertEquals(str(e) in [template1, template2, template3], True, msg=str(e))
 
     def test_InvalidConfigurationError(self):
         try:

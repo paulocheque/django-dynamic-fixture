@@ -9,6 +9,7 @@ logging.getLogger('ddf').addHandler(logging.StreamHandler())
 
 sys.path.insert(0, dirname(abspath(__file__)))
 
+import django
 from django.conf import settings
 
 if not settings.configured:
@@ -21,6 +22,9 @@ from django_dynamic_fixture import models_test
 
 
 def runtests(*test_args, **kwargs):
+    if django.get_version().startswith('1.7'):
+        django.setup()
+
     kwargs.setdefault('interactive', False)
     test_runner = NoseTestSuiteRunner(**kwargs)
     failures = test_runner.run_tests(test_args)

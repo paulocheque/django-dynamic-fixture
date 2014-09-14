@@ -34,3 +34,7 @@ NOSE_ARGS = [
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # python manage.py test --with-coverage --cover-inclusive --cover-html --cover-package=django_dynamic_fixture.* --with-queries --with-ddf-setup
+
+
+# To avoid warnings
+MIDDLEWARE_CLASSES = ()
