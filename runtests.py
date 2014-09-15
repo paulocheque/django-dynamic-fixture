@@ -4,6 +4,7 @@ import os
 import sys
 from os.path import dirname, abspath
 from optparse import OptionParser
+from distutils.version import StrictVersion
 
 logging.getLogger('ddf').addHandler(logging.StreamHandler())
 
@@ -22,7 +23,7 @@ from django_dynamic_fixture import models_test
 
 
 def runtests(*test_args, **kwargs):
-    if django.get_version().startswith('1.7'):
+    if StrictVersion(django.get_version()) >= StrictVersion('1.7'):
         django.setup()
 
     kwargs.setdefault('interactive', False)
