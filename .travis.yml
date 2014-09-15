@@ -1,35 +1,20 @@
 language: python
-python:
-  - 2.7
-  - 3.3
-
-env:
-  - DJANGO=">=1.6, <1.7"
-
-matrix:
-  include:
-  - python: 2.7
-    env: DJANGO=">=1.2, <1.3"
-
-  - python: 2.7
-    env: DJANGO=">=1.3, <1.4"
-
-  - python: 2.7
-    env: DJANGO=">=1.4, <1.5"
-
-  - python: 2.7
-    env: DJANGO=">=1.5, <1.6"
-
-before_script:
-- pip uninstall django -y
-- sh -c "if [ $DJANGO = 'trunk' ]; then
-    pip install https://github.com/django/django/tarball/master/django.tar.gz#egg=django ;
-  else
-    pip install 'django $DJANGO' ;
-  fi"
-- sh -c "python -c 'import django; print(django.VERSION)'"
 
 install:
-  - pip install -r requirements.txt
+  - pip install tox
+
 script:
-  - python manage.py test
+  - tox
+
+env:
+  - TOXENV=py27-django12
+  - TOXENV=py27-django13
+  - TOXENV=py27-django14
+  - TOXENV=py27-django15
+  - TOXENV=py27-django16
+  - TOXENV=py33-django16
+  - TOXENV=py27-django17
+  - TOXENV=py33-django17
+  - TOXENV=py34-django17
+  - TOXENV=pypy-django16
+  - TOXENV=pypy-django17
