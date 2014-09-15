@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+from distutils.version import StrictVersion
 
+import django
 from django.test import TestCase
 
 from django_dynamic_fixture.models_test import *
@@ -87,8 +89,16 @@ class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
             pass
 
     def test_new_fill_binary_fields_with_basic_data(self):
-        instance = self.ddf.new(ModelWithBinary)
-        self.assertTrue(isinstance(instance.binary, six.binary_type), msg=type(instance.binary))
+        if StrictVersion(django.get_version()) > StrictVersion('1.6'):
+            value = b'\x00\x46\xFE'
+            instance = self.ddf.new(ModelWithBinary, binary=value)
+            self.assertEqual(bytes(instance.binary), bytes(value))
+
+            instance = self.ddf.get(ModelWithBinary)
+            if six.PY3:
+                self.assertTrue(isinstance(instance.binary, six.binary_type), msg=type(instance.binary))
+            else:
+                self.assertTrue(isinstance(instance.binary, (six.binary_type, str, unicode)), msg=type(instance.binary))
 
 
 class NewFullFillAttributesWithDefaultDataTest(DDFTestCase):

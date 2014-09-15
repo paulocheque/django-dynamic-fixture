@@ -109,4 +109,4 @@ class RandomDataFixture(DataFixture):
 
     # BINARY
     def binaryfield_config(self, field, key):
-        return six.binary_type(self.charfield_config(field, key))
+        return six.b(self.charfield_config(field, key))
