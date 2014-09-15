@@ -3,6 +3,24 @@
 Field Data Generation
 *******************************************************************************
 
+Supported Fields
+===============================================================================
+
+* **Numbers**: IntegerField, SmallIntegerField, PositiveIntegerField, PositiveSmallIntegerField, BigIntegerField, FloatField,DecimalField
+
+* **Strings**: CharField, TextField, SlugField, CommaSeparatedintegerField
+
+* **Booleans**: BooleanField, NullBooleanField
+
+* **Timestamps**: DateField, TimeField, DatetimeField
+
+* **Utilities**: EmailField, UrlField, IPAddressField, XMLField
+
+* **Files**: FilePathField, FileField, ImageField
+
+* **Binary**: BinaryField
+
+
 About Custom Fields
 ===============================================================================
 
