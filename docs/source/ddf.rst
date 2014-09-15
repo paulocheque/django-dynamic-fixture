@@ -122,3 +122,55 @@ This is an alias to F function, but it follows the Django pattern of filters tha
 
 Just be careful because DDF does not interpret related names yet.
 
+
+Global Settings
+===============================================================================
+
+You can configure DDF in ``settings.py`` file. You can also override the global config per instance creation when necessary.
+
+* **DDF_FILL_NULLABLE_FIELDS** (Default = True): DDF can fill nullable fields (``null=True``) with None or some data::
+
+    # SomeModel(models.Model): nullable_field = Field(null=True)
+    G(SomeModel).nullable_field is None # True if DDF_FILL_NULLABLE_FIELDS is True
+    G(SomeModel).nullable_field is None # False if DDF_FILL_NULLABLE_FIELDS is False
+
+    # You can override the global config for one case:
+    G(Model, fill_nullable_fields=False)
+    G(Model, fill_nullable_fields=True)
+
+
+*  **DDF_VALIDATE_MODELS** (Default = False): DDF will call ``model.full_clean()`` method before saving to the database::
+
+    # You can override the global config for one case:
+    G(Model, validate_models=True)
+    G(Model, validate_models=False)
+
+
+* **DDF_VALIDATE_ARGS** (Default = False): DDF can raise an exception if you are trying to fill data for a non existent field::
+
+    G(Model, nonexistent_field='data') # DDF will ignore it if DDF_VALIDATE_ARGS is False
+    G(Model, nonexistent_field='data') # DDF will raise an exception if DDF_VALIDATE_ARGS is True
+
+    # You can override the global config for one case:
+    G(Model, validate_args=False)
+    G(Model, validate_args=True)
+
+
+* **DDF_USE_LIBRARY** (Default = False): For using the Shelve feature::
+
+    # You can override the global config for one case:
+    G(Model, use_library=False)
+    G(Model, use_library=True)
+
+
+* **DDF_DEBUG_MODE** (Default = False): To show some DDF logs::
+
+    # You can override the global config for one case:
+    G(Model, debug_mode=True)
+    G(Model, debug_mode=False)
+
+
+* **DDF_NUMBER_OF_LAPS** (Default = 1):  For models with foreign keys to itself (``ForeignKey('self')``), DDF will avoid infinite loops because it stops creating objects after it create **n** **laps** for the cycle::
+
+    # You can override the global config for one case:
+    G(Model, number_of_laps=5)

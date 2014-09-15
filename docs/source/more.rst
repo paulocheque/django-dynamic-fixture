@@ -1,6 +1,6 @@
 .. _more:
 
-Other DDF Configurations
+DDF Extras
 *******************************************************************************
 
 Decorators (New in 1.4.0)
