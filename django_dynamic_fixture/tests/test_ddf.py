@@ -86,6 +86,10 @@ class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
         except ImportError:
             pass
 
+    def test_new_fill_binary_fields_with_basic_data(self):
+        instance = self.ddf.new(ModelWithBinary)
+        self.assertTrue(isinstance(instance.binary, six.binary_type), msg=type(instance.binary))
+
 
 class NewFullFillAttributesWithDefaultDataTest(DDFTestCase):
     def test_fill_field_with_default_data(self):

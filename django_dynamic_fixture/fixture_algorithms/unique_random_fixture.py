@@ -165,3 +165,7 @@ class UniqueRandomDataFixture(DataFixture):
 
     def imagefield_config(self, field, key):
         return self.random_string(field, key)
+
+    # BINARY
+    def binaryfield_config(self, field, key):
+        return six.binary_type(self.charfield_config(field, key))

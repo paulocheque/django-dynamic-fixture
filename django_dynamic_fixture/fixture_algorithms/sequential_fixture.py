@@ -142,6 +142,10 @@ class SequentialDataFixture(DataFixture):
     def imagefield_config(self, field, key):
         return six.text_type(self.get_value(field, key))
 
+    # BINARY
+    def binaryfield_config(self, field, key):
+        return six.binary_type(self.charfield_config(field, key))
+
 
 class GlobalSequentialDataFixture(SequentialDataFixture):
     def get_value(self, field, key):

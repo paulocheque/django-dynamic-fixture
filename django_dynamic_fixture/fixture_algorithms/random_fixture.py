@@ -107,3 +107,6 @@ class RandomDataFixture(DataFixture):
     def imagefield_config(self, field, key):
         return self.random_string(10)
 
+    # BINARY
+    def binaryfield_config(self, field, key):
+        return six.binary_type(self.charfield_config(field, key))
