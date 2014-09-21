@@ -110,3 +110,11 @@ class RandomDataFixture(DataFixture):
     # BINARY
     def binaryfield_config(self, field, key):
         return six.b(self.charfield_config(field, key))
+
+    # GIS/GeoDjango
+    def pointfield_config(self, field, key):
+        from django.contrib.gis.geos import Point
+        x = random.randint(-180, 180)
+        y = random.randint(-90, 90)
+        WGS84_SRID = 4326
+        return Point(x=x, y=y, srid=WGS84_SRID)

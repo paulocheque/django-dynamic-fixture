@@ -147,6 +147,14 @@ class SequentialDataFixture(DataFixture):
     def binaryfield_config(self, field, key):
         return six.b(self.charfield_config(field, key))
 
+    # GIS/GeoDjango
+    def pointfield_config(self, field, key):
+        from django.contrib.gis.geos import Point
+        val = self.get_value(field, key)
+        rest = val % 90
+        val = rest if (val/90 % 2) else -rest
+        return Point(val, val)
+
 
 class GlobalSequentialDataFixture(SequentialDataFixture):
     def get_value(self, field, key):
