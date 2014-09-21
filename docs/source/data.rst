@@ -20,14 +20,38 @@ Supported Fields
 
 * **Binary**: BinaryField
 
+PS: Use **DDF_FIELD_FIXTURES** settings, customized data or even the field default values to deal with not supported fields.
+
+
+GeoDjango Fields
+===============================================================================
+
+You can use DDF_FIELD_FIXTURES to create fixtures for Geo Django fields::
+
+    # https://docs.djangoproject.com/en/dev/ref/contrib/gis/
+    from django.contrib.gis.geos import Point
+    DDF_FIELD_FIXTURES = {
+        'django.contrib.gis.db.models.GeometryField': lambda: None,
+        'django.contrib.gis.db.models.PointField': lambda: None,
+        'django.contrib.gis.db.models.LineStringField': lambda: None,
+        'django.contrib.gis.db.models.PolygonField': lambda: None,
+        'django.contrib.gis.db.models.MultiPointField': lambda: None,
+        'django.contrib.gis.db.models.MultiLineStringField': lambda: None,
+        'django.contrib.gis.db.models.MultiPolygonField': lambda: None,
+        'django.contrib.gis.db.models.GeometryCollectionField': lambda: None,
+    }
+
 
 About Custom Fields
 ===============================================================================
 
-* if it does not recognize the Field class, it will raise an *UnsupportedFieldError*.
-* if a field is not default in Django, but it inherits from a Django field, it will be filled using its config.
-* if a field is not default in Django and not related with a Django field, it will raise an *UnsupportedFieldError*.
 * Customized data is also valid for unsupported fields.
+* You can also set the field fixture using the **DDF_FIELD_FIXTURES** settings. (new in 1.8.0)
+* if a field is not default in Django, but it inherits from a Django field, it will be filled using its config.
+
+* if a field is not default in Django and not related with a Django field, it will raise an *UnsupportedFieldError*.
+* if it does not recognize the Field class, it will raise an *UnsupportedFieldError*.
+
 
 Fill Nullable Fields
 ===============================================================================

@@ -9,3 +9,6 @@ six
 
 sphinx
 sphinx_rtd_theme
+
+jsonfield
+django-json-field

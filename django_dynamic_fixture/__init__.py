@@ -11,7 +11,7 @@ from django_dynamic_fixture.fixture_algorithms.sequential_fixture import Sequent
     StaticSequentialDataFixture
 from django_dynamic_fixture.global_settings import DDF_DEFAULT_DATA_FIXTURE, DDF_FILL_NULLABLE_FIELDS, DDF_NUMBER_OF_LAPS, \
                                                     DDF_IGNORE_FIELDS, DDF_VALIDATE_MODELS, DDF_VALIDATE_ARGS, DDF_USE_LIBRARY, \
-                                                    DDF_DEBUG_MODE
+                                                    DDF_DEBUG_MODE, DDF_FIELD_FIXTURES
 
 
 LOOKUP_SEP = '__'
@@ -57,7 +57,7 @@ def new(model, shelve=False, n=1, persist_dependencies=True, **kwargs):
     """
     Return one or many valid instances of Django Models with fields filled with auto generated or customized data.
     All instances will NOT be persisted in the database, except its dependencies, in case @persist_dependencies is True.
-    
+
     @data_fixture: override DDF_DEFAULT_DATA_FIXTURE configuration. Default is SequentialDataFixture().
     @fill_nullable_fields: override DDF_FILL_NULLABLE_FIELDS global configuration. Default is True.
     @ignore_fields: List of fields that will be ignored by DDF. It will be concatenated with the global list DDF_IGNORE_FIELDS. Default is [].
@@ -86,7 +86,7 @@ def get(model, shelve=False, n=1, **kwargs):
     """
     Return one or many valid instances of Django Models with fields filled with auto generated or customized data.
     All instances will be persisted in the database.
-    
+
     @data_fixture: override DDF_DEFAULT_DATA_FIXTURE configuration. Default is SequentialDataFixture().
     @fill_nullable_fields: override DDF_FILL_NULLABLE_FIELDS global configuration. Default is True.
     @ignore_fields: List of fields that will be ignored by DDF. It will be concatenated with the global list DDF_IGNORE_FIELDS. Default is [].

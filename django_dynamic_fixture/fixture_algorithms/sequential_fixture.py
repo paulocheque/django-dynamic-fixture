@@ -42,6 +42,7 @@ class AutoDataFiller(object):
 class SequentialDataFixture(DataFixture):
 
     def __init__(self):
+        super(SequentialDataFixture, self).__init__()
         self.filler = AutoDataFiller()
 
     def get_value(self, field, key):

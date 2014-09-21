@@ -210,6 +210,10 @@ class CustomDjangoField(models.IntegerField):
     pass
 
 
+class CustomDjangoField2(models.IntegerField):
+    pass
+
+
 class CustomDjangoFieldMixin(object):
     pass
 
@@ -328,3 +332,30 @@ class ModelForSignals(models.Model):
 class ModelForSignals2(models.Model):
     class Meta:
         verbose_name = 'Signals 2'
+
+
+class ModelForFieldPlugins(models.Model):
+    # aaa = CustomDjangoField(null=False) # defined in settings.py
+    # bbb = models.IntegerField(null=False)
+    custom_field_custom_fixture = CustomDjangoField(null=False) # defined in settings.py
+    custom_field_custom_fixture2 = CustomDjangoField2(null=False) # defined in settings.py
+
+
+# jsonfield requires Django 1.4+
+if StrictVersion(django.get_version()) >= StrictVersion('1.4'):
+    try:
+        from jsonfield import JSONField
+        from jsonfield import JSONCharField
+        class ModelForPlugins1(models.Model):
+            json_field1 = JSONCharField(max_length=10)
+            json_field2 = JSONField()
+    except ImportError:
+        pass
+
+
+try:
+    from json_field import JSONField as JSONField2
+    class ModelForPlugins2(models.Model):
+        json_field1 = JSONField2()
+except ImportError:
+    pass

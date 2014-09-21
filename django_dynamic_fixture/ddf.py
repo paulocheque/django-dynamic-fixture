@@ -92,6 +92,8 @@ class DataFixture(object):
     :field: Field object.
     :key: string that represents a unique name for a Field, considering app, model and field names.
     """
+    def __init__(self):
+        self.plugins = {}
 
     def _field_fixture_template(self, field_class):
         return '%s_config' % (field_class.__name__.lower(),)
@@ -112,6 +114,12 @@ class DataFixture(object):
 
     def generate_data(self, field):
         "Get a unique and valid data for the field."
+        field_fullname = field.__module__ + "." + field.__class__.__name__
+        fixture = self.plugins.get(field_fullname, {})
+        if type(fixture) == dict:
+            fixture = fixture.get('ddf_fixture', None)
+        if fixture and callable(fixture):
+            return fixture()
         config = self._field_fixture_factory(field.__class__)
         is_supported_field = config != None
         if is_supported_field:

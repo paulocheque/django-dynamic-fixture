@@ -30,6 +30,7 @@ class UniqueRandomDataFixture(DataFixture):
     )
 
     def __init__(self):
+        super(UniqueRandomDataFixture, self).__init__()
         self.filler = AutoDataFiller()
 
     def get_counter(self, field, key):

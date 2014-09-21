@@ -110,3 +110,16 @@ In the test file::
     print instance.integerfield_a # this will print 1000
     print instance.integerfield_b # this will print 1000
     # ...
+
+
+Custom Field Fixture
+===============================================================================
+
+You can also override a field default fixture or even create a fixture for a new field using the **DDF_FIELD_FIXTURES** settings in ``settings.py``::
+
+    # https://github.com/bradjasper/django-jsonfield
+    import json
+    DDF_FIELD_FIXTURES = {
+        'jsonfield.fields.JSONCharField': {'ddf_fixture': lambda: json.dumps({'some random value': 'c'})},
+        'jsonfield.fields.JSONField': {'ddf_fixture': lambda: json.dumps([1, 2, 3])},
+    }

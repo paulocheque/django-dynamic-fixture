@@ -38,3 +38,14 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # To avoid warnings
 MIDDLEWARE_CLASSES = ()
+
+# Example of DDF plugins for Custom fields
+import json
+DDF_FIELD_FIXTURES = {
+    'django_dynamic_fixture.models_test.CustomDjangoField': {'ddf_fixture': lambda: 123456789},
+    'django_dynamic_fixture.models_test.CustomDjangoField2': lambda: 987654321,
+
+    # https://github.com/bradjasper/django-jsonfield
+    'jsonfield.fields.JSONCharField': {'ddf_fixture': lambda: json.dumps({'some random value': 'c'})},
+    'jsonfield.fields.JSONField': {'ddf_fixture': lambda: json.dumps([1, 2, 3])},
+}

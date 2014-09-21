@@ -65,6 +65,15 @@ except Exception as e:
     six.reraise(DDFImproperlyConfigured, DDFImproperlyConfigured("DDF_NUMBER_OF_LAPS (%s) must be a integer number." % settings.DDF_NUMBER_OF_LAPS), sys.exc_info()[2])
 
 
+# DDF_FIELD_FIXTURES default = {}
+try:
+    DDF_FIELD_FIXTURES = dict(settings.DDF_FIELD_FIXTURES) if hasattr(settings, 'DDF_FIELD_FIXTURES') else {}
+    DDF_DEFAULT_DATA_FIXTURE.plugins = DDF_FIELD_FIXTURES
+except Exception as e:
+    six.reraise(DDFImproperlyConfigured, DDFImproperlyConfigured("DDF_FIELD_FIXTURES (%s) must be a dict." % settings.DDF_FIELD_FIXTURES), sys.exc_info()[2])
+
+
+
 DDF_FILL_NULLABLE_FIELDS = get_boolean_config('DDF_FILL_NULLABLE_FIELDS', default=True)
 DDF_VALIDATE_MODELS = get_boolean_config('DDF_VALIDATE_MODELS', default=False)
 DDF_VALIDATE_ARGS = get_boolean_config('DDF_VALIDATE_ARGS', default=False)

@@ -24,6 +24,7 @@ tests_require = [
     'django-nose==1.2',
     'tox==1.7.0',
     'flake8==2.1.0',
+    'jsonfield',
 ]
 
 install_requires = [
