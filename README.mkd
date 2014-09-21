@@ -4,7 +4,7 @@ Django Dynamic Fixture
 [![Build Status](https://travis-ci.org/paulocheque/django-dynamic-fixture.png?branch=master)](https://travis-ci.org/paulocheque/django-dynamic-fixture)
 [![Docs Status](https://readthedocs.org/projects/django-dynamic-fixture/badge/?version=latest)](https://readthedocs.org/projects/django-dynamic-fixture/badge/?version=latest)
 
-**Latest version: 1.7.0 (2014/03/26)**
+**Latest version: 1.8.0 (2014/09)**
 
 Documentation
 -------------

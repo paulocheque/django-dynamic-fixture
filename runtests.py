@@ -32,6 +32,10 @@ def runtests(*test_args, **kwargs):
     sys.exit(failures)
 
 if __name__ == '__main__':
+    try:
+        os.remove('test_:memory:')
+    except:
+        pass
     parser = OptionParser()
     parser.add_option('--verbosity', dest='verbosity', action='store', default=2, type=int)
     parser.add_options(NoseTestSuiteRunner.options)

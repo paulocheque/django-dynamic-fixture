@@ -9,8 +9,22 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 1.8.0 - 2014/09
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/1.8.0>
+  * [New] DDF_FIELD_FIXTURES global settings. You can include support of other fields here.
+  * [New] Support for BinaryField
+  * [Update] Django 1.7, Python 3.4 and Pypy official suppport (fixed some tests)
+  * [New] ReadTheDocs full documentation
+  * [Update] Fixed some print calls for python 3
+  * [Update] Nose plugin disable as default. Recommended behavior of nose plugins.
+  * [Update] ignore_fields parameter does not consider fields explicitly defined by the developer.
+  * [Update] Travis env using Tox
+
 Version 1.7.0 - 2014/03/26
 -------------------------------------------------------------------------------
+
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/1.7.0>
 
 Version 1.6.4 - 2012/12/30
 -------------------------------------------------------------------------------
