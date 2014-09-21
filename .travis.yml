@@ -2,6 +2,8 @@ language: python
 
 install:
   - pip install tox
+  - pip install coveralls
+  #- pip install python-coveralls
 
 script:
   - tox
@@ -18,3 +20,6 @@ env:
   - TOXENV=py34-django17
   - TOXENV=pypy-django16
   - TOXENV=pypy-django17
+
+after_success:
+  - coveralls

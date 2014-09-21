@@ -22,7 +22,7 @@ NOSE_PLUGINS = ['queries.Queries', 'ddf_setup.DDFSetup']
 
 # Tell nose to measure coverage on the 'foo' and 'bar' apps
 NOSE_ARGS = [
-    # '--with-coverage',
+    '--with-coverage',
     '--cover-html',
     '--cover-package=django_dynamic_fixture',
     '--cover-tests',

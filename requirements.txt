@@ -5,6 +5,9 @@ django-nose==1.2
 nose-progressive
 tox==1.7.0
 
+coveralls
+python-coveralls
+
 flake8==2.1.0
 six
 
