@@ -55,6 +55,7 @@ task :publish => [:tag] do
   # http://guide.python-distribute.org/quickstart.html
   # python setup.py sdist
   # python setup.py register
+  # Create a .pypirc file in ~ dir (cp .pypirc ~)
   # python setup.py sdist upload
   # Manual upload to PypI
   # http://pypi.python.org/pypi/THE-PROJECT

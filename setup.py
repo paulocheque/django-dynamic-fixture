@@ -3,6 +3,7 @@ from setuptools import setup, find_packages
 
 # http://guide.python-distribute.org/quickstart.html
 # python setup.py sdist
+# Create a .pypirc file in ~ dir (cp .pypirc ~)
 # python setup.py register
 # python setup.py sdist upload
 # pip install django-dynamic-fixture
