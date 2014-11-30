@@ -349,35 +349,35 @@ class DynamicFixture(object):
             data = self.data_fixture.generate_data(field)
         return data
 
-    def set_data_for_a_field(self, model_class, instance, field, persist_dependencies=True, **kwargs):
-        if field.name in kwargs:
-            config = kwargs[field.name]
+    def set_data_for_a_field(self, model_class, __instance, __field, persist_dependencies=True, **kwargs):
+        if __field.name in kwargs:
+            config = kwargs[__field.name]
             try:
-                data = self._process_field_with_customized_fixture(instance, field, config, persist_dependencies)
+                data = self._process_field_with_customized_fixture(__instance, __field, config, persist_dependencies)
             except PendingField:
                 return # ignore this field for a while.
             except Exception as e:
-                six.reraise(InvalidConfigurationError, InvalidConfigurationError(get_unique_field_name(field), e), sys.exc_info()[2])
+                six.reraise(InvalidConfigurationError, InvalidConfigurationError(get_unique_field_name(__field), e), sys.exc_info()[2])
         else:
-            data = self._process_field_with_default_fixture(field, model_class, persist_dependencies)
+            data = self._process_field_with_default_fixture(__field, model_class, persist_dependencies)
 
-        if is_file_field(field) and data:
+        if is_file_field(__field) and data:
             django_file = data
             if isinstance(django_file, File):
-                setattr(instance, field.name, data.name) # set the attribute
+                setattr(__instance, __field.name, data.name) # set the attribute
                 if django_file.file.mode != 'rb':
                     django_file.file.close() # this file may be open in another mode, for example, in a+b
                     opened_file = open(django_file.file.name, 'rb') # to save the file it must be open in rb mode
                     django_file.file = opened_file # we update the reference to the rb mode opened file
-                getattr(instance, field.name).save(django_file.name, django_file) # save the file into the file storage system
+                getattr(__instance, __field.name).save(django_file.name, django_file) # save the file into the file storage system
                 django_file.close()
             else: # string (saving just a name in the file, without saving the file to the storage file system
-                setattr(instance, field.name, data) # Model.field = data
+                setattr(__instance, __field.name, data) # Model.field = data
         else:
             if self.debug_mode:
-                LOGGER.debug('%s.%s = %s' % (get_unique_model_name(model_class), field.name, data))
-            setattr(instance, field.name, data) # Model.field = data
-        self.fields_processed.append(field.name)
+                LOGGER.debug('%s.%s = %s' % (get_unique_model_name(model_class), __field.name, data))
+            setattr(__instance, __field.name, data) # Model.field = data
+        self.fields_processed.append(__field.name)
 
     def _validate_kwargs(self, model_class, kwargs):
         "validate all kwargs match Model.fields."

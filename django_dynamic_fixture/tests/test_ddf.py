@@ -824,3 +824,33 @@ class SanityTest(DDFTestCase):
     def test_create_lots_of_models_to_verify_data_unicity_errors(self):
         for i in range(1000):
             self.ddf.get(ModelWithNumbers)
+
+
+class AvoidNameCollisionTest(DDFTestCase):
+    def test_avoid_common_name_instance(self):
+        self.ddf = DynamicFixture(data_fixture, fill_nullable_fields=False)
+        instance = self.ddf.new(ModelWithCommonNames)
+        self.assertNotEquals(None, instance.instance)
+
+        instance = self.ddf.new(ModelWithCommonNames, instance=3)
+        self.assertEquals(3, instance.instance)
+
+        instance = self.ddf.get(ModelWithCommonNames)
+        self.assertNotEquals(None, instance.instance)
+
+        instance = self.ddf.get(ModelWithCommonNames, instance=4)
+        self.assertEquals(4, instance.instance)
+
+    def test_avoid_common_name_field(self):
+        self.ddf = DynamicFixture(data_fixture, fill_nullable_fields=False)
+        instance = self.ddf.new(ModelWithCommonNames)
+        self.assertNotEquals(None, instance.field)
+
+        instance = self.ddf.new(ModelWithCommonNames, field=5)
+        self.assertEquals(5, instance.field)
+
+        instance = self.ddf.get(ModelWithCommonNames)
+        self.assertNotEquals(None, instance.field)
+
+        instance = self.ddf.get(ModelWithCommonNames, field=6)
+        self.assertEquals(6, instance.field)

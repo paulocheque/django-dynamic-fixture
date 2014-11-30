@@ -341,6 +341,11 @@ class ModelForFieldPlugins(models.Model):
     custom_field_custom_fixture2 = CustomDjangoField2(null=False) # defined in settings.py
 
 
+class ModelWithCommonNames(models.Model):
+    instance = models.IntegerField(null=False)
+    field = models.IntegerField(null=False)
+
+
 # jsonfield requires Django 1.4+
 if StrictVersion(django.get_version()) >= StrictVersion('1.4'):
     try:
