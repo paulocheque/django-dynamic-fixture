@@ -13,7 +13,7 @@ from setuptools import setup, find_packages
 # Update version and save
 # Go to 'files' link and upload the file
 
-VERSION = '1.8.0'
+VERSION = '1.8.1'
 
 tests_require = [
     'nose==1.1.2',

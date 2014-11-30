@@ -9,6 +9,11 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 1.8.1 - 2014/12
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/1.8.1>
+  * [Update] Avoid conflicts with "instance" and "field" model field names.
+
 Version 1.8.0 - 2014/09
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/1.8.0>
