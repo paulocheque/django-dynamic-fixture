@@ -143,7 +143,7 @@ class Copier(object):
         self.expression = expression
 
     def __str__(self):
-        return u"C('%s')" % self.expression
+        return "C('%s')" % self.expression
 
     def immediate_field_name(self, instance):
         model_class = instance.__class__
@@ -244,7 +244,7 @@ class DynamicFixture(object):
         self.fields_to_disable_auto_now_add = []
 
     def __str__(self):
-        return u'F(%s)' % (u', '.join(u'%s=%s' % (key, value) for key, value in self.kwargs.items()))
+        return 'F(%s)' % (', '.join(six.text_type('%s=%s') % (key, value) for key, value in self.kwargs.items()))
 
     def __eq__(self, that):
         return self.kwargs == that.kwargs
@@ -458,7 +458,7 @@ class DynamicFixture(object):
             self.set_data_for_a_field(model_class, instance, field, persist_dependencies=persist_dependencies, **configuration)
             i += 1
             if i > 2 * number_of_pending_fields: # dealing with infinite loop too.
-                raise InvalidConfigurationError(get_unique_field_name(field), u'Cyclic dependency of Copiers.')
+                raise InvalidConfigurationError(get_unique_field_name(field), 'Cyclic dependency of Copiers.')
         if self.debug_mode:
             LOGGER.debug('<<< [%s] Instance created.' % get_unique_model_name(model_class))
         return instance

@@ -43,7 +43,7 @@ class UniqueRandomDataFixture(DataFixture):
         counter = six.text_type(self.get_counter(field, key))
         length = n or self.DEFAULT_LENGTH
         result = counter
-        result += u''.join(
+        result += six.text_type('').join(
             random.choice(string.ascii_letters)
             for _ in xrange(length - len(counter))
         )
@@ -142,10 +142,10 @@ class UniqueRandomDataFixture(DataFixture):
 
     # FORMATTED STRINGS
     def emailfield_config(self, field, key):
-        return u'a%s@dynamicfixture.com' % self.random_string(field, key)
+        return six.text_type('a%s@dynamicfixture.com') % self.random_string(field, key)
 
     def urlfield_config(self, field, key):
-        return u'http://dynamicfixture%s.com' % self.random_string(field, key)
+        return six.text_type('http://dynamicfixture%s.com') % self.random_string(field, key)
 
     def ipaddressfield_config(self, field, key):
         MAX_IP = 2 ** 32 - 1
@@ -155,7 +155,7 @@ class UniqueRandomDataFixture(DataFixture):
         return six.text_type(socket.inet_ntoa(struct.pack('!L', integer)))
 
     def xmlfield_config(self, field, key):
-        return u'<a>%s</a>' % self.random_string(field, key)
+        return six.text_type('<a>%s</a>') % self.random_string(field, key)
 
     # FILES
     def filepathfield_config(self, field, key):
