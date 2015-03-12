@@ -783,8 +783,9 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             error_msg2 = 'NOT NULL constraint failed: django_dynamic_fixture_modelforignorelist.required'
             template1 = "('%s', IntegrityError('%s',))" % (model_msg, error_msg)
             template2 = "('%s', IntegrityError('%s',))" % (model_msg, error_msg2) # py34
-            template3 = "('%s', IntegrityError(u'%s',))" % (model_msg, error_msg2) # pypy
-            self.assertEquals(str(e) in [template1, template2, template3], True, msg=str(e))
+            template3 = "('%s', IntegrityError(u'%s',))" % (model_msg, error_msg) # pypy
+            template4 = "('%s', IntegrityError(u'%s',))" % (model_msg, error_msg2) # pypy
+            self.assertEquals(str(e) in [template1, template2, template3, template4], True, msg=str(e))
 
     def test_InvalidConfigurationError(self):
         try:
