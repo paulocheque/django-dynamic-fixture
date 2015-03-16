@@ -871,6 +871,10 @@ class PolymorphicModelTest(DDFTestCase):
         p = self.ddf.get(ModelPolymorphic2)
         self.assertEqual([p], list(ModelPolymorphic2.objects.all()))
 
+    def test_cannot_save(self):
+        with self.assertRaises(BadDataError):
+            self.ddf.get(ModelPolymorphic3)
+
 
 class AvoidNameCollisionTest(DDFTestCase):
     def test_avoid_common_name_instance(self):

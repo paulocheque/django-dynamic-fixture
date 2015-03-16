@@ -348,6 +348,14 @@ class ModelPolymorphic2(ModelPolymorphic):
         verbose_name = 'Polymorphic Model 2'
 
 
+class ModelPolymorphic3(ModelPolymorphic):
+    class CannotSave(Exception):
+        pass
+
+    def save(self):
+        raise self.CannotSave
+
+
 class ModelForFieldPlugins(models.Model):
     # aaa = CustomDjangoField(null=False) # defined in settings.py
     # bbb = models.IntegerField(null=False)
