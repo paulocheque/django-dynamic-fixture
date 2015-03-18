@@ -169,3 +169,8 @@ class UniqueRandomDataFixture(BaseDataFixture, GeoDjangoDataFixture):
 
     def imagefield_config(self, field, key):
         return self.random_string(field, key)
+
+    # django-pgfields
+    def uuidfield_config(self, field, key):
+        from uuid import uuid4
+        return uuid4()

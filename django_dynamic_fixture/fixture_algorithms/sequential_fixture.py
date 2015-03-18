@@ -148,6 +148,11 @@ class SequentialDataFixture(BaseDataFixture, GeoDjangoDataFixture):
     def imagefield_config(self, field, key):
         return six.text_type(self.get_value(field, key))
 
+    # django-pgfields
+    def uuidfield_config(self, field, key):
+        from uuid import uuid4
+        return uuid4()
+
 
 class GlobalSequentialDataFixture(SequentialDataFixture):
     def get_value(self, field, key):
