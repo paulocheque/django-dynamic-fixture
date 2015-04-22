@@ -8,7 +8,10 @@ import sys
 
 from django.conf import settings
 from django.core.urlresolvers import get_mod_func
-from django.utils.importlib import import_module
+try:
+    from importlib import import_module
+except ImportError:
+    from django.utils.importlib import import_module
 import six
 
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture, StaticSequentialDataFixture, GlobalSequentialDataFixture
