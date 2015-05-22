@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from distutils.version import StrictVersion
 import django
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
+from django_dynamic_fixture.django_helper import django_greater_than
 
 
 class EmptyModel(models.Model):
@@ -55,7 +55,7 @@ class ModelWithDateTimes(models.Model):
         verbose_name = 'DateTimes'
 
 
-if StrictVersion(django.get_version()) > StrictVersion('1.6'):
+if django_greater_than('1.6'):
     class ModelWithBinary(models.Model):
         binary = models.BinaryField()
 
@@ -347,7 +347,7 @@ class ModelWithCommonNames(models.Model):
 
 
 # jsonfield requires Django 1.4+
-if StrictVersion(django.get_version()) >= StrictVersion('1.4'):
+if django_greater_than('1.4'):
     try:
         from jsonfield import JSONField
         from jsonfield import JSONCharField

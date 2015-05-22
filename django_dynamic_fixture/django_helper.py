@@ -1,14 +1,26 @@
 # -*- coding: utf-8 -*-
-
 """
 Module to wrap dirty stuff of django core.
 """
+from distutils.version import StrictVersion
+
+import django
 from django.db import models
 from django.db.models import Model, ForeignKey, OneToOneField, FileField
 from django.db.models.fields import NOT_PROVIDED, AutoField, FieldDoesNotExist
 from django.db.models.base import ModelBase
 from django.db.models.query import QuerySet
 
+try:
+    from django.apps import apps
+except ImportError:
+    pass # Django < 1.7
+
+
+def django_greater_than(version):
+    # Slice to avoid StrictVersion errors with versions like 1.8c1
+    DJANGO_VERSION = django.get_version()[0:3]
+    return StrictVersion(DJANGO_VERSION) >= StrictVersion(version)
 
 # Apps
 def get_apps(application_labels=[], exclude_application_labels=[]):
@@ -16,6 +28,7 @@ def get_apps(application_labels=[], exclude_application_labels=[]):
     - if not @application_labels and not @exclude_application_labels, it returns all applications.
     - if @application_labels is not None, it returns just these applications,
     except applications with label in exclude_application_labels.
+    @Returns an array of `module` objects
     """
     if application_labels:
         applications = []
@@ -30,18 +43,23 @@ def get_apps(application_labels=[], exclude_application_labels=[]):
     return applications
 
 
-def get_app_name(app):
+def get_app_name(app_module):
     """
-    app is the object returned by get_apps method
+    app is the object (python module) returned by get_apps method
     """
-    return app.__name__.split('.')[0]
+    return app_module.__name__.split('.')[0]
 
 
-def get_models_of_an_app(app):
+def get_models_of_an_app(app_module):
     """
-    app is the object returned by get_apps method
+    app_module is the object returned by get_apps method (python module)
     """
-    return models.get_models(app)
+    if django_greater_than('1.7'):
+        app_name = get_app_name(app_module)
+        app_config = apps.get_app_config(app_name)
+        return list(app_config.get_models())
+    else:
+        return models.get_models(app_module)
 
 
 # Models
@@ -203,3 +221,27 @@ def enable_auto_now_add(field):
 def disable_auto_now_add(field):
     if hasattr(field, 'auto_now_add'):
         field.auto_now_add = False
+
+
+
+def is_boolean(field):
+    return isinstance(field, (BooleanField, NullBooleanField))
+
+def is_string(field):
+    return isinstance(field, (CharField, EmailField, IPAddressField, SlugField, URLField))
+
+def is_number(field):
+    return isinstance(field, (IntegerField, SmallIntegerField, PositiveIntegerField,
+        PositiveSmallIntegerField, BigIntegerField, CommaSeparatedIntegerField, DecimalField, FloatField))
+
+def is_datetime(field):
+    return isinstance(field, (DateTimeField, DateField, TimeField))
+
+def is_file(field):
+    return isinstance(field, (FileField, FilePathField))
+
+def is_binary(field):
+    if django_greater_than('1.6'):
+        return isinstance(field, (BinaryField))
+    else:
+        return False

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from distutils.version import StrictVersion
+from datetime import datetime, date
+from decimal import Decimal
 
 import django
 from django.test import TestCase
@@ -8,9 +9,7 @@ from django_dynamic_fixture.models_test import *
 from django_dynamic_fixture.ddf import *
 from django_dynamic_fixture.ddf import _PRE_SAVE, _POST_SAVE
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture
-
-from datetime import datetime, date
-from decimal import Decimal
+from django_dynamic_fixture.django_helper import django_greater_than
 
 
 data_fixture = SequentialDataFixture()
@@ -89,7 +88,7 @@ class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
             pass
 
     def test_new_fill_binary_fields_with_basic_data(self):
-        if StrictVersion(django.get_version()) > StrictVersion('1.6'):
+        if django_greater_than('1.6'):
             value = b'\x00\x46\xFE'
             instance = self.ddf.new(ModelWithBinary, binary=value)
             self.assertEqual(bytes(instance.binary), bytes(value))
@@ -170,7 +169,7 @@ class NewFullFillAttributesUsingPluginsTest(DDFTestCase):
     # Real Custom Field
     def test_json_field_not_registered_must_raise_an_unsupported_field_exception(self):
         # jsonfield requires Django 1.4+
-        if StrictVersion(django.get_version()) >= StrictVersion('1.4'):
+        if django_greater_than('1.4'):
             try:
                 from jsonfield import JSONCharField, JSONField
                 instance = self.ddf.new(ModelForPlugins1)
@@ -182,7 +181,7 @@ class NewFullFillAttributesUsingPluginsTest(DDFTestCase):
 
     def test_new_fill_json_field_with_data_generated_by_plugins(self):
         # jsonfield requires Django 1.4+
-        if StrictVersion(django.get_version()) >= StrictVersion('1.4'):
+        if django_greater_than('1.4'):
             try:
                 import json
                 from jsonfield import JSONCharField, JSONField

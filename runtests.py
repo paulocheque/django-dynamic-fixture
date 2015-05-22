@@ -23,7 +23,8 @@ from django_dynamic_fixture import models_test
 
 
 def runtests(*test_args, **kwargs):
-    if StrictVersion(django.get_version()) >= StrictVersion('1.7'):
+    # Slice to avoid StrictVersion errors with versions like 1.8c1
+    if StrictVersion(django.get_version()[0:3]) >= StrictVersion('1.7'):
         django.setup()
 
     kwargs.setdefault('interactive', False)
@@ -38,7 +39,6 @@ if __name__ == '__main__':
         pass
     parser = OptionParser()
     parser.add_option('--verbosity', dest='verbosity', action='store', default=2, type=int)
-    parser.add_options(NoseTestSuiteRunner.options)
     (options, args) = parser.parse_args()
 
     runtests(*args, **options.__dict__)
