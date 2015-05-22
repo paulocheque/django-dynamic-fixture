@@ -9,17 +9,17 @@ script:
   - tox
 
 env:
-  - TOXENV=py27-django12
-  - TOXENV=py27-django13
   - TOXENV=py27-django14
   - TOXENV=py27-django15
   - TOXENV=py27-django16
-  - TOXENV=py33-django16
   - TOXENV=py27-django17
+  - TOXENV=py27-django18
   - TOXENV=py33-django17
+  - TOXENV=py33-django18
   - TOXENV=py34-django17
-  - TOXENV=pypy-django16
+  - TOXENV=py34-django18
   - TOXENV=pypy-django17
+  - TOXENV=pypy-django18
 
 after_success:
   - coveralls
