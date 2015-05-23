@@ -9,6 +9,12 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 1.8.3 - 2015/05
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/1.8.3>
+  * [Update] No more deprecated methods
+
+
 Version 1.8.2 - 2015/05
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/1.8.2>
