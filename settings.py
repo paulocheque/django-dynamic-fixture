@@ -1,6 +1,39 @@
 
 IMPORT_DDF_MODELS = True
 
+# Postgres and PostGis
+# DATABASES = {
+#     'default': {
+#         # Postgis supports all Django features
+#         # createdb ddf
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         # psql -d ddf -c "CREATE EXTENSION postgis;"
+#         # psql -d ddf -c "select postgis_lib_version();"
+#         # 'ENGINE': 'django.contrib.db.backends.postgis',
+#         'NAME': 'ddf',
+#         'USER': 'paulocheque', # please, change this if you want to run tests in your machine
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': 5432,
+#     }
+# }
+
+# MySQL
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'ddf',
+#         'USER': 'paulocheque', # please, change this if you want to run tests in your machine
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': 3306,
+#     }
+# }
+
+# SQlite and SpatialLite
+# brew install spatialite-tools
+# brew install gdal
+SPATIALITE_LIBRARY_PATH = '/usr/local/lib/mod_spatialite.dylib'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
