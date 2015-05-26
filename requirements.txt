@@ -12,3 +12,5 @@ django-json-field
 #mysql-python
 #psycopg2 # not pypy compatible
 #psycopg2cffi # pypy2+ compatible
+
+geopy

@@ -10,23 +10,27 @@ from django_dynamic_fixture.django_helper import *
 
 class DjangoHelperAppsTest(TestCase):
     def test_get_apps_must_return_all_installed_apps(self):
-        self.assertEquals(1, len(get_apps()))
+        self.assertTrue(len(get_apps()) >= 1)
 
     def test_get_apps_may_be_filtered_by_app_names(self):
-        self.assertEquals(1, len(get_apps(application_labels=['django_dynamic_fixture'])))
+        apps = get_apps(application_labels=['django_dynamic_fixture'])
+        self.assertEquals(1, len(apps))
 
     def test_get_apps_may_ignore_some_apps(self):
-        self.assertEquals(0, len(get_apps(exclude_application_labels=['django_dynamic_fixture'])))
+        apps = len(get_apps(exclude_application_labels=['django_dynamic_fixture']))
+        self.assertEquals(1, len(get_apps()) - apps)
 
     def test_app_name_must_be_valid(self):
         self.assertRaises(Exception, get_apps, application_labels=['x'])
         self.assertRaises(Exception, get_apps, exclude_application_labels=['x'])
 
     def test_get_app_name_must(self):
-        self.assertEquals('django_dynamic_fixture', get_app_name(get_apps()[0]))
+        ddf = get_apps(application_labels=['django_dynamic_fixture'])[0]
+        self.assertEquals('django_dynamic_fixture', get_app_name(ddf))
 
     def test_get_models_of_an_app_must(self):
-        models_ddf = get_models_of_an_app(get_apps()[0])
+        ddf = get_apps(application_labels=['django_dynamic_fixture'])[0]
+        models_ddf = get_models_of_an_app(ddf)
         self.assertTrue(len(models_ddf) > 0)
         self.assertTrue(ModelWithNumbers in models_ddf)
 

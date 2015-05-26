@@ -10,10 +10,15 @@ try:
 except ImportError:
     now = datetime.now
 
-from django_dynamic_fixture.fixture_algorithms.default_fixture import BaseDataFixture
+try:
+    from django.contrib.gis.geos import *
+except ImportError:
+    pass # Django < 1.7
+
+from django_dynamic_fixture.fixture_algorithms.default_fixture import BaseDataFixture, GeoDjangoDataFixture
 
 
-class RandomDataFixture(BaseDataFixture):
+class RandomDataFixture(BaseDataFixture, GeoDjangoDataFixture):
     def random_string(self, n):
         return u''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(n))
 
@@ -106,11 +111,3 @@ class RandomDataFixture(BaseDataFixture):
 
     def imagefield_config(self, field, key):
         return self.random_string(10)
-
-    # GIS/GeoDjango
-    def pointfield_config(self, field, key):
-        from django.contrib.gis.geos import Point
-        x = random.randint(-180, 180)
-        y = random.randint(-90, 90)
-        WGS84_SRID = 4326
-        return Point(x=x, y=y, srid=WGS84_SRID)

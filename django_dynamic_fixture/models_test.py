@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import django
+from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
@@ -140,7 +141,7 @@ def default_fk_value():
         return ModelRelated.objects.get(id=1)
     except ModelRelated.DoesNotExist:
         ModelRelated.objects.create()
-        return ModelRelated.objects.first()
+        return ModelRelated.objects.all()[0]
 
 
 class ModelWithRelationships(models.Model):
@@ -345,6 +346,20 @@ class ModelForFieldPlugins(models.Model):
 class ModelWithCommonNames(models.Model):
     instance = models.IntegerField(null=False)
     field = models.IntegerField(null=False)
+
+
+# GeoDjango requires Django 1.7+
+if django_greater_than('1.7') and settings.DDF_TEST_GEODJANGO:
+    from django.contrib.gis.db import models as geomodels
+    class ModelForGeoDjango(geomodels.Model):
+        geometry = geomodels.GeometryField()
+        point = geomodels.PointField()
+        line_string = geomodels.LineStringField()
+        polygon = geomodels.PolygonField()
+        multi_point = geomodels.MultiPointField()
+        multi_line_string = geomodels.MultiLineStringField()
+        multi_polygon = geomodels.MultiPolygonField()
+        geometry_collection = geomodels.GeometryCollectionField()
 
 
 if django_greater_than('1.8'):

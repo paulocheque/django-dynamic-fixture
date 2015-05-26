@@ -4,6 +4,16 @@ from decimal import Decimal
 import uuid
 
 import django
+from django.conf import settings
+try:
+    from django.contrib.gis.geos import *
+except ImportError:
+    pass # Django < 1.7
+
+try:
+    from django.contrib.gis.db import models as geomodel
+except ImportError:
+    pass # Django < 1.7
 from django.test import TestCase
 
 from django_dynamic_fixture.models_test import *
@@ -420,6 +430,21 @@ class ComplexFieldsTest(DDFTestCase):
         if django_greater_than('1.8'):
             instance = self.ddf.new(ModelForUUID)
             self.assertTrue(isinstance(instance.uuid, uuid.UUID))
+
+
+if settings.DDF_TEST_GEODJANGO:
+    class GeoDjangoFieldsTest(DDFTestCase):
+        def test_geodjango_fields(self):
+            if django_greater_than('1.7'):
+                instance = self.ddf.new(ModelForGeoDjango)
+                self.assertTrue(isinstance(instance.geometry, GEOSGeometry), msg=str(type(instance.geometry)))
+                self.assertTrue(isinstance(instance.point, Point))
+                self.assertTrue(isinstance(instance.line_string, LineString))
+                self.assertTrue(isinstance(instance.polygon, Polygon))
+                self.assertTrue(isinstance(instance.multi_point, MultiPoint))
+                self.assertTrue(isinstance(instance.multi_line_string, MultiLineString))
+                self.assertTrue(isinstance(instance.multi_polygon, MultiPolygon))
+                self.assertTrue(isinstance(instance.geometry_collection, GeometryCollection))
 
 
 class ModelValidatorsTest(DDFTestCase):
