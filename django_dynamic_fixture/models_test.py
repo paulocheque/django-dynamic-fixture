@@ -139,7 +139,8 @@ def default_fk_value():
     try:
         return ModelRelated.objects.get(id=1)
     except ModelRelated.DoesNotExist:
-        return None
+        ModelRelated.objects.create()
+        return ModelRelated.objects.first()
 
 
 class ModelWithRelationships(models.Model):
