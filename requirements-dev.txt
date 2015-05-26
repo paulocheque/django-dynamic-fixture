@@ -1,0 +1,11 @@
+tox>=2.0
+
+coveralls
+python-coveralls
+
+flake8==2.1.0
+pylint
+pyflakes
+
+sphinx
+sphinx_rtd_theme
