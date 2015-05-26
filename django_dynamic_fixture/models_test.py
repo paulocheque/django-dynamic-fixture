@@ -346,6 +346,11 @@ class ModelWithCommonNames(models.Model):
     field = models.IntegerField(null=False)
 
 
+if django_greater_than('1.8'):
+    class ModelForUUID(models.Model):
+        uuid = models.UUIDField()
+
+
 # jsonfield requires Django 1.4+
 if django_greater_than('1.4'):
     try:

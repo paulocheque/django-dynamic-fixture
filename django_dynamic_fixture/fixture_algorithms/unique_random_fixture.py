@@ -7,21 +7,19 @@ import socket
 import string
 import struct
 from warnings import warn
+
 import six
-
-from django_dynamic_fixture.ddf import DataFixture
-from django_dynamic_fixture.fixture_algorithms.sequential_fixture import \
-    AutoDataFiller
 from six.moves import xrange
-
 try:
     from django.utils.timezone import now
 except ImportError:
     now = datetime.now
 
+from django_dynamic_fixture.fixture_algorithms.sequential_fixture import AutoDataFiller
+from django_dynamic_fixture.fixture_algorithms.default_fixture import BaseDataFixture
 
-class UniqueRandomDataFixture(DataFixture):
 
+class UniqueRandomDataFixture(BaseDataFixture):
     DEFAULT_LENGTH = 10
     OBJECT_COUNT = 512
     WARNING_MESSAGE_TMPL = (

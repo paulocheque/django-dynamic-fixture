@@ -2,15 +2,15 @@
 from datetime import datetime, date, timedelta
 from decimal import Decimal
 import threading
+
 import six
-
-from django_dynamic_fixture.ddf import DataFixture
-from django_dynamic_fixture.django_helper import field_is_unique
-
 try:
     from django.utils.timezone import now
 except ImportError:
     now = datetime.now
+
+from django_dynamic_fixture.fixture_algorithms.default_fixture import BaseDataFixture
+from django_dynamic_fixture.django_helper import field_is_unique
 
 
 class AutoDataFiller(object):
@@ -39,7 +39,7 @@ class AutoDataFiller(object):
         return self.__data_controller_map[key]
 
 
-class SequentialDataFixture(DataFixture):
+class SequentialDataFixture(BaseDataFixture):
 
     def __init__(self):
         super(SequentialDataFixture, self).__init__()

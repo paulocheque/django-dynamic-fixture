@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, date
 from decimal import Decimal
+import uuid
 
 import django
 from django.test import TestCase
@@ -409,6 +410,13 @@ class CustomFieldsTest(DDFTestCase):
     def test_new_field_that_double_inherits_django_field_must_be_supported(self):
         instance = self.ddf.new(ModelWithCustomFieldsMultipleInheritance)
         self.assertEquals(1, instance.x)
+
+
+class ComplexFieldsTest(DDFTestCase):
+    def test_x(self):
+        if django_greater_than('1.8'):
+            instance = self.ddf.new(ModelForUUID)
+            self.assertTrue(isinstance(instance.uuid, uuid.UUID))
 
 
 class ModelValidatorsTest(DDFTestCase):

@@ -3,17 +3,17 @@ from datetime import datetime, date, timedelta
 from decimal import Decimal
 import random
 import string
-import six
 
+import six
 try:
     from django.utils.timezone import now
 except ImportError:
     now = datetime.now
 
-from django_dynamic_fixture.ddf import DataFixture
+from django_dynamic_fixture.fixture_algorithms.default_fixture import BaseDataFixture
 
 
-class RandomDataFixture(DataFixture):
+class RandomDataFixture(BaseDataFixture):
     def random_string(self, n):
         return u''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(n))
 
