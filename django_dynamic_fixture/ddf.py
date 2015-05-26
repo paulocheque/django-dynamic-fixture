@@ -133,7 +133,7 @@ class DataFixture(object):
             if field.null:
                 data = None # a workaround for versatility
             else:
-                raise(UnsupportedFieldError(get_unique_field_name(field)))
+                raise(UnsupportedFieldError(get_unique_field_name(field) + ' (%s)' % (field_fullname)))
         return data
 
 

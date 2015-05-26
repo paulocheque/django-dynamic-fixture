@@ -768,8 +768,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.new(ModelWithUnsupportedField)
             self.fail()
         except UnsupportedFieldError as e:
-            self.assertEquals("""django_dynamic_fixture.models_test.ModelWithUnsupportedField.z""",
-                              str(e))
+            self.assertTrue("""django_dynamic_fixture.models_test.ModelWithUnsupportedField.z""" in str(e))
 
     def test_BadDataError(self):
         self.ddf = DynamicFixture(data_fixture, ignore_fields=['required', 'required_with_default'])
