@@ -1,4 +1,4 @@
-VERSION = "1.8.3"
+VERSION = "1.8.4"
 
 def colorize(text, color)
   color_codes = {

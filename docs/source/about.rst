@@ -9,6 +9,17 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+
+Version 1.8.4 - 2015/05/26
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/1.8.4>
+  * [New] UUIDField support
+  * [New] GeoDjango fields support (GeometryField, PointField, LineStringField, PolygonField, MultiPointField, MultiLineStringField, MultiPolygonField, GeometryCollectionField)
+  * [Update] Better error messages
+  * [Bugfix] BinaryField fixture fix
+  * [Update] Optimizations
+
+
 Version 1.8.3 - 2015/05
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/1.8.3>

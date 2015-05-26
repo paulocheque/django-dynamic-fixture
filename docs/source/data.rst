@@ -26,6 +26,10 @@ PS: Use **DDF_FIELD_FIXTURES** settings, customized data or even the field defau
 GeoDjango Fields
 ===============================================================================
 
+After `1.8.4` version, DDF has native support for GeoDjango fields: GeometryField, PointField, LineStringField, PolygonField, MultiPointField, MultiLineStringField, MultiPolygonField, GeometryCollectionField.
+
+For older versions of DDF, please, use the following approach:
+
 You can use DDF_FIELD_FIXTURES to create fixtures for Geo Django fields::
 
     # https://docs.djangoproject.com/en/dev/ref/contrib/gis/
