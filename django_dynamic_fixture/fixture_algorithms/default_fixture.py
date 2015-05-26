@@ -14,5 +14,10 @@ from django_dynamic_fixture.ddf import DataFixture
 
 
 class BaseDataFixture(DataFixture):
+    # Django >= 1.6
+    def binaryfield_config(self, field, key):
+        return six.b('\x00\x46\xFE')
+
+    # Django >= 1.8
     def uuidfield_config(self, field, key):
         return uuid.uuid4()

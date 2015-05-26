@@ -143,10 +143,6 @@ class SequentialDataFixture(BaseDataFixture):
     def imagefield_config(self, field, key):
         return six.text_type(self.get_value(field, key))
 
-    # BINARY
-    def binaryfield_config(self, field, key):
-        return six.b(self.charfield_config(field, key))
-
     # GIS/GeoDjango
     def pointfield_config(self, field, key):
         from django.contrib.gis.geos import Point

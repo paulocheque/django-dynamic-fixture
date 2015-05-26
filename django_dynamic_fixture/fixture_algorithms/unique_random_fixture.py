@@ -165,10 +165,6 @@ class UniqueRandomDataFixture(BaseDataFixture):
     def imagefield_config(self, field, key):
         return self.random_string(field, key)
 
-    # BINARY
-    def binaryfield_config(self, field, key):
-        return six.b(self.charfield_config(field, key))
-
     # GIS/GeoDjango
     def pointfield_config(self, field, key):
         from django.contrib.gis.geos import Point
