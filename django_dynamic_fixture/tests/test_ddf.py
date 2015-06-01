@@ -818,10 +818,8 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             template1 = "('%s', IntegrityError('%s',))" % (model_msg, error_msg)
             template2 = "('%s', IntegrityError('%s',))" % (model_msg, error_msg2) # py34
             template3 = "('%s', IntegrityError(u'%s',))" % (model_msg, error_msg) # pypy
-            try:
-                self.assertEquals(str(e) in [template1, template2, template3], True, msg=str(e))
-            except AssertionError:
-                pass # It is ok to have a different template
+            template4 = "('%s', IntegrityError(u'%s',))" % (model_msg, error_msg2) # pypy
+            self.assertEquals(str(e) in [template1, template2, template3, template4], True, msg=str(e))
 
 
     def test_InvalidConfigurationError(self):
