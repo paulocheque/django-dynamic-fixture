@@ -120,10 +120,10 @@ class SequentialDataFixture(BaseDataFixture, GeoDjangoDataFixture):
 
     # FORMATTED STRINGS
     def emailfield_config(self, field, key):
-        return u'a%s@dynamicfixture.com' % self.get_value(field, key)
+        return six.text_type('a%s@dynamicfixture.com') % self.get_value(field, key)
 
     def urlfield_config(self, field, key):
-        return u'http://dynamicfixture%s.com' % self.get_value(field, key)
+        return six.text_type('http://dynamicfixture%s.com') % self.get_value(field, key)
 
     def ipaddressfield_config(self, field, key):
         # TODO: better workaround (this suppose ip field is not unique)
@@ -132,10 +132,10 @@ class SequentialDataFixture(BaseDataFixture, GeoDjangoDataFixture):
         b = '1'
         c = '1'
         d = data % 256
-        return u'%s.%s.%s.%s' % (a, b, c, str(d))
+        return six.text_type('%s.%s.%s.%s') % (a, b, c, str(d))
 
     def xmlfield_config(self, field, key):
-        return u'<a>%s</a>' % self.get_value(field, key)
+        return six.text_type('<a>%s</a>') % self.get_value(field, key)
 
     # FILES
     def filepathfield_config(self, field, key):
