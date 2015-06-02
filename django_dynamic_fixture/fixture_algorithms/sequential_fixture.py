@@ -125,6 +125,7 @@ class SequentialDataFixture(BaseDataFixture, GeoDjangoDataFixture):
     def urlfield_config(self, field, key):
         return six.text_type('http://dynamicfixture%s.com') % self.get_value(field, key)
 
+    # Deprecated in Django >= 1.7
     def ipaddressfield_config(self, field, key):
         # TODO: better workaround (this suppose ip field is not unique)
         data = self.get_value(field, key)

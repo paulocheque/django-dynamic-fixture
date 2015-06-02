@@ -92,6 +92,7 @@ class RandomDataFixture(BaseDataFixture, GeoDjangoDataFixture):
     def urlfield_config(self, field, key):
         return six.text_type('http://dynamicfixture%s.com') % self.random_string(10)
 
+    # Deprecated in Django >= 1.7
     def ipaddressfield_config(self, field, key):
         a = random.randint(1, 255)
         b = random.randint(1, 255)

@@ -64,6 +64,8 @@ class ModelWithFieldsWithCustomValidation(models.Model):
     email = models.EmailField(null=True, unique=True)
     url = models.URLField(null=True, unique=True)
     ip = models.IPAddressField(null=True, unique=False)
+    if django_greater_than('1.4'):
+        ipv6 = models.GenericIPAddressField(null=True, unique=False)
 
     class Meta:
         verbose_name = 'Custom validation'

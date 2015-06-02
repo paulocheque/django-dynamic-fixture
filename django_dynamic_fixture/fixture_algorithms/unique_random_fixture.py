@@ -149,6 +149,7 @@ class UniqueRandomDataFixture(BaseDataFixture, GeoDjangoDataFixture):
     def urlfield_config(self, field, key):
         return six.text_type('http://dynamicfixture%s.com') % self.random_string(field, key)
 
+    # Deprecated in Django >= 1.7
     def ipaddressfield_config(self, field, key):
         MAX_IP = 2 ** 32 - 1
 

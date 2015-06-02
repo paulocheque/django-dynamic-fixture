@@ -26,6 +26,10 @@ class BaseDataFixture(DataFixture):
     def uuidfield_config(self, field, key):
         return uuid.uuid4()
 
+    # Django >= 1.4
+    def genericipaddressfield_config(self, field, key):
+        return self.ipaddressfield_config(field, key)
+
 
 # GIS/GeoDjango
 class GeoDjangoDataFixture(object):

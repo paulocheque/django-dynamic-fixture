@@ -86,6 +86,8 @@ class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
         self.assertTrue(isinstance(instance.email, six.text_type))
         self.assertTrue(isinstance(instance.url, six.text_type))
         self.assertTrue(isinstance(instance.ip, six.text_type))
+        if django_greater_than('1.4'):
+            self.assertTrue(isinstance(instance.ipv6, six.text_type))
 
     def test_new_fill_file_fields_with_basic_strings(self):
         instance = self.ddf.new(ModelWithFileFields)
