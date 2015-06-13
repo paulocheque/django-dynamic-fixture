@@ -3,14 +3,20 @@ import uuid
 
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
+
+
 try:
     from django.contrib.gis.geos import *
 except ImportError:
-    pass # Django < 1.7
+    pass  # Django < 1.7
 try:
     from django.contrib.gis.db import models as geomodels
 except ImportError:
-    pass # Django < 1.7
+    pass  # Django < 1.7
+except ImproperlyConfigured:
+    pass  # enviroment without geo libs
+
 
 from django.test import TestCase
 

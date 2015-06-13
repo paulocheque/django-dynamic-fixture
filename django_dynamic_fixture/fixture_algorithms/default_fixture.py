@@ -3,8 +3,10 @@ from decimal import Decimal
 import random
 import string
 import uuid
-
+from django.core.exceptions import ImproperlyConfigured
 import six
+
+
 try:
     from django.utils.timezone import now
 except ImportError:
@@ -12,7 +14,10 @@ except ImportError:
 try:
     from django.contrib.gis.geos import *
 except ImportError:
-    pass # Django < 1.7
+    pass  # Django < 1.7
+except ImproperlyConfigured:
+    pass  # enviroment without geo libs
+
 
 from django_dynamic_fixture.ddf import DataFixture
 

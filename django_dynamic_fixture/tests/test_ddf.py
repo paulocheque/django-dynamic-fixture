@@ -5,15 +5,24 @@ import uuid
 
 import django
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
+
+
 try:
     from django.contrib.gis.geos import *
 except ImportError:
-    pass # Django < 1.7
+    pass  # Django < 1.7
+except ImproperlyConfigured:
+    pass  # enviroment without geo libs
 
 try:
     from django.contrib.gis.db import models as geomodel
 except ImportError:
-    pass # Django < 1.7
+    pass  # Django < 1.7
+except ImproperlyConfigured:
+    pass  # enviroment without geo libs
+
+
 from django.test import TestCase
 
 from django_dynamic_fixture.models_test import *
