@@ -443,7 +443,7 @@ class ComplexFieldsTest(DDFTestCase):
             self.assertTrue(isinstance(instance.uuid, uuid.UUID))
 
 
-if settings.DDF_TEST_GEODJANGO:
+if hasattr(settings, 'DDF_TEST_GEODJANGO') and settings.DDF_TEST_GEODJANGO:
     class GeoDjangoFieldsTest(DDFTestCase):
         def test_geodjango_fields(self):
             if django_greater_than('1.7'):

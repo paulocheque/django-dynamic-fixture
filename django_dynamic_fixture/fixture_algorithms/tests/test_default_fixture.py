@@ -38,7 +38,7 @@ class BaseDataFixtureTestCase(TestCase):
             self.assertTrue(isinstance(self.fixture.generate_data(models.UUIDField()), uuid.UUID))
 
 
-if django_greater_than('1.7') and settings.DDF_TEST_GEODJANGO:
+if django_greater_than('1.7') and hasattr(settings, 'DDF_TEST_GEODJANGO') and settings.DDF_TEST_GEODJANGO:
     class GeoDjangoDataFixtureTestCase(TestCase):
         def setUp(self):
             self.fixture = GeoDjangoDataFixture()
