@@ -9,6 +9,12 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 1.8.5 - 2015/07/09
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/1.8.5>
+  * GenericIPAddressField
+  * DDF Test bugfix (when running the tests in the CI without GeoDjango)
+
 
 Version 1.8.4 - 2015/05/26
 -------------------------------------------------------------------------------

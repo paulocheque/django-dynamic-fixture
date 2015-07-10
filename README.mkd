@@ -8,7 +8,7 @@ Django Dynamic Fixture
 [![PyPi version](https://pypip.in/v/django-dynamic-fixture/badge.png)](https://crate.io/packages/django-dynamic-fixture/)
 [![PyPi downloads](https://pypip.in/d/django-dynamic-fixture/badge.png)](https://crate.io/packages/django-dynamic-fixture/)
 
-**Latest version: 1.8.4 (2015/05)**
+**Latest version: 1.8.5 (2015/07)**
 
 Django Dynamic Fixture (DDF) is a complete and simple library to create dynamic model instances for testing purposes.
 
