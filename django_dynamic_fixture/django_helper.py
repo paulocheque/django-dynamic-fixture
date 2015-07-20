@@ -116,7 +116,10 @@ def get_field_names_of_model(model_class):
 
 def get_field_by_name_or_raise(model_class, field_name):
     "Get field by name, including inherited fields and M2M fields."
-    return model_class._meta.get_field_by_name(field_name)[0]
+    if django_greater_than('1.8'):
+        return model_class._meta.get_field(field_name)
+    else:
+        return model_class._meta.get_field_by_name(field_name)[0]
 
 
 def is_model_class(instance_or_model_class):
