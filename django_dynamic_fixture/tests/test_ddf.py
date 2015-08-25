@@ -274,6 +274,10 @@ class NewAlsoCreatesRelatedObjectsTest(DDFTestCase):
         instance = self.ddf.new(ModelWithRelationships)
         self.assertTrue(isinstance(instance.foreignkey_with_default, ModelRelated), msg=str(type(instance.foreignkey_with_default)))
 
+    def test_new_deal_with_id_default_values(self):
+        instance = self.ddf.new(ModelWithRelationships)
+        self.assertTrue(isinstance(instance.foreignkey_with_id_default, ModelRelated), msg=str(type(instance.foreignkey_with_default)))
+
 #        TODO
 #    def test_new_fill_genericrelations_fields(self):
 #        instance = self.ddf.new(ModelWithRelationships)
