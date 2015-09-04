@@ -3,6 +3,8 @@
 
 import django
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
@@ -387,3 +389,9 @@ try:
         json_field1 = JSONField2()
 except ImportError:
     pass
+
+
+class ModelWithGenericForeignKey(models.Model):
+    owner_type = models.ForeignKey(ContentType)
+    owner_id = models.PositiveIntegerField()
+    owner = GenericForeignKey('owner_type', 'owner_id')

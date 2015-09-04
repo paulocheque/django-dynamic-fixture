@@ -901,3 +901,15 @@ class AvoidNameCollisionTest(DDFTestCase):
 
         instance = self.ddf.get(ModelWithCommonNames, field=6)
         self.assertEquals(6, instance.field)
+
+
+class GenericForeignKeyTest(DDFTestCase):
+    def test_set_generic_foreign_key(self):
+        owner = self.ddf.get(ModelWithDefaultValues)
+        ctype = ContentType.objects.get_for_model(owner)
+
+        instance = self.ddf.get(ModelWithGenericForeignKey, owner=owner)
+
+        self.assertIsInstance(instance.owner_type, ctype.__class__)
+        self.assertEqual(instance.owner_type, ctype)
+        self.assertEqual(instance.owner, owner)
