@@ -52,7 +52,9 @@ DATABASES = {
 SECRET_KEY = 'ddf-secret-key'
 
 
-INSTALLED_APPS = ()
+INSTALLED_APPS = (
+    'django.contrib.contenttypes',
+)
 
 if DDF_TEST_GEODJANGO:
     INSTALLED_APPS += ('django.contrib.gis',)
