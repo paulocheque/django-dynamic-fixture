@@ -380,7 +380,13 @@ class DynamicFixture(object):
         else:
             if self.debug_mode:
                 LOGGER.debug('%s.%s = %s' % (get_unique_model_name(model_class), __field.name, data))
-            setattr(__instance, __field.name, data) # Model.field = data
+            try:
+                setattr(__instance, __field.name, data) # Model.field = data
+            except ValueError as e:
+                if is_relationship_field(__field):
+                    setattr(__instance, "%s_id" % __field.name, data) # Model.field = data
+                else:
+                    six.reraise(*sys.exc_info())
         self.fields_processed.append(__field.name)
 
     def _validate_kwargs(self, model_class, kwargs):
