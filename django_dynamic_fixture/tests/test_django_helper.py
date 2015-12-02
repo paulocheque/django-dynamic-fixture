@@ -25,7 +25,7 @@ class DjangoHelperAppsTest(TestCase):
         self.assertRaises(Exception, get_apps, exclude_application_labels=['x'])
 
     def test_get_app_name_must(self):
-        ddf = get_apps(application_labels=['django_dynamic_fixture'])[0]
+        import django_dynamic_fixture.models as ddf
         self.assertEquals('django_dynamic_fixture', get_app_name(ddf))
 
     def test_get_models_of_an_app_must(self):
