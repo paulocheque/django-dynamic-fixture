@@ -16,6 +16,8 @@ from django.conf import settings
 if not settings.configured:
     os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
+django.setup()
+
 from django_nose import NoseTestSuiteRunner
 
 # Django-Nose must import test_models to avoid 'no such table' problem
