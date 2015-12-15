@@ -28,26 +28,36 @@ def get_apps(application_labels=[], exclude_application_labels=[]):
     - if not @application_labels and not @exclude_application_labels, it returns all applications.
     - if @application_labels is not None, it returns just these applications,
     except applications with label in exclude_application_labels.
-    @Returns an array of `module` objects
+    @Returns an array of application labels.
     """
     if application_labels:
         applications = []
         for app_label in application_labels:
             if django_greater_than('1.7'):
                 app_config = apps.get_app_config(app_label)
-                applications.append(app_config.module)
+                applications.append(app_config.label)
             else:
-                applications.append(models.get_app(app_label))
+                applications.append(get_app_name(models.get_app(app_label)))
     else:
-        applications = models.get_apps()
+        if django_greater_than('1.7'):
+            applications = [
+                app_config.label
+                for app_config in apps.get_app_configs()
+            ]
+        else:
+            applications = [
+                get_app_name(app_module)
+                for app_module in models.get_apps()
+            ]
     if exclude_application_labels:
         for app_label in exclude_application_labels:
             if app_label:
-                if django_greater_than('1.7'):
-                    app_config = apps.get_app_config(app_label)
-                    applications.remove(app_config.models_module)
+                if app_label in applications:
+                    applications.remove(app_label)
                 else:
-                    applications.remove(models.get_app(app_label))
+                    raise ValueError(
+                        "Excluded application with label '{0}' "
+                        "is not installed.".format(app_label))
     return applications
 
 
@@ -58,15 +68,15 @@ def get_app_name(app_module):
     return app_module.__name__.split('.')[0]
 
 
-def get_models_of_an_app(app_module):
+def get_models_of_an_app(app_label):
     """
     app_module is the object returned by get_apps method (python module)
     """
     if django_greater_than('1.7'):
-        app_name = get_app_name(app_module)
-        app_config = apps.get_app_config(app_name)
+        app_config = apps.get_app_config(app_label)
         return list(app_config.get_models())
     else:
+        app_module = models.get_app(app_label)
         return models.get_models(app_module)
 
 
