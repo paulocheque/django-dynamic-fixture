@@ -34,6 +34,11 @@ env:
   - TOXENV=django18-py33
   - TOXENV=django18-py34
   - TOXENV=django18-pypy
+  - TOXENV=django19-py27
+  - TOXENV=django19-py32
+  - TOXENV=django19-py33
+  - TOXENV=django19-py34
+  - TOXENV=django19-pypy
 
 after_success:
   - coveralls
