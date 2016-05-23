@@ -12,7 +12,6 @@ env:
   - TOXENV=django17-py27
   - TOXENV=django17-py34
   - TOXENV=django18-py27
-  - TOXENV=django18-py32
   - TOXENV=django18-py33
   - TOXENV=django18-py34
   - TOXENV=django18-pypy
