@@ -10,6 +10,13 @@ Change Log
 Date format: yyyy/mm/dd
 
 
+Version 1.9.0 - 2016/05/23
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/1.9.0>
+  * [New] Django 1.9 support
+  * [Bugfix] Fixed issue on ForeignKey field with default id
+  * [Bugfix] Fixed issue with SimpleUploadedFile
+
 Version 1.8.4 - 2015/05/26
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/1.8.4>
