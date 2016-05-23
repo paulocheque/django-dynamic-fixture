@@ -369,7 +369,7 @@ class DynamicFixture(object):
             django_file = data
             if isinstance(django_file, File):
                 setattr(__instance, __field.name, data.name) # set the attribute
-                if django_file.file.mode != 'rb':
+                if hasattr(django_file.file, 'mode') and django_file.file.mode != 'rb':
                     django_file.file.close() # this file may be open in another mode, for example, in a+b
                     opened_file = open(django_file.file.name, 'rb') # to save the file it must be open in rb mode
                     django_file.file = opened_file # we update the reference to the rb mode opened file
