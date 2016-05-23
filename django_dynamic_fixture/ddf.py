@@ -373,8 +373,12 @@ class DynamicFixture(object):
                     django_file.file.close() # this file may be open in another mode, for example, in a+b
                     opened_file = open(django_file.file.name, 'rb') # to save the file it must be open in rb mode
                     django_file.file = opened_file # we update the reference to the rb mode opened file
-                getattr(__instance, __field.name).save(django_file.name, django_file) # save the file into the file storage system
-                django_file.close()
+
+                # https://github.com/paulocheque/django-dynamic-fixture/issues/10
+                # getattr(__instance, __field.name).save(django_file.name, django_file) # save the file into the file storage system
+                # django_file.close()
+                getattr(instance, field.name).save(django_file.name, django_file, save=False)
+
             else: # string (saving just a name in the file, without saving the file to the storage file system
                 setattr(__instance, __field.name, data) # Model.field = data
         else:
