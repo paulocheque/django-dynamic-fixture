@@ -377,7 +377,7 @@ class DynamicFixture(object):
                 # https://github.com/paulocheque/django-dynamic-fixture/issues/10
                 # getattr(__instance, __field.name).save(django_file.name, django_file) # save the file into the file storage system
                 # django_file.close()
-                getattr(instance, field.name).save(django_file.name, django_file, save=False)
+                getattr(__instance, __field.name).save(django_file.name, django_file, save=False)
 
             else: # string (saving just a name in the file, without saving the file to the storage file system
                 setattr(__instance, __field.name, data) # Model.field = data
