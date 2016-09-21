@@ -2,6 +2,7 @@
 """
 Module to wrap dirty stuff of django core.
 """
+import re
 from distutils.version import StrictVersion
 
 import django
@@ -18,8 +19,8 @@ except ImportError:
 
 
 def django_greater_than(version):
-    # Slice to avoid StrictVersion errors with versions like 1.8c1
-    DJANGO_VERSION = django.get_version()[0:3]
+    # Avoid StrictVersion errors with versions like 1.8c1
+    DJANGO_VERSION = re.match(r"\d\.\d\d?", django.get_version()).group(0)
     return StrictVersion(DJANGO_VERSION) >= StrictVersion(version)
 
 # Apps
