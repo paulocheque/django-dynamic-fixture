@@ -9,6 +9,11 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 1.9.1 - 2016/12/21
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/1.9.1>
+  * Bugfix: Django version parser
+  * Bugfix: NameError on invalid variable name
 
 Version 1.9.0 - 2016/05/23
 -------------------------------------------------------------------------------
