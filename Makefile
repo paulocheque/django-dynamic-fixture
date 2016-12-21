@@ -4,7 +4,6 @@ clean:
 	clear
 	@find . -type f -name "*.py[co]" -delete
 	@find . -type d -name "__pycache__" -delete
-	env/bin/python setup.py clean --all
 	rm -rf *.egg
 	rm -rf *.egg-info/
 	rm -rf *.log
@@ -12,6 +11,7 @@ clean:
 	rm -rf data/
 	rm -rf dist/
 	rm -rf .eggs/
+	env/bin/python setup.py clean --all
 
 prepare:
 	clear ; python3.5 -m venv env
@@ -25,11 +25,11 @@ deps:
 shell:
 	clear ; env/bin/python
 
+compile:
+	env/bin/python -OO -m compileall .
+
 test:
 	clear ; time env/bin/python manage.py test
-
-test2:
-	clear ; time env/bin/python setup.py test
 
 tox:
 	clear ; time tox
@@ -37,20 +37,20 @@ tox:
 push: test
 	clear ; git push origin master
 
-compile:
-	env/bin/python -OO -m compileall .
-
-lib:
+setup_clean:
 	clear ; env/bin/python setup.py clean --all
-	clear ; env/bin/python setup.py test
+
+setup_test:
+	clear ; time env/bin/python setup.py test
+
+lib: setup_clean setup_test
 	clear ; env/bin/python setup.py build
 
-register:
-	clear ; env/bin/python setup.py clean --all
+register: setup_clean setup_test
 	clear ; env/bin/python setup.py sdist
 	clear ; env/bin/python setup.py register
 
-publish: clean test
+publish: setup_clean setup_test
 	# http://guide.python-distribute.org/quickstart.html
 	# python setup.py sdist
 	# python setup.py register
