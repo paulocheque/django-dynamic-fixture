@@ -35,3 +35,4 @@ env3.3
 env3.4
 .tox
 test_:memory:
+.eggs/
