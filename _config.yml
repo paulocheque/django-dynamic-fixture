@@ -1,0 +1,8 @@
+title: Django-dynamic-fixture
+description: A complete and simple library to create dynamic model instances for testing purposes.
+google_analytics: UA-30621911-1
+show_downloads: true
+theme: jekyll-theme-modernist
+
+gems:
+  - jekyll-mentions
