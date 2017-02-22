@@ -2,6 +2,7 @@
 
 import inspect
 import logging
+import re
 import sys
 import six
 
@@ -461,7 +462,7 @@ class DynamicFixture(object):
             raise InvalidModelError(get_unique_model_name(model_class))
         for field in get_fields_from_model(model_class):
             if is_key_field(field) and 'id' not in configuration: continue
-            if field.name in self.ignore_fields and field.name not in self.kwargs: continue
+            if field.name not in self.kwargs and self._is_ignored_field(field.name): continue
             self.set_data_for_a_field(model_class, instance, field, persist_dependencies=persist_dependencies, **configuration)
         number_of_pending_fields = len(self.pending_fields)
         # For Copier fixtures: dealing with pending fields that need to receive values of another fields.
@@ -476,6 +477,27 @@ class DynamicFixture(object):
         if self.debug_mode:
             LOGGER.debug('<<< [%s] Instance created.' % get_unique_model_name(model_class))
         return instance
+
+    def _is_ignored_field(self, field_name):
+        """
+        Return `True` if the given field name should be ignored according to
+        this class's `self.ignored_fields`. Both literal field names and
+        names with wildcard '*' and '?' characters are supported.
+        """
+        # Do fast check for literal field name first
+        if field_name in self.ignore_fields:
+            return True
+        # If any ignored field names contain wildcards, check them against the
+        # given field name
+        for ignore_spec in self.ignore_fields:
+            if '*' in ignore_spec or '?' in ignore_spec:
+                # Replace wildcard characters with regexp equivalents
+                re_spec = ignore_spec.replace('?', '.').replace('*', '.*')
+                # Update regexp to match entire field name, not just a portion
+                re_spec = r'^%s$' % re_spec
+                if re.match(re_spec, field_name):
+                    return True
+        return False
 
     def _process_many_to_many_field(self, field, manytomany_field, fixture, instance):
         """

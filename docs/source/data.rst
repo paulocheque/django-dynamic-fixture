@@ -86,6 +86,12 @@ In settings.py::
 
     DDF_IGNORE_FIELDS = ['field_x', 'field_y'] # default = []
 
+Ignored field names can use wildcard matching with '*' and '?' characters which substitute multiple or one character respectively. Wildcards are useful for fields that should not be populated and which match a pattern, like ``*_ptr`` fields for [django-polymorphic](https://github.com/django-polymorphic/django-polymorphic).
+
+In settings.py::
+
+    DDF_IGNORE_FIELDS = ['*_ptr'] # Ignore django-polymorphic pointer fields
+
 It is not possible to override the global configuration, just extend the list. So use global option with caution::
 
     instance = G(MyModel, ignore_fields=['another_field_name'])
