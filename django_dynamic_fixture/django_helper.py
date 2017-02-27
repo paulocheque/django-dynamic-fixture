@@ -165,7 +165,7 @@ def get_unique_field_name(field):
 
 
 def get_related_model(field):
-    return field.rel.to
+    return field.remote_field.model if hasattr(field, 'remote_field') else field.rel.to
 
 
 def field_is_a_parent_link(field):
