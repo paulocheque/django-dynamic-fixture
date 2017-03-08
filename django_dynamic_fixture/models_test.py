@@ -10,7 +10,8 @@ from django_dynamic_fixture.django_helper import django_greater_than
 
 
 class EmptyModel(models.Model):
-    pass
+    class Meta:
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelWithNumbers(models.Model):
@@ -25,6 +26,7 @@ class ModelWithNumbers(models.Model):
 
     class Meta:
         verbose_name = 'Numbers'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelWithStrings(models.Model):
@@ -35,6 +37,7 @@ class ModelWithStrings(models.Model):
 
     class Meta:
         verbose_name = 'Strings'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelWithBooleans(models.Model):
@@ -45,6 +48,7 @@ class ModelWithBooleans(models.Model):
 
     class Meta:
         verbose_name = 'Booleans'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelWithDateTimes(models.Model):
@@ -54,11 +58,14 @@ class ModelWithDateTimes(models.Model):
 
     class Meta:
         verbose_name = 'DateTimes'
+        app_label = 'django_dynamic_fixture'
 
 
 if django_greater_than('1.6'):
     class ModelWithBinary(models.Model):
         binary = models.BinaryField()
+        class Meta:
+            app_label = 'django_dynamic_fixture'
 
 class ModelWithFieldsWithCustomValidation(models.Model):
     email = models.EmailField(null=True, unique=True)
@@ -69,7 +76,7 @@ class ModelWithFieldsWithCustomValidation(models.Model):
 
     class Meta:
         verbose_name = 'Custom validation'
-
+        app_label = 'django_dynamic_fixture'
 
 class ModelWithFileFields(models.Model):
     filepath = models.FilePathField(unique=True, blank=True)
@@ -84,6 +91,7 @@ class ModelWithFileFields(models.Model):
 
     class Meta:
         verbose_name = 'File fields'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelWithDefaultValues(models.Model):
@@ -95,6 +103,7 @@ class ModelWithDefaultValues(models.Model):
 
     class Meta:
         verbose_name = 'Default values'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelForNullable(models.Model):
@@ -103,6 +112,7 @@ class ModelForNullable(models.Model):
 
     class Meta:
         verbose_name = 'Nullable'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelForIgnoreList2(models.Model):
@@ -110,6 +120,7 @@ class ModelForIgnoreList2(models.Model):
 
     class Meta:
         verbose_name = 'Ignore list 2'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelForIgnoreList(models.Model):
@@ -122,6 +133,7 @@ class ModelForIgnoreList(models.Model):
 
     class Meta:
         verbose_name = 'Ignore list'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelRelated(models.Model):
@@ -131,12 +143,15 @@ class ModelRelated(models.Model):
 
     class Meta:
         verbose_name = 'Related'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelRelatedThrough(models.Model):
     related = models.ForeignKey('ModelRelated')
     relationship = models.ForeignKey('ModelWithRelationships')
 
+    class Meta:
+        app_label = 'django_dynamic_fixture'
 
 def default_fk_value():
     try:
@@ -168,6 +183,7 @@ class ModelWithRelationships(models.Model):
 
     class Meta:
         verbose_name = 'Relationships'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelWithCyclicDependency(models.Model):
@@ -175,6 +191,7 @@ class ModelWithCyclicDependency(models.Model):
 
     class Meta:
         verbose_name = 'Cyclic dependency'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelWithCyclicDependency2(models.Model):
@@ -182,6 +199,7 @@ class ModelWithCyclicDependency2(models.Model):
 
     class Meta:
         verbose_name = 'Cyclic dependency 2'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelAbstract(models.Model):
@@ -189,16 +207,19 @@ class ModelAbstract(models.Model):
     class Meta:
         abstract = True
         verbose_name = 'Abstract'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelParent(ModelAbstract):
     class Meta:
         verbose_name = 'Parent'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelChild(ModelParent):
     class Meta:
         verbose_name = 'Child'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelChildWithCustomParentLink(ModelParent):
@@ -206,6 +227,7 @@ class ModelChildWithCustomParentLink(ModelParent):
 
     class Meta:
         verbose_name = 'Custom child'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelWithRefToParent(models.Model):
@@ -213,6 +235,7 @@ class ModelWithRefToParent(models.Model):
 
     class Meta:
         verbose_name = 'Child with parent'
+        app_label = 'django_dynamic_fixture'
 
 
 class CustomDjangoField(models.IntegerField):
@@ -241,6 +264,7 @@ class ModelWithCustomFields(models.Model):
 
     class Meta:
         verbose_name = 'Custom fields'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelWithCustomFieldsMultipleInheritance(models.Model):
@@ -249,6 +273,7 @@ class ModelWithCustomFieldsMultipleInheritance(models.Model):
 
     class Meta:
         verbose_name = 'Custom fields with multiple inheritance'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelWithUnsupportedField(models.Model):
@@ -256,6 +281,7 @@ class ModelWithUnsupportedField(models.Model):
 
     class Meta:
         verbose_name = 'Unsupported field'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelWithValidators(models.Model):
@@ -264,6 +290,7 @@ class ModelWithValidators(models.Model):
 
     class Meta:
         verbose_name = 'Validators'
+        app_label = 'django_dynamic_fixture'
 
     def clean(self):
         if self.clean_validator != 'ok':
@@ -277,6 +304,7 @@ class ModelWithAutoDateTimes(models.Model):
 
     class Meta:
         verbose_name = 'Auto DateTime'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelForCopy2(models.Model):
@@ -284,6 +312,7 @@ class ModelForCopy2(models.Model):
 
     class Meta:
         verbose_name = 'Copy 2'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelForCopy(models.Model):
@@ -295,6 +324,7 @@ class ModelForCopy(models.Model):
 
     class Meta:
         verbose_name = 'Copy'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelForLibrary2(models.Model):
@@ -303,6 +333,7 @@ class ModelForLibrary2(models.Model):
 
     class Meta:
         verbose_name = 'Library 2'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelForLibrary(models.Model):
@@ -313,6 +344,7 @@ class ModelForLibrary(models.Model):
 
     class Meta:
         verbose_name = 'Library'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelForDDFSetup(models.Model):
@@ -320,6 +352,7 @@ class ModelForDDFSetup(models.Model):
 
     class Meta:
         verbose_name = 'DDF setup'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelWithClean(models.Model):
@@ -327,6 +360,7 @@ class ModelWithClean(models.Model):
 
     class Meta:
         verbose_name = 'Clean'
+        app_label = 'django_dynamic_fixture'
 
     def clean(self):
         if self.integer != 9999: # just for testing
@@ -336,11 +370,13 @@ class ModelWithClean(models.Model):
 class ModelForSignals(models.Model):
     class Meta:
         verbose_name = 'Signals'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelForSignals2(models.Model):
     class Meta:
         verbose_name = 'Signals 2'
+        app_label = 'django_dynamic_fixture'
 
 
 class ModelForFieldPlugins(models.Model):
@@ -348,11 +384,14 @@ class ModelForFieldPlugins(models.Model):
     # bbb = models.IntegerField(null=False)
     custom_field_custom_fixture = CustomDjangoField(null=False) # defined in settings.py
     custom_field_custom_fixture2 = CustomDjangoField2(null=False) # defined in settings.py
-
+    class Meta:
+        app_label = 'django_dynamic_fixture'
 
 class ModelWithCommonNames(models.Model):
     instance = models.IntegerField(null=False)
     field = models.IntegerField(null=False)
+    class Meta:
+        app_label = 'django_dynamic_fixture'
 
 
 # GeoDjango requires Django 1.7+
@@ -367,11 +406,15 @@ if django_greater_than('1.7') and (hasattr(settings, 'DDF_TEST_GEODJANGO') and s
         multi_line_string = geomodels.MultiLineStringField()
         multi_polygon = geomodels.MultiPolygonField()
         geometry_collection = geomodels.GeometryCollectionField()
+        class Meta:
+            app_label = 'django_dynamic_fixture'
 
 
 if django_greater_than('1.8'):
     class ModelForUUID(models.Model):
         uuid = models.UUIDField()
+        class Meta:
+            app_label = 'django_dynamic_fixture'
 
 
 # jsonfield requires Django 1.4+
@@ -382,6 +425,8 @@ if django_greater_than('1.4'):
         class ModelForPlugins1(models.Model):
             json_field1 = JSONCharField(max_length=10)
             json_field2 = JSONField()
+            class Meta:
+                app_label = 'django_dynamic_fixture'
     except ImportError:
         pass
 
@@ -390,5 +435,7 @@ try:
     from json_field import JSONField as JSONField2
     class ModelForPlugins2(models.Model):
         json_field1 = JSONField2()
+        class Meta:
+            app_label = 'django_dynamic_fixture'
 except ImportError:
     pass
