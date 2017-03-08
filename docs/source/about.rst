@@ -9,6 +9,13 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 1.9.2 - 2017/03/08
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/1.9.2>
+  * Django 2.0 compatibility
+  * New: Support for wildcards `?` and `*` in the ignore fields
+  * Bugfix: Fixed DDF_TEST_GEODJANGO test issues
+
 Version 1.9.1 - 2016/12/21
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/1.9.1>
