@@ -1,11 +1,11 @@
-tox>=2.0
+tox==2.6.0
 
 coveralls
 python-coveralls
 
 flake8==2.1.0
-pylint
-pyflakes
+pyflakes==1.5.0
+pylint==1.6.5
 
-sphinx
-sphinx_rtd_theme
+sphinx==1.5.3
+sphinx_rtd_theme==0.2.2
