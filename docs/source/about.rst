@@ -9,6 +9,11 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 1.9.3 - 2017/03/08
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/1.9.3>
+  * Improve compatibility for the DDF internal tests
+
 Version 1.9.2 - 2017/03/08
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/1.9.2>
