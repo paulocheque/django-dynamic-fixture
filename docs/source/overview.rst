@@ -59,7 +59,7 @@ requirements.txt
 
 ::
 
-    django-dynamic-fixture==1.7.0
+    django-dynamic-fixture==<VERSION>
     # or use the development version
     git+git://github.com/paulocheque/django-dynamic-fixture.git#egg=django-dynamic-fixture
 
