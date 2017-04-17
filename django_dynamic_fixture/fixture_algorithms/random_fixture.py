@@ -15,10 +15,10 @@ try:
 except ImportError:
     pass # Django < 1.7
 
-from django_dynamic_fixture.fixture_algorithms.default_fixture import BaseDataFixture, GeoDjangoDataFixture
+from django_dynamic_fixture.fixture_algorithms.default_fixture import BaseDataFixture, GeoDjangoDataFixture, PostgresFixtureMixin
 
 
-class RandomDataFixture(BaseDataFixture, GeoDjangoDataFixture):
+class RandomDataFixture(BaseDataFixture, GeoDjangoDataFixture, PostgresFixtureMixin):
     def random_string(self, n):
         return six.text_type('').join(random.choice(string.ascii_uppercase + string.digits) for _ in range(n))
 

@@ -26,6 +26,7 @@ tests_require = [
     'pyflakes==1.5.0',
     'pylint==1.6.5',
     'jsonfield==2.0.0',
+    'psycopg2==2.7',
 ]
 
 install_requires = [

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+import six
 import uuid
 
 from django.db import models
@@ -21,12 +23,7 @@ except ImproperlyConfigured:
 from django.test import TestCase
 
 from django_dynamic_fixture.django_helper import django_greater_than
-from django_dynamic_fixture.fixture_algorithms.default_fixture import BaseDataFixture, GeoDjangoDataFixture
-
-
-# Mixing for tests
-class GeoDjangoDataFixture(BaseDataFixture, GeoDjangoDataFixture):
-    pass
+from django_dynamic_fixture.fixture_algorithms.default_fixture import BaseDataFixture
 
 
 class BaseDataFixtureTestCase(TestCase):
@@ -39,6 +36,12 @@ class BaseDataFixtureTestCase(TestCase):
 
 
 if django_greater_than('1.7') and (hasattr(settings, 'DDF_TEST_GEODJANGO') and settings.DDF_TEST_GEODJANGO):
+    from django_dynamic_fixture.fixture_algorithms.default_fixture import GeoDjangoDataFixture
+
+    # Mixing for tests
+    class GeoDjangoDataFixture(BaseDataFixture, GeoDjangoDataFixture):
+        pass
+
     class GeoDjangoDataFixtureTestCase(TestCase):
         def setUp(self):
             self.fixture = GeoDjangoDataFixture()
@@ -66,3 +69,57 @@ if django_greater_than('1.7') and (hasattr(settings, 'DDF_TEST_GEODJANGO') and s
 
         def test_geometrycollectionfield_config(self):
             self.assertTrue(isinstance(self.fixture.generate_data(geomodels.GeometryCollectionField()), GeometryCollection))
+
+
+if django_greater_than('1.8'):
+    from django.contrib.postgres.fields import ArrayField
+    from django_dynamic_fixture.fixture_algorithms.default_fixture import PostgresFixtureMixin
+    from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture, StaticSequentialDataFixture
+    from django_dynamic_fixture.fixture_algorithms.random_fixture import RandomDataFixture
+    from django_dynamic_fixture.fixture_algorithms.unique_random_fixture import UniqueRandomDataFixture
+
+    class PostgresDataFixtureTestMixin(object):
+        def test_arrayfield_integer_config(self):
+            data = self.fixture.generate_data(ArrayField(models.IntegerField()))
+            self.assertTrue(isinstance(data, list))
+            self.assertTrue(isinstance(data[0], int))
+
+        def test_arrayfield_char_config(self):
+            data = self.fixture.generate_data(ArrayField(models.CharField()))
+            self.assertTrue(isinstance(data, list))
+            self.assertTrue(isinstance(data[0], six.text_type))
+
+        def test_arrayfield_datetime_config(self):
+            data = self.fixture.generate_data(ArrayField(models.DateTimeField()))
+            self.assertTrue(isinstance(data, list))
+            self.assertTrue(isinstance(data[0], datetime))
+
+        def test_arrayfield_email_config(self):
+            data = self.fixture.generate_data(ArrayField(models.EmailField(max_length=100)))
+            self.assertTrue(isinstance(data, list))
+            self.assertTrue(isinstance(data[0], six.text_type))
+
+
+    class PostgresSequentialDataFixtureTestCase(TestCase, PostgresDataFixtureTestMixin):
+        def setUp(self):
+            class CustomFixture(SequentialDataFixture, PostgresFixtureMixin):
+                pass
+            self.fixture = CustomFixture()
+
+    class PostgresStaticSequentialDataFixtureTestCase(TestCase, PostgresDataFixtureTestMixin):
+        def setUp(self):
+            class CustomFixture(StaticSequentialDataFixture, PostgresFixtureMixin):
+                pass
+            self.fixture = CustomFixture()
+
+    class PostgresRandomDataFixtureTestCase(TestCase, PostgresDataFixtureTestMixin):
+        def setUp(self):
+            class CustomFixture(RandomDataFixture, PostgresFixtureMixin):
+                pass
+            self.fixture = CustomFixture()
+
+    class PostgresUniqueRandomDataFixtureTestCase(TestCase, PostgresDataFixtureTestMixin):
+        def setUp(self):
+            class CustomFixture(UniqueRandomDataFixture, PostgresFixtureMixin):
+                pass
+            self.fixture = CustomFixture()

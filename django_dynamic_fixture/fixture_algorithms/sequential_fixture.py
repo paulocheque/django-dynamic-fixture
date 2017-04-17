@@ -13,7 +13,7 @@ try:
 except ImportError:
     pass # Django < 1.7
 
-from django_dynamic_fixture.fixture_algorithms.default_fixture import BaseDataFixture, GeoDjangoDataFixture
+from django_dynamic_fixture.fixture_algorithms.default_fixture import BaseDataFixture, GeoDjangoDataFixture, PostgresFixtureMixin
 from django_dynamic_fixture.django_helper import field_is_unique
 
 
@@ -43,7 +43,7 @@ class AutoDataFiller(object):
         return self.__data_controller_map[key]
 
 
-class SequentialDataFixture(BaseDataFixture, GeoDjangoDataFixture):
+class SequentialDataFixture(BaseDataFixture, GeoDjangoDataFixture, PostgresFixtureMixin):
 
     def __init__(self):
         super(SequentialDataFixture, self).__init__()

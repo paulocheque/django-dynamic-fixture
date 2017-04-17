@@ -1,5 +1,7 @@
 tox==2.6.0
 
+psycopg2==2.7 # For tests with Postgres fields
+
 coveralls
 python-coveralls
 

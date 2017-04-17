@@ -76,3 +76,11 @@ class GeoDjangoDataFixture(object):
     def geometrycollectionfield_config(self, field, key, n=3):
         polygons = [self.polygonfield_config(field, key, n) for i in range(n)]
         return GeometryCollection(polygons)
+
+
+# Postgres fields
+# https://docs.djangoproject.com/en/1.8/ref/contrib/postgres/fields/
+class PostgresFixtureMixin(object):
+    def arrayfield_config(self, field, key, n=1):
+        data = [self.generate_data(field.base_field) for i in range(n)]
+        return data

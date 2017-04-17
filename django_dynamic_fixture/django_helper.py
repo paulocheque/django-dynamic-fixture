@@ -161,7 +161,7 @@ def model_has_the_field(model_class, field_name):
 def get_unique_field_name(field):
     if hasattr(field, 'model'):
         return get_unique_model_name(field.model) + '.' + field.name
-    return field.name
+    return field.name or ''
 
 
 def get_related_model(field):

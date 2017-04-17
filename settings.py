@@ -74,6 +74,7 @@ NOSE_ARGS = [
     '--cover-package=django_dynamic_fixture',
     '--cover-tests',
     '--cover-erase',
+    '--verbosity=1'
     ]
 
 # EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
