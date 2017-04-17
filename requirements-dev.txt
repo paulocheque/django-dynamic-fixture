@@ -1,6 +1,7 @@
 tox==2.6.0
 
 psycopg2==2.7 # For tests with Postgres fields
+#or psycopg2cffi==2.7.5 # For pypy
 
 coveralls
 python-coveralls
