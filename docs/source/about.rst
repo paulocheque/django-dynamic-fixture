@@ -9,6 +9,12 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 1.9.4 - 2017/04/17
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/1.9.4>
+  * Added support for django.contrib.postgres.fields.ArrayField field
+  * Fixed GeoDjango Point instantiation.
+
 Version 1.9.3 - 2017/03/08
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/1.9.3>
