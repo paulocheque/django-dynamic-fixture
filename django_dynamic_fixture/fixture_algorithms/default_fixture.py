@@ -42,7 +42,7 @@ class GeoDjangoDataFixture(object):
         # latitude: [-90,90], longitude: [-180,180]
         latitude = x or random.randint(-90, 90)
         longitude = y or random.randint(-180, 180)
-        return Point(latitude, longitude)
+        return Point(longitude, latitude)
 
     def create_points(self, n=3, closed=True):
         points = [self.create_point() for i in range(n)]
