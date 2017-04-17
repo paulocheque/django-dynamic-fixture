@@ -20,10 +20,10 @@ except ImportError:
     pass # Django < 1.7
 
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import AutoDataFiller
-from django_dynamic_fixture.fixture_algorithms.default_fixture import BaseDataFixture, GeoDjangoDataFixture, PostgresFixtureMixin
+from django_dynamic_fixture.fixture_algorithms.default_fixture import BaseDataFixture, GeoDjangoFixtureMixin, PostgresFixtureMixin
 
 
-class UniqueRandomDataFixture(BaseDataFixture, GeoDjangoDataFixture, PostgresFixtureMixin):
+class UniqueRandomDataFixture(BaseDataFixture, GeoDjangoFixtureMixin, PostgresFixtureMixin):
     DEFAULT_LENGTH = 10
     OBJECT_COUNT = 512
     WARNING_MESSAGE_TMPL = (

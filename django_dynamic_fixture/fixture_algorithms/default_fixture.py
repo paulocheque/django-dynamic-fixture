@@ -37,7 +37,7 @@ class BaseDataFixture(DataFixture):
 
 
 # GIS/GeoDjango
-class GeoDjangoDataFixture(object):
+class GeoDjangoFixtureMixin(object):
     def create_point(self, x=None, y=None):
         # latitude: [-90,90], longitude: [-180,180]
         latitude = x or random.randint(-90, 90)

@@ -36,15 +36,15 @@ class BaseDataFixtureTestCase(TestCase):
 
 
 if django_greater_than('1.7') and (hasattr(settings, 'DDF_TEST_GEODJANGO') and settings.DDF_TEST_GEODJANGO):
-    from django_dynamic_fixture.fixture_algorithms.default_fixture import GeoDjangoDataFixture
+    from django_dynamic_fixture.fixture_algorithms.default_fixture import GeoDjangoFixtureMixin
 
     # Mixing for tests
-    class GeoDjangoDataFixture(BaseDataFixture, GeoDjangoDataFixture):
+    class GeoDjangoFixtureMixin(BaseDataFixture, GeoDjangoFixtureMixin):
         pass
 
     class GeoDjangoDataFixtureTestCase(TestCase):
         def setUp(self):
-            self.fixture = GeoDjangoDataFixture()
+            self.fixture = GeoDjangoFixtureMixin()
 
         def test_geometryfield_config(self):
             self.assertTrue(isinstance(self.fixture.generate_data(geomodels.GeometryField()), GEOSGeometry))
