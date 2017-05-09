@@ -14,7 +14,7 @@ from setuptools import setup, find_packages
 # Update version and save
 # Go to 'files' link and upload the file
 
-VERSION = '1.9.4'
+VERSION = '1.9.5'
 
 tests_require = [
     'nose==1.3.7',

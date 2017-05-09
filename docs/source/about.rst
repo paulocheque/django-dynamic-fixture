@@ -9,6 +9,11 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 1.9.5 - 2017/05/09
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/1.9.5>
+  * Bugfix: avoid GDALException on Django 1.11
+
 Version 1.9.4 - 2017/04/17
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/1.9.4>
