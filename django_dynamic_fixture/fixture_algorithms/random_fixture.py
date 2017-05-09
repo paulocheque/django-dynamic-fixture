@@ -5,6 +5,9 @@ import random
 import string
 
 import six
+
+from django.core.exceptions import ImproperlyConfigured
+
 try:
     from django.utils.timezone import now
 except ImportError:
@@ -14,6 +17,10 @@ try:
     from django.contrib.gis.geos import *
 except ImportError:
     pass # Django < 1.7
+except ImproperlyConfigured:
+    pass  # enviroment without geo libs
+except Exception:
+    pass # Avoid errors like GDALException
 
 from django_dynamic_fixture.fixture_algorithms.default_fixture import BaseDataFixture, GeoDjangoFixtureMixin, PostgresFixtureMixin
 
