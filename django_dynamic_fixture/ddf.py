@@ -316,15 +316,10 @@ class DynamicFixture(object):
         else:
             next_model_path = self.model_path[:]
             next_model_path.append(model_class)
-            if model_class == next_model: # self reference
-                # propagate ignored_fields only for self references
-                ignore_fields = self.ignore_fields
-            else:
-                ignore_fields = []
             # need a new DynamicFixture to control the cycles and ignored fields.
             fixture = DynamicFixture(data_fixture=self.data_fixture,
                                      fill_nullable_fields=self.fill_nullable_fields,
-                                     ignore_fields=ignore_fields,
+                                     ignore_fields=self.ignore_fields,
                                      number_of_laps=self.number_of_laps,
                                      use_library=self.use_library,
                                      validate_models=self.validate_models,

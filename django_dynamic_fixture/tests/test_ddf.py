@@ -250,10 +250,11 @@ class NewIgnoreFieldsInIgnoreListTest(DDFTestCase):
         self.assertEquals(None, instance.not_required)
         self.assertEquals(None, instance.self_reference.not_required)
 
-    def test_ignore_fields_are_not_propagated_to_different_references(self):
+    def test_ignore_fields_are_propagated_to_different_references(self):
         self.ddf = DynamicFixture(data_fixture, ignore_fields=['not_required', 'nullable'])
         instance = self.ddf.new(ModelForIgnoreList)
-        self.assertNotEquals(None, instance.different_reference.nullable)
+        self.assertEquals(None, instance.not_required)
+        self.assertEquals(None, instance.self_reference.not_required)
 
     def test_ignore_fields_are_not_ignored_if_explicitely_given(self):
         self.ddf = DynamicFixture(data_fixture, not_required=3, ignore_fields=['not_required', 'nullable'])
