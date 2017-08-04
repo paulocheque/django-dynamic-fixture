@@ -229,10 +229,14 @@ class DynamicFixture(object):
         :print_errors: flag to determine if the model data must be printed to console on errors. For some scripts is interesting to disable it.
         :model_path: internal variable used to control the cycles of dependencies.
         """
+        from django_dynamic_fixture.global_settings import DDF_IGNORE_FIELDS
+
         # custom config of fixtures
         self.data_fixture = data_fixture
         self.fill_nullable_fields = fill_nullable_fields
         self.ignore_fields = ignore_fields
+        # extend ignore_fields with globally declared ignore_fields
+        self.ignore_fields.extend(DDF_IGNORE_FIELDS)
         self.number_of_laps = number_of_laps
         self.use_library = use_library
         # other ddfs configs

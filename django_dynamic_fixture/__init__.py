@@ -48,7 +48,6 @@ def fixture(**kwargs):
                        print_errors=kwargs.pop('print_errors', True),
                        debug_mode=kwargs.pop('debug_mode', DDF_DEBUG_MODE),
                        **kwargs)
-    f.ignore_fields.extend(DDF_IGNORE_FIELDS)
     return f
 
 
