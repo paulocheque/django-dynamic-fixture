@@ -391,9 +391,12 @@ class DynamicFixture(object):
                 LOGGER.debug('%s.%s = %s' % (get_unique_model_name(model_class), __field.name, data))
             try:
                 setattr(__instance, __field.name, data) # Model.field = data
-            except ValueError as e:
+            except (ValueError, AttributeError) as e:
                 if is_relationship_field(__field):
-                    setattr(__instance, "%s_id" % __field.name, data) # Model.field = data
+                    # Handle AttributeError for compatibility with django-polymorphic
+                    # https://github.com/paulocheque/django-dynamic-fixture/issues/88
+                    field_value = data.id if isinstance(e, AttributeError) else data
+                    setattr(__instance, "%s_id" % __field.name, field_value) # Model.field = data
                 else:
                     six.reraise(*sys.exc_info())
         self.fields_processed.append(__field.name)
