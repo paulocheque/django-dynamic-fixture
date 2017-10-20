@@ -7,7 +7,12 @@ This is the facade of all features of DDF.
 import sys
 
 from django.conf import settings
-from django.core.urlresolvers import get_mod_func
+try:
+    # Django 2.0
+    from django.urls import get_mod_func
+except ImportError:
+    # Django <= 1.11
+    from django.core.urlresolvers import get_mod_func
 try:
     from importlib import import_module
 except ImportError:
