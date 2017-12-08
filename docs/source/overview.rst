@@ -131,3 +131,9 @@ External references
   * http://stackoverflow.com/search?q=django+dynamic+fixture
   * http://stackoverflow.com/questions/12487337/optimizing-setup-and-teardown-for-sample-django-model-using-django-nose-and-djan
   * http://stackoverflow.com/questions/4400609/initial-data-fixture-management-in-django
+
+
+Running tests locally
+===============================================================================
+
+Install GDAL: https://docs.djangoproject.com/en/1.11/ref/contrib/gis/install/geolibs/#gdal
