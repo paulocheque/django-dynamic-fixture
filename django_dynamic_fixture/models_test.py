@@ -43,7 +43,7 @@ class ModelWithStrings(models.Model):
 class ModelWithBooleans(models.Model):
     # https://docs.djangoproject.com/en/1.6/ref/models/fields/#booleanfield
     # Django 1.6 changed the default value of BooleanField from False to None
-    boolean = models.BooleanField()
+    boolean = models.BooleanField(default=False)
     nullboolean = models.NullBooleanField()
 
     class Meta:
@@ -99,7 +99,7 @@ class ModelWithDefaultValues(models.Model):
     string_with_choices = models.CharField(max_length=5, null=True, choices=(('a', 'A'), ('b', 'B')))
     string_with_choices_and_default = models.CharField(max_length=5, null=True, default='b', choices=(('a', 'A'), ('b', 'B')))
     string_with_optgroup_choices = models.CharField(max_length=5, null=True, choices=(('group1', (('a', 'A'), ('b', 'B'))), ('group2', (('c', 'C'), ('d', 'D')))))
-    foreign_key_with_default = models.ForeignKey(EmptyModel, null=True, default=None)
+    foreign_key_with_default = models.ForeignKey(EmptyModel, null=True, default=None, on_delete=None)
 
     class Meta:
         verbose_name = 'Default values'
@@ -128,8 +128,8 @@ class ModelForIgnoreList(models.Model):
     required_with_default = models.IntegerField(null=False, default=1)
     not_required = models.IntegerField(null=True)
     not_required_with_default = models.IntegerField(null=True, default=1)
-    self_reference = models.ForeignKey('ModelForIgnoreList', null=True)
-    different_reference = models.ForeignKey(ModelForIgnoreList2, null=True)
+    self_reference = models.ForeignKey('ModelForIgnoreList', null=True, on_delete=None)
+    different_reference = models.ForeignKey(ModelForIgnoreList2, null=True, on_delete=None)
 
     class Meta:
         verbose_name = 'Ignore list'
@@ -137,7 +137,7 @@ class ModelForIgnoreList(models.Model):
 
 
 class ModelRelated(models.Model):
-    selfforeignkey = models.ForeignKey('self', null=True)
+    selfforeignkey = models.ForeignKey('self', null=True, on_delete=None)
     integer = models.IntegerField(null=True)
     integer_b = models.IntegerField(null=True)
 
@@ -147,8 +147,8 @@ class ModelRelated(models.Model):
 
 
 class ModelRelatedThrough(models.Model):
-    related = models.ForeignKey('ModelRelated')
-    relationship = models.ForeignKey('ModelWithRelationships')
+    related = models.ForeignKey('ModelRelated', on_delete=None)
+    relationship = models.ForeignKey('ModelWithRelationships', on_delete=None)
 
     class Meta:
         app_label = 'django_dynamic_fixture'
@@ -167,14 +167,14 @@ def default_fk_id():
 
 class ModelWithRelationships(models.Model):
     # relationship
-    selfforeignkey = models.ForeignKey('self', null=True)
-    foreignkey = models.ForeignKey('ModelRelated', related_name='fk', null=True)
-    onetoone = models.OneToOneField('ModelRelated', related_name='o2o', null=True)
+    selfforeignkey = models.ForeignKey('self', null=True, on_delete=None)
+    foreignkey = models.ForeignKey('ModelRelated', related_name='fk', null=True, on_delete=None)
+    onetoone = models.OneToOneField('ModelRelated', related_name='o2o', null=True, on_delete=None)
     manytomany = models.ManyToManyField('ModelRelated', related_name='m2m')
     manytomany_through = models.ManyToManyField('ModelRelated', related_name='m2m_through', through=ModelRelatedThrough)
 
-    foreignkey_with_default = models.ForeignKey('ModelRelated', related_name='fk2', null=True, default=default_fk_value)
-    foreignkey_with_id_default = models.ForeignKey('ModelRelated', related_name='fk3', null=True, default=default_fk_id)
+    foreignkey_with_default = models.ForeignKey('ModelRelated', related_name='fk2', null=True, default=default_fk_value, on_delete=None)
+    foreignkey_with_id_default = models.ForeignKey('ModelRelated', related_name='fk3', null=True, default=default_fk_id, on_delete=None)
 
     integer = models.IntegerField(null=True)
     integer_b = models.IntegerField(null=True)
@@ -187,7 +187,7 @@ class ModelWithRelationships(models.Model):
 
 
 class ModelWithCyclicDependency(models.Model):
-    d = models.ForeignKey('ModelWithCyclicDependency2', null=True)
+    d = models.ForeignKey('ModelWithCyclicDependency2', null=True, on_delete=None)
 
     class Meta:
         verbose_name = 'Cyclic dependency'
@@ -195,7 +195,7 @@ class ModelWithCyclicDependency(models.Model):
 
 
 class ModelWithCyclicDependency2(models.Model):
-    c = models.ForeignKey(ModelWithCyclicDependency, null=True)
+    c = models.ForeignKey(ModelWithCyclicDependency, null=True, on_delete=None)
 
     class Meta:
         verbose_name = 'Cyclic dependency 2'
@@ -223,7 +223,7 @@ class ModelChild(ModelParent):
 
 
 class ModelChildWithCustomParentLink(ModelParent):
-    my_custom_ref = models.OneToOneField(ModelParent, parent_link=True, related_name='my_custom_ref_x')
+    my_custom_ref = models.OneToOneField(ModelParent, parent_link=True, related_name='my_custom_ref_x', on_delete=None)
 
     class Meta:
         verbose_name = 'Custom child'
@@ -231,7 +231,7 @@ class ModelChildWithCustomParentLink(ModelParent):
 
 
 class ModelWithRefToParent(models.Model):
-    parent = models.ForeignKey(ModelParent)
+    parent = models.ForeignKey(ModelParent, on_delete=None)
 
     class Meta:
         verbose_name = 'Child with parent'
@@ -320,7 +320,7 @@ class ModelForCopy(models.Model):
     int_b = models.IntegerField(null=None)
     int_c = models.IntegerField()
     int_d = models.IntegerField()
-    e = models.ForeignKey(ModelForCopy2)
+    e = models.ForeignKey(ModelForCopy2, on_delete=None)
 
     class Meta:
         verbose_name = 'Copy'
@@ -339,8 +339,8 @@ class ModelForLibrary2(models.Model):
 class ModelForLibrary(models.Model):
     integer = models.IntegerField(null=True)
     integer_unique = models.IntegerField(null=True, unique=True)
-    selfforeignkey = models.ForeignKey('self', null=True)
-    foreignkey = models.ForeignKey('ModelForLibrary2', related_name='fk', null=True)
+    selfforeignkey = models.ForeignKey('self', null=True, on_delete=None)
+    foreignkey = models.ForeignKey('ModelForLibrary2', related_name='fk', null=True, on_delete=None)
 
     class Meta:
         verbose_name = 'Library'
