@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import logging
 import os
+import platform
 import sys
 from os.path import dirname, abspath
 from optparse import OptionParser
@@ -15,7 +16,10 @@ from django.conf import settings
 if not settings.configured:
     os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
+print('\n\n')
+print(platform.python_version())
 print('Django {}'.format(django.VERSION))
+print('\n\n')
 
 if django.VERSION >= (1, 7):
     django.setup()
