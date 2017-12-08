@@ -9,6 +9,13 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 2.0.0 - 2017/12/08
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/2.0.0>
+  * `DDF_IGNORE_FIELDS` globally for all new instances
+  * Bugfix for auto generated `_ptr` fields.
+  * Support for Django 2.0.0.
+
 Version 1.9.5 - 2017/05/09
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/1.9.5>
