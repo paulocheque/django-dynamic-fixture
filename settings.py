@@ -51,6 +51,8 @@ DATABASES = {
 
 SECRET_KEY = 'ddf-secret-key'
 
+ALLOWED_HOSTS = ['*'] # Since Django 1.11, it is verified when running tests
+
 
 INSTALLED_APPS = ()
 

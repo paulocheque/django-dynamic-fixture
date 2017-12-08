@@ -18,7 +18,7 @@ VERSION = '2.0.0'
 
 tests_require = [
     'nose==1.3.7',
-    'django-nose==1.4.4',
+    'django-nose==1.4.5',
     'coverage==3.7.1',
     'django-coverage==1.2.4',
     'tox==2.6.0',
