@@ -1,28 +1,31 @@
 dist: trusty
-sudo: false
+sudo: true
 
 language: python
+python:
+  - 2.7
+  - 3.6
 
 install:
   - pip install tox
   - pip install coveralls
   #- pip install python-coveralls
 
-script:
-  - tox
-
 env:
-  - TOXENV=django17-py27
-  - TOXENV=django17-py33
-  - TOXENV=django18-py27
-  - TOXENV=django18-py34
-  - TOXENV=django19-py27
-  - TOXENV=django19-py35
-  - TOXENV=django110-py27
-  - TOXENV=django110-py35
-  - TOXENV=django111-py27
-  - TOXENV=django111-py36
-  - TOXENV=django20-py36
+  - DJANGO=django18
+  - DJANGO=django19
+  - DJANGO=django110
+  - DJANGO=django111
+  # - DJANGO=django20
+
+# Workaround for Travis issues with unknown python interpreters
+matrix:
+  exclude:
+    - python: 2.7
+      env: DJANGO=django20
+
+script:
+  - tox -e $DJANGO-py${TRAVIS_PYTHON_VERSION//[.]/}
 
 after_success:
   - coveralls
