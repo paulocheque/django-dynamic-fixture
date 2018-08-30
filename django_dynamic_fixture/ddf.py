@@ -468,7 +468,7 @@ class DynamicFixture(object):
         if not is_model_class(instance):
             raise InvalidModelError(get_unique_model_name(model_class))
         for field in get_fields_from_model(model_class):
-            if is_key_field(field) and 'id' not in configuration: continue
+            if is_key_field(field) and field.name not in configuration: continue
             if field.name not in self.kwargs and self._is_ignored_field(field.name): continue
             self.set_data_for_a_field(model_class, instance, field, persist_dependencies=persist_dependencies, **configuration)
         number_of_pending_fields = len(self.pending_fields)
