@@ -394,6 +394,9 @@ class ModelWithCommonNames(models.Model):
         app_label = 'django_dynamic_fixture'
 
 
+class ModelWithNamedPrimaryKey(models.Model):
+    named_pk = models.AutoField(primary_key=True)
+
 # GeoDjango requires Django 1.7+
 if django_greater_than('1.7') and (hasattr(settings, 'DDF_TEST_GEODJANGO') and settings.DDF_TEST_GEODJANGO):
     from django.contrib.gis.db import models as geomodels

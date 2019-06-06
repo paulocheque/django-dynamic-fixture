@@ -61,6 +61,11 @@ class GetDealWithPrimaryKeyTest(DDFTestCase):
         self.assertEquals(99998, instance.id)
         self.assertEquals(99998, instance.pk)
 
+    def test_get_use_given_named_id(self):
+        instance = self.ddf.get(ModelWithNamedPrimaryKey, named_pk=99998)
+        self.assertEquals(99998, instance.named_pk)
+        self.assertEquals(99998, instance.pk)
+
 
 class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
     def test_new_fill_number_fields_with_numbers(self):
