@@ -847,8 +847,8 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.new(ModelWithNumbers, integer=lambda x: ''.invalidmethod())
             self.fail()
         except InvalidConfigurationError as e:
-            self.assertEquals("""('django_dynamic_fixture.models_test.ModelWithNumbers.integer', AttributeError("'str' object has no attribute 'invalidmethod'",))""",
-                              str(e))
+            self.assertTrue('django_dynamic_fixture.models_test.ModelWithNumbers.integer' in str(e))
+            self.assertTrue("AttributeError("'str' object has no attribute 'invalidmethod'"))" in str(e))
 
     def test_InvalidManyToManyConfigurationError(self):
         try:
