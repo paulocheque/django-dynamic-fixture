@@ -21,7 +21,7 @@ tests_require = [
     'django-nose==1.4.5',
     'coverage==3.7.1',
     'django-coverage==1.2.4',
-    'tox==2.6.0',
+    'tox==3.14.0',
     'flake8==2.1.0',
     'pyflakes==1.5.0',
     'pylint==1.6.5',

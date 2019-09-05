@@ -18,7 +18,7 @@ prepare:
 	#clear ; virtualenv env -p python3.5
 
 os_deps:
-	brew install gdal --HEAD
+	brew install gdal
 
 deps:
 	clear
@@ -37,7 +37,7 @@ test:
 build: clean prepare os_deps deps test
 
 tox:
-	clear ; time tox
+	clear ; time env/bin/tox
 
 push: test
 	clear ; git push origin master
