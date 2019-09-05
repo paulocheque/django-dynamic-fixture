@@ -14,8 +14,11 @@ clean:
 	env/bin/python setup.py clean --all
 
 prepare:
-	clear ; python3.5 -m venv env
+	clear ; python3.7 -m venv env
 	#clear ; virtualenv env -p python3.5
+
+os_deps:
+	brew install gdal --HEAD
 
 deps:
 	clear
@@ -30,6 +33,8 @@ compile:
 
 test:
 	clear ; time env/bin/python manage.py test
+
+build: clean prepare os_deps deps test
 
 tox:
 	clear ; time tox
