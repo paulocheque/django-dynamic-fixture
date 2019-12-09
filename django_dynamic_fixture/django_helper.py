@@ -180,6 +180,9 @@ def field_has_choices(field):
     don't want to convert it to a list. We only care if the list is empty
     or not, so just try to access the first element and return True if that
     doesn't throw an exception."""
+    # Django 3.x no longer helps make choices non-None by default.
+    if field.choices is None:
+        return False
     for i in field.choices:
         return True
     return False
