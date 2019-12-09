@@ -835,20 +835,20 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             model_msg = 'django_dynamic_fixture.models_test.ModelForIgnoreList'
             error_msg = 'django_dynamic_fixture_modelforignorelist.required may not be NULL'
             error_msg2 = 'NOT NULL constraint failed: django_dynamic_fixture_modelforignorelist.required'
-            template1 = "('%s', IntegrityError('%s',))" % (model_msg, error_msg)
-            template2 = "('%s', IntegrityError('%s',))" % (model_msg, error_msg2) # py34
-            template3 = "('%s', IntegrityError(u'%s',))" % (model_msg, error_msg) # pypy
-            template4 = "('%s', IntegrityError(u'%s',))" % (model_msg, error_msg2) # pypy
-            self.assertEquals(str(e) in [template1, template2, template3, template4], True, msg=str(e))
-
+            template1 = "('%s', IntegrityError('%s'" % (model_msg, error_msg)
+            template2 = "('%s', IntegrityError('%s'" % (model_msg, error_msg2) # py34
+            template3 = "('%s', IntegrityError(u'%s'" % (model_msg, error_msg) # pypy
+            template4 = "('%s', IntegrityError(u'%s'" % (model_msg, error_msg2) # pypy
+            self.assertTrue(any(item in str(e) for item in [template1, template2, template3, template4]), msg=str(e))
 
     def test_InvalidConfigurationError(self):
         try:
             self.ddf.new(ModelWithNumbers, integer=lambda x: ''.invalidmethod())
             self.fail()
         except InvalidConfigurationError as e:
-            self.assertTrue('django_dynamic_fixture.models_test.ModelWithNumbers.integer' in str(e))
-            self.assertTrue("AttributeError("'str' object has no attribute 'invalidmethod'"))" in str(e))
+            self.assertTrue('django_dynamic_fixture.models_test.ModelWithNumbers.integer' in str(e), str(e))
+            invalid_method_str = "AttributeError(\"'str' object has no attribute 'invalidmethod'\""
+            self.assertTrue(invalid_method_str in str(e), str(e))
 
     def test_InvalidManyToManyConfigurationError(self):
         try:
