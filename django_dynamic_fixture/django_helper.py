@@ -180,6 +180,9 @@ def field_has_choices(field):
     don't want to convert it to a list. We only care if the list is empty
     or not, so just try to access the first element and return True if that
     doesn't throw an exception."""
+    if not hasattr(field, 'choices') or not field.choices:
+        return False
+
     for i in field.choices:
         return True
     return False
