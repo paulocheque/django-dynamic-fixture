@@ -425,7 +425,7 @@ class DynamicFixture(object):
                 field = get_field_by_name_or_raise(model_class, field_name)
                 fixture = kwargs[field_name]
                 if field.unique and not (isinstance(fixture, (DynamicFixture, Copier, DataFixture)) or callable(fixture)):
-                    raise InvalidConfigurationError('It is not possible to store static values for fields with unique=True (%s)' % get_unique_field_name(field))
+                    raise InvalidConfigurationError('It is not possible to store static values for fields with unique=True (%s). Try using a lambda function instead.' % get_unique_field_name(field))
             library.add_configuration(model_class, kwargs, name=shelve)
         if self.use_library:
             # load ddf_setup.py of the model application
