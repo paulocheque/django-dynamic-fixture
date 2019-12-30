@@ -54,12 +54,12 @@ class DDF_DEFAULT_DATA_FIXTURE_TestCase(AbstractGlobalSettingsTestCase):
 class DDF_FILL_NULLABLE_FIELDS_TestCase(AbstractGlobalSettingsTestCase):
     def test_not_configured_must_load_default_value(self):
         reload_module(global_settings)
-        self.assertEquals(True, global_settings.DDF_FILL_NULLABLE_FIELDS)
+        self.assertEquals(False, global_settings.DDF_FILL_NULLABLE_FIELDS)
 
     def test_must_be_a_boolean(self):
-        conf.settings.DDF_FILL_NULLABLE_FIELDS = False
+        conf.settings.DDF_FILL_NULLABLE_FIELDS = True
         reload_module(global_settings)
-        self.assertEquals(False, global_settings.DDF_FILL_NULLABLE_FIELDS)
+        self.assertEquals(True, global_settings.DDF_FILL_NULLABLE_FIELDS)
 
     def test_must_raise_an_exception_if_it_is_not_a_boolean(self):
         conf.settings.DDF_FILL_NULLABLE_FIELDS = 'x'
@@ -84,7 +84,7 @@ class DDF_IGNORE_FIELDS_TestCase(AbstractGlobalSettingsTestCase):
 class DDF_NUMBER_OF_LAPS_TestCase(AbstractGlobalSettingsTestCase):
     def test_not_configured_must_load_default_value(self):
         reload_module(global_settings)
-        self.assertEquals(1, global_settings.DDF_NUMBER_OF_LAPS)
+        self.assertEquals(0, global_settings.DDF_NUMBER_OF_LAPS)
 
     def test_must_be_an_integer(self):
         conf.settings.DDF_NUMBER_OF_LAPS = 2
@@ -114,7 +114,7 @@ class DDF_VALIDATE_MODELS_TestCase(AbstractGlobalSettingsTestCase):
 class DDF_USE_LIBRARY_TestCase(AbstractGlobalSettingsTestCase):
     def test_not_configured_must_load_default_value(self):
         reload_module(global_settings)
-        self.assertEquals(False, global_settings.DDF_USE_LIBRARY)
+        self.assertEquals(True, global_settings.DDF_USE_LIBRARY)
 
     def test_must_be_a_boolean(self):
         conf.settings.DDF_USE_LIBRARY = False

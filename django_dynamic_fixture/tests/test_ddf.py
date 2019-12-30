@@ -22,7 +22,6 @@ except ImportError:
 except ImproperlyConfigured:
     pass  # enviroment without geo libs
 
-
 from django.test import TestCase
 
 from django_dynamic_fixture.models_test import *
@@ -832,14 +831,8 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.get(ModelForIgnoreList)
             self.fail()
         except BadDataError as e:
-            model_msg = 'django_dynamic_fixture.models_test.ModelForIgnoreList'
-            error_msg = 'django_dynamic_fixture_modelforignorelist.required may not be NULL'
-            error_msg2 = 'NOT NULL constraint failed: django_dynamic_fixture_modelforignorelist.required'
-            template1 = "('%s', IntegrityError('%s',))" % (model_msg, error_msg)
-            template2 = "('%s', IntegrityError('%s',))" % (model_msg, error_msg2) # py34
-            template3 = "('%s', IntegrityError(u'%s',))" % (model_msg, error_msg) # pypy
-            template4 = "('%s', IntegrityError(u'%s',))" % (model_msg, error_msg2) # pypy
-            self.assertEquals(str(e) in [template1, template2, template3, template4], True, msg=str(e))
+            self.assertTrue('IntegrityError' in str(e), msg=str(e))
+            self.assertTrue('NULL' in str(e), msg=str(e))
 
 
     def test_InvalidConfigurationError(self):
@@ -848,7 +841,8 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.fail()
         except InvalidConfigurationError as e:
             self.assertTrue('django_dynamic_fixture.models_test.ModelWithNumbers.integer' in str(e))
-            self.assertTrue("AttributeError("'str' object has no attribute 'invalidmethod'"))" in str(e))
+            self.assertTrue('AttributeError' in str(e))
+            self.assertTrue('invalidmethod' in str(e))
 
     def test_InvalidManyToManyConfigurationError(self):
         try:

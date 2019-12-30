@@ -95,19 +95,19 @@ class CShortcutTest(TestCase):
         self.assertEquals(instance.integer, instance.integer_b)
 
     def test_copying_from_a_fk(self):
-        instance = G(ModelWithRelationships, integer=C('foreignkey.integer'))
+        instance = G(ModelWithRelationships, foreignkey=F(), integer=C('foreignkey.integer'))
         self.assertEquals(instance.integer, instance.foreignkey.integer)
 
     def test_copying_from_a_one2one(self):
-        instance = G(ModelWithRelationships, integer=C('onetoone.integer'))
+        instance = G(ModelWithRelationships, onetoone=F(), integer=C('onetoone.integer'))
         self.assertEquals(instance.integer, instance.onetoone.integer)
 
     def test_copying_from_a_self_fk(self):
-        instance = G(ModelWithRelationships, integer=C('selfforeignkey.integer_b'))
+        instance = G(ModelWithRelationships, selfforeignkey=F(), integer=C('selfforeignkey.integer_b'))
         self.assertEquals(instance.integer, instance.selfforeignkey.integer_b)
 
     def test_copying_inside_fk(self):
-        instance = G(ModelWithRelationships, selfforeignkey=F(integer=C('selfforeignkey.integer_b')))
+        instance = G(ModelWithRelationships, selfforeignkey=F(selfforeignkey=F(), integer=C('selfforeignkey.integer_b')))
         self.assertEquals(instance.selfforeignkey.integer, instance.selfforeignkey.selfforeignkey.integer_b)
 
     def test_copying_inside_many_to_many(self):
