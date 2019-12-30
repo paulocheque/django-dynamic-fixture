@@ -18,10 +18,11 @@ prepare:
 
 os_deps:
 	brew install gdal
-	pip install --upgrade pip
+	env/bin/pip install --upgrade pip
 
 deps:
 	clear
+	env/bin/pip install --upgrade pip
 	env/bin/pip install -r requirements.txt
 	env/bin/pip install -r requirements-dev.txt
 
@@ -33,12 +34,15 @@ compile:
 	env/bin/python -OO -m compileall .
 
 test:
-	clear ; time env/bin/python manage.py test
+	clear ; env/bin/pytest -n 3
 
-build: clean prepare os_deps deps test
+cov:
+	clear ; env/bin/pytest -n 3 --cov=django_dynamic_fixture tests/
 
 tox:
 	clear ; time env/bin/tox
+
+build: clean prepare os_deps deps test
 
 push: test
 	clear ; git push origin master

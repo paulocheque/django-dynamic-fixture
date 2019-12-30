@@ -17,16 +17,6 @@ from setuptools import setup, find_packages
 VERSION = '2.0.0'
 
 tests_require = [
-    'nose==1.3.7',
-    'django-nose==1.4.5',
-    'coverage==3.7.1',
-    'django-coverage==1.2.4',
-    'tox==3.14.0',
-    'flake8==2.1.0',
-    'pyflakes==1.5.0',
-    'pylint==1.6.5',
-    'jsonfield==2.0.0',
-    'psycopg2==2.7',
 ]
 
 install_requires = [
@@ -53,7 +43,7 @@ setup(name='django-dynamic-fixture',
       version=VERSION,
       install_requires=install_requires,
       tests_require=tests_require,
-      test_suite='runtests.runtests',
+      test_suite='pytest',
       extras_require={'test': tests_require},
 
       entry_points={ 'nose.plugins': ['queries = queries:Queries', 'ddf_setup = ddf_setup:DDFSetup'] },

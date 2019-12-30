@@ -1,4 +1,8 @@
-tox==3.14.0
+pytest
+pytest-django
+pytest-xdist
+pytest-cov
+tox
 
 psycopg2==2.8.4 # For tests with Postgres fields
 #or psycopg2cffi==2.7.5 # For pypy
