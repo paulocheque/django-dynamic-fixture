@@ -82,7 +82,7 @@ except Exception as e:
 
 
 
-DDF_FILL_NULLABLE_FIELDS = get_boolean_config('DDF_FILL_NULLABLE_FIELDS', default=True)
+DDF_FILL_NULLABLE_FIELDS = get_boolean_config('DDF_FILL_NULLABLE_FIELDS', default=False)
 DDF_VALIDATE_MODELS = get_boolean_config('DDF_VALIDATE_MODELS', default=False)
 DDF_VALIDATE_ARGS = get_boolean_config('DDF_VALIDATE_ARGS', default=False)
 DDF_USE_LIBRARY = get_boolean_config('DDF_USE_LIBRARY', default=False)
