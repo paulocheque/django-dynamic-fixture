@@ -5,6 +5,8 @@ language: python
 python:
   - 2.7
   - 3.6
+  - 3.7
+  - 3.8
 
 install:
   - pip install tox
@@ -12,9 +14,6 @@ install:
   #- pip install python-coveralls
 
 env:
-  - DJANGO=django18
-  - DJANGO=django19
-  - DJANGO=django110
   - DJANGO=django111
   # - DJANGO=django20
 

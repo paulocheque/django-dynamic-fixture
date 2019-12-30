@@ -14,11 +14,11 @@ clean:
 	env/bin/python setup.py clean --all
 
 prepare:
-	clear ; python3.7 -m venv env
-	#clear ; virtualenv env -p python3.5
+	clear ; python3 -m venv env
 
 os_deps:
 	brew install gdal
+	pip install --upgrade pip
 
 deps:
 	clear
@@ -26,7 +26,8 @@ deps:
 	env/bin/pip install -r requirements-dev.txt
 
 shell:
-	clear ; env/bin/python
+	#clear ; env/bin/python -i -c "from ddf import *"
+	clear ; env/bin/python manage.py shell"
 
 compile:
 	env/bin/python -OO -m compileall .
