@@ -45,71 +45,71 @@ class DDFTestCase(TestCase):
 class NewCreateAModelInstanceTest(DDFTestCase):
     def test_new_create_a_non_saved_instance_of_the_model(self):
         instance = self.ddf.new(EmptyModel)
-        self.assertTrue(isinstance(instance, EmptyModel))
-        self.assertEquals(None, instance.id)
+        assert isinstance(instance, EmptyModel)
+        assert instance.id is None
 
 
 class GetDealWithPrimaryKeyTest(DDFTestCase):
     def test_get_use_database_id_by_default(self):
         instance = self.ddf.get(EmptyModel)
-        self.assertNotEquals(None, instance.id)
-        self.assertNotEquals(None, instance.pk)
+        assert instance.id is not None
+        assert instance.pk is not None
 
     def test_get_use_given_id(self):
         instance = self.ddf.new(EmptyModel, id=99998)
-        self.assertEquals(99998, instance.id)
-        self.assertEquals(99998, instance.pk)
+        assert instance.id == 99998
+        assert instance.pk == 99998
 
     def test_get_use_given_named_id(self):
         instance = self.ddf.get(ModelWithNamedPrimaryKey, named_pk=99998)
-        self.assertEquals(99998, instance.named_pk)
-        self.assertEquals(99998, instance.pk)
+        assert instance.named_pk == 99998
+        assert instance.pk == 99998
 
 
 class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
     def test_new_fill_number_fields_with_numbers(self):
         instance = self.ddf.new(ModelWithNumbers)
-        self.assertTrue(isinstance(instance.integer, int))
-        self.assertTrue(isinstance(instance.smallinteger, int))
-        self.assertTrue(isinstance(instance.positiveinteger, int))
-        self.assertTrue(isinstance(instance.positivesmallinteger, int))
-        self.assertTrue(isinstance(instance.biginteger, int))
-        self.assertTrue(isinstance(instance.float, float))
+        assert isinstance(instance.integer, int)
+        assert isinstance(instance.smallinteger, int)
+        assert isinstance(instance.positiveinteger, int)
+        assert isinstance(instance.positivesmallinteger, int)
+        assert isinstance(instance.biginteger, int)
+        assert isinstance(instance.float, float)
 
     def test_new_fill_string_fields_with_text_type_strings(self):
         instance = self.ddf.new(ModelWithStrings)
-        self.assertTrue(isinstance(instance.string, six.text_type))
-        self.assertTrue(isinstance(instance.text, six.text_type))
-        self.assertTrue(isinstance(instance.slug, six.text_type))
-        self.assertTrue(isinstance(instance.commaseparated, six.text_type))
+        assert isinstance(instance.string, six.text_type)
+        assert isinstance(instance.text, six.text_type)
+        assert isinstance(instance.slug, six.text_type)
+        assert isinstance(instance.commaseparated, six.text_type)
 
     def test_new_fill_boolean_fields_with_False_and_None(self):
         instance = self.ddf.new(ModelWithBooleans)
-        self.assertEquals(False, instance.boolean)
-        self.assertEquals(None, instance.nullboolean)
+        assert instance.boolean == False
+        assert instance.nullboolean is None
 
     def test_new_fill_time_related_fields_with_current_values(self):
         instance = self.ddf.new(ModelWithDateTimes)
-        self.assertTrue(date.today() >= instance.date)
-        self.assertTrue(datetime.now() >= instance.time)
-        self.assertTrue(datetime.now() >= instance.datetime)
+        assert date.today() >= instance.date
+        assert datetime.now() >= instance.time
+        assert datetime.now() >= instance.datetime
 
     def test_new_fill_formatted_strings_fields_with_basic_values(self):
         instance = self.ddf.new(ModelWithFieldsWithCustomValidation)
-        self.assertTrue(isinstance(instance.email, six.text_type))
-        self.assertTrue(isinstance(instance.url, six.text_type))
-        self.assertTrue(isinstance(instance.ip, six.text_type))
+        assert isinstance(instance.email, six.text_type)
+        assert isinstance(instance.url, six.text_type)
+        assert isinstance(instance.ip, six.text_type)
         if django_greater_than('1.4'):
-            self.assertTrue(isinstance(instance.ipv6, six.text_type))
+            assert isinstance(instance.ipv6, six.text_type)
 
     def test_new_fill_file_fields_with_basic_strings(self):
         instance = self.ddf.new(ModelWithFileFields)
-        self.assertTrue(isinstance(instance.filepath, six.text_type))
-        self.assertTrue(isinstance(instance.file.path, six.text_type))
+        assert isinstance(instance.filepath, six.text_type)
+        assert isinstance(instance.file.path, six.text_type)
         try:
             import pil
             # just test it if the PIL package is installed
-            self.assertTrue(isinstance(instance.image, str))
+            assert isinstance(instance.image, str)
         except ImportError:
             pass
 
@@ -117,50 +117,50 @@ class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
         if django_greater_than('1.6'):
             value = b'\x00\x46\xFE'
             instance = self.ddf.new(ModelWithBinary, binary=value)
-            self.assertEqual(bytes(instance.binary), bytes(value))
+            assert bytes(instance.binary) == bytes(value)
 
             instance = self.ddf.get(ModelWithBinary)
             if six.PY3:
-                self.assertTrue(isinstance(instance.binary, six.binary_type), msg=type(instance.binary))
+                assert isinstance(instance.binary, six.binary_type), type(instance.binary)
             else:
-                self.assertTrue(isinstance(instance.binary, (six.binary_type, str, unicode)), msg=type(instance.binary))
+                assert isinstance(instance.binary, (six.binary_type, str, unicode)), type(instance.binary)
 
 
 class NewFullFillAttributesWithDefaultDataTest(DDFTestCase):
     def test_fill_field_with_default_data(self):
         instance = self.ddf.new(ModelWithDefaultValues)
-        self.assertEquals(3, instance.integer_with_default)
+        assert instance.integer_with_default == 3
 
     def test_fill_field_with_possible_choices(self):
         instance = self.ddf.new(ModelWithDefaultValues)
-        self.assertEquals('a', instance.string_with_choices)
+        assert instance.string_with_choices == 'a'
 
     def test_fill_field_with_default_value_even_if_field_is_foreign_key(self):
         instance = self.ddf.new(ModelWithDefaultValues)
-        self.assertEquals(None, instance.foreign_key_with_default)
+        assert instance.foreign_key_with_default is None
 
     def test_fill_field_with_default_data_and_choices_must_consider_default_data_instead_choices(self):
         instance = self.ddf.new(ModelWithDefaultValues)
-        self.assertEquals('b', instance.string_with_choices_and_default)
+        assert instance.string_with_choices_and_default == 'b'
 
     def test_fill_field_with_possible_optgroup_choices(self):
         instance = self.ddf.new(ModelWithDefaultValues)
-        self.assertEquals('a', instance.string_with_optgroup_choices)
+        assert instance.string_with_optgroup_choices == 'a'
 
 
 class NewFullFillAttributesWithCustomDataTest(DDFTestCase):
     def test_fields_are_filled_with_custom_attributes(self):
-        self.assertEquals(9, self.ddf.new(ModelWithNumbers, integer=9).integer)
-        self.assertEquals('7', self.ddf.new(ModelWithStrings, string='7').string)
-        self.assertEquals(True, self.ddf.new(ModelWithBooleans, boolean=True).boolean)
+        assert self.ddf.new(ModelWithNumbers, integer=9).integer == 9
+        assert self.ddf.new(ModelWithStrings, string='7').string == '7'
+        assert self.ddf.new(ModelWithBooleans, boolean=True).boolean
 
     def test_decimal_can_be_filled_by_an_string(self):
         self.ddf.get(ModelWithNumbers, decimal='9.5')
-        self.assertEquals(Decimal('9.5'), ModelWithNumbers.objects.latest('id').decimal)
+        assert ModelWithNumbers.objects.latest('id').decimal == Decimal('9.5')
 
     def test_fields_can_be_filled_by_functions(self):
         instance = self.ddf.new(ModelWithStrings, string=lambda field: field.name)
-        self.assertEquals('string', instance.string)
+        assert instance.string == 'string'
 
     def test_invalid_configuration_raise_an_error(self):
         self.assertRaises(InvalidConfigurationError, self.ddf.new, ModelWithNumbers, integer=lambda x: ''.invalidmethod())
@@ -178,9 +178,9 @@ class NewFullFillAttributesUsingPluginsTest(DDFTestCase):
         data_fixture.plugins = django.conf.settings.DDF_FIELD_FIXTURES
         try:
             instance = self.ddf.get(ModelForFieldPlugins)
-            # self.assertEquals(123456789, instance.aaa)
-            # self.assertEquals(123456789, instance.bbb)
-            self.assertEquals(123456789, instance.custom_field_custom_fixture)
+            # assert instance.aaa == 123456789
+            # assert instance.bbb == 123456789
+            assert instance.custom_field_custom_fixture == 123456789
         finally:
             data_fixture.plugins = {}
 
@@ -188,7 +188,7 @@ class NewFullFillAttributesUsingPluginsTest(DDFTestCase):
         data_fixture.plugins = django.conf.settings.DDF_FIELD_FIXTURES
         try:
             instance = self.ddf.get(ModelForFieldPlugins)
-            self.assertEquals(987654321, instance.custom_field_custom_fixture2)
+            assert instance.custom_field_custom_fixture2 == 987654321
         finally:
             data_fixture.plugins = {}
 
@@ -199,7 +199,7 @@ class NewFullFillAttributesUsingPluginsTest(DDFTestCase):
             try:
                 from jsonfield import JSONCharField, JSONField
                 instance = self.ddf.new(ModelForPlugins1)
-                self.assertEquals(True, False, msg='JSON fields must not be supported by default')
+                assert False, 'JSON fields must not be supported by default'
             except ImportError:
                 pass
             except UnsupportedFieldError as e:
@@ -214,12 +214,12 @@ class NewFullFillAttributesUsingPluginsTest(DDFTestCase):
                 data_fixture.plugins = django.conf.settings.DDF_FIELD_FIXTURES
                 try:
                     instance = self.ddf.new(ModelForPlugins1)
-                    self.assertTrue(isinstance(instance.json_field1, str), msg=type(instance.json_field1))
-                    self.assertTrue(isinstance(instance.json_field2, str), msg=type(instance.json_field2))
-                    self.assertTrue(isinstance(json.loads(instance.json_field1), dict))
-                    self.assertTrue(isinstance(json.loads(instance.json_field2), list))
-                    self.assertEquals(instance.json_field1, '{"some random value": "c"}')
-                    self.assertEquals(instance.json_field2, '[1, 2, 3]')
+                    assert isinstance(instance.json_field1, str), type(instance.json_field1)
+                    assert isinstance(instance.json_field2, str), type(instance.json_field2)
+                    assert isinstance(json.loads(instance.json_field1), dict)
+                    assert isinstance(json.loads(instance.json_field2), list)
+                    assert instance.json_field1 == '{"some random value": "c"}'
+                    assert instance.json_field2 == '[1, 2, 3]'
                 finally:
                     data_fixture.plugins = {}
             except ImportError:
@@ -230,19 +230,19 @@ class NewIgnoringNullableFieldsTest(DDFTestCase):
     def test_new_do_not_fill_nullable_fields_if_we_do_not_want_to(self):
         self.ddf = DynamicFixture(data_fixture, fill_nullable_fields=False)
         instance = self.ddf.new(ModelForNullable)
-        self.assertNotEquals(None, instance.not_nullable)
-        self.assertEquals(None, instance.nullable)
+        assert instance.not_nullable is not None
+        assert instance.nullable is None
 
 
 class NewIgnoreFieldsInIgnoreListTest(DDFTestCase):
     def test_new_do_not_fill_ignored_fields(self):
         self.ddf = DynamicFixture(data_fixture, ignore_fields=['not_required', 'not_required_with_default'])
         instance = self.ddf.new(ModelForIgnoreList)
-        self.assertEquals(None, instance.not_required)
-        self.assertNotEquals(None, instance.not_required_with_default)
+        assert instance.not_required is None
+        assert instance.not_required_with_default is not None
         # not ignored fields
-        self.assertNotEquals(None, instance.required)
-        self.assertNotEquals(None, instance.required_with_default)
+        assert instance.required is not None
+        assert instance.required_with_default is not None
 
     def test_get_raise_an_error_if_a_required_field_is_in_ignore_list(self):
         self.ddf = DynamicFixture(data_fixture, ignore_fields=['required', 'required_with_default'])
@@ -251,105 +251,105 @@ class NewIgnoreFieldsInIgnoreListTest(DDFTestCase):
     def test_ignore_fields_are_propagated_to_self_references(self):
         self.ddf = DynamicFixture(data_fixture, ignore_fields=['not_required', 'nullable'])
         instance = self.ddf.new(ModelForIgnoreList)
-        self.assertEquals(None, instance.not_required)
-        self.assertEquals(None, instance.self_reference.not_required)
+        assert instance.not_required is None
+        assert instance.self_reference.not_required is None
 
     def test_ignore_fields_are_not_propagated_to_different_references(self):
         self.ddf = DynamicFixture(data_fixture, ignore_fields=['not_required', 'nullable'])
         instance = self.ddf.new(ModelForIgnoreList)
-        self.assertNotEquals(None, instance.different_reference.nullable)
+        assert instance.different_reference.nullable is not None
 
     def test_ignore_fields_are_not_ignored_if_explicitely_given(self):
         self.ddf = DynamicFixture(data_fixture, not_required=3, ignore_fields=['not_required', 'nullable'])
         instance = self.ddf.new(ModelForIgnoreList)
-        self.assertEqual(3, instance.not_required)
+        assert instance.not_required == 3
 
 
 class NewAlsoCreatesRelatedObjectsTest(DDFTestCase):
     def test_new_fill_foreignkey_fields(self):
         instance = self.ddf.new(ModelWithRelationships)
-        self.assertTrue(isinstance(instance.foreignkey, ModelRelated))
+        assert isinstance(instance.foreignkey, ModelRelated)
 
     def test_new_fill_onetoone_fields(self):
         instance = self.ddf.new(ModelWithRelationships)
-        self.assertTrue(isinstance(instance.onetoone, ModelRelated))
+        assert isinstance(instance.onetoone, ModelRelated)
 
     def test_new_deal_with_default_values(self):
         instance = self.ddf.new(ModelWithRelationships)
-        self.assertTrue(isinstance(instance.foreignkey_with_default, ModelRelated), msg=str(type(instance.foreignkey_with_default)))
+        assert isinstance(instance.foreignkey_with_default, ModelRelated), str(type(instance.foreignkey_with_default))
 
     def test_new_deal_with_id_default_values(self):
         instance = self.ddf.new(ModelWithRelationships)
-        self.assertTrue(isinstance(instance.foreignkey_with_id_default, ModelRelated), msg=str(type(instance.foreignkey_with_default)))
+        assert isinstance(instance.foreignkey_with_id_default, ModelRelated), str(type(instance.foreignkey_with_default))
 
 #        TODO
 #    def test_new_fill_genericrelations_fields(self):
 #        instance = self.ddf.new(ModelWithRelationships)
-#        self.assertTrue(isinstance(instance.foreignkey, ModelRelated))
+#        assert isinstance(instance.foreignkey, ModelRelated)
 
 
 class NewCanCreatesCustomizedRelatedObjectsTest(DDFTestCase):
     def test_customizing_nullable_fields_for_related_objects(self):
         instance = self.ddf.new(ModelWithRelationships, selfforeignkey=DynamicFixture(data_fixture, fill_nullable_fields=False))
-        self.assertTrue(isinstance(instance.integer, int))
-        self.assertEquals(None, instance.selfforeignkey.integer)
+        assert isinstance(instance.integer, int)
+        assert instance.selfforeignkey.integer is None
 
 
 class NewDealWithSelfReferencesTest(DDFTestCase):
     def test_new_create_by_default_only_1_lap_in_cycle(self):
         instance = self.ddf.new(ModelWithRelationships)
-        self.assertNotEquals(None, instance.selfforeignkey) # 1 cycle
-        self.assertEquals(None, instance.selfforeignkey.selfforeignkey) # 2 cycles
+        assert instance.selfforeignkey is not None # 1 cycle
+        assert instance.selfforeignkey.selfforeignkey is None # 2 cycles
 
     def test_new_create_n_laps_in_cycle(self):
         self.ddf = DynamicFixture(data_fixture, number_of_laps=2)
         instance = self.ddf.new(ModelWithRelationships)
-        self.assertNotEquals(None, instance.selfforeignkey) # 1 cycle
-        self.assertNotEquals(None, instance.selfforeignkey.selfforeignkey) # 2 cycles
-        self.assertEquals(None, instance.selfforeignkey.selfforeignkey.selfforeignkey) # 3 cycles
+        assert instance.selfforeignkey is not None # 1 cycle
+        assert instance.selfforeignkey.selfforeignkey is not None # 2 cycles
+        instance.selfforeignkey.selfforeignkey.selfforeignkey is None # 3 cycles
 
 
 class GetFullFilledModelInstanceAndPersistTest(DDFTestCase):
     def test_get_create_and_save_a_full_filled_instance_of_the_model(self):
         instance = self.ddf.get(ModelWithRelationships)
-        self.assertTrue(isinstance(instance, ModelWithRelationships))
-        self.assertNotEquals(None, instance.id)
+        assert isinstance(instance, ModelWithRelationships)
+        assert instance.id is not None
         # checking unique problems
         another_instance = self.ddf.get(ModelWithRelationships)
-        self.assertTrue(isinstance(another_instance, ModelWithRelationships))
-        self.assertNotEquals(None, another_instance.id)
+        assert isinstance(another_instance, ModelWithRelationships)
+        assert another_instance.id is not None
 
     def test_get_create_and_save_related_fields(self):
         instance = self.ddf.get(ModelWithRelationships)
-        self.assertNotEquals(None, instance.selfforeignkey)
-        self.assertNotEquals(None, instance.foreignkey)
-        self.assertNotEquals(None, instance.onetoone)
+        assert instance.selfforeignkey is not None
+        assert instance.foreignkey is not None
+        assert instance.onetoone is not None
 
 
 class ManyToManyRelationshipTest(DDFTestCase):
     def test_new_ignore_many_to_many_configuratios(self):
         instance = self.ddf.new(ModelWithRelationships, manytomany=3)
         instance.save()
-        self.assertEquals(0, instance.manytomany.all().count())
+        assert instance.manytomany.all().count() == 0
 
     def test_get_ignore_many_to_many_configuratios(self):
         instance = self.ddf.get(ModelWithRelationships, manytomany=3)
-        self.assertEquals(3, instance.manytomany.all().count())
+        assert instance.manytomany.all().count() == 3
 
     def test_many_to_many_configuratios_accept_list_of_dynamic_filters(self):
         instance = self.ddf.get(ModelWithRelationships, manytomany=[DynamicFixture(data_fixture, integer=1000), DynamicFixture(data_fixture, integer=1001)])
-        self.assertEquals(2, instance.manytomany.all().count())
-        self.assertEquals(1000, instance.manytomany.all()[0].integer)
-        self.assertEquals(1001, instance.manytomany.all()[1].integer)
+        assert instance.manytomany.all().count() == 2
+        assert instance.manytomany.all()[0].integer == 1000
+        assert instance.manytomany.all()[1].integer == 1001
 
     def test_many_to_many_configuratios_accept_list_of_instances(self):
         b1 = self.ddf.get(ModelRelated, integer=1000)
         b2 = self.ddf.get(ModelRelated, integer=1001)
         instance = self.ddf.get(ModelWithRelationships, manytomany=[b1, b2])
-        self.assertEquals(2, instance.manytomany.all().count())
+        assert instance.manytomany.all().count() == 2
         objs = instance.manytomany.all().order_by('integer')
-        self.assertEquals(1000, objs[0].integer)
-        self.assertEquals(1001, objs[1].integer)
+        assert objs[0].integer == 1000
+        assert objs[1].integer == 1001
 
     def test_invalid_many_to_many_configuration(self):
         self.assertRaises(InvalidManyToManyConfigurationError, self.ddf.get, ModelWithRelationships, manytomany='a')
@@ -359,24 +359,24 @@ class ManyToManyRelationshipTest(DDFTestCase):
         b2 = self.ddf.get(ModelRelated, integer=1001)
         instance = self.ddf.get(ModelWithRelationships, manytomany_through=[b1, b2])
         objs = instance.manytomany_through.all().order_by('integer')
-        self.assertEquals(2, objs.count())
-        self.assertEquals(1000, objs[0].integer)
-        self.assertEquals(1001, objs[1].integer)
+        assert objs.count() == 2
+        assert objs[0].integer == 1000
+        assert objs[1].integer == 1001
 
 
 class NewDealWithCyclicDependenciesTest(DDFTestCase):
     def test_new_create_by_default_only_1_lap_in_cycle(self):
         c = self.ddf.new(ModelWithCyclicDependency)
-        self.assertNotEquals(None, c.d) # 1 cycle
-        self.assertEquals(None, c.d.c) # 2 cycles
+        assert c.d is not None # 1 cycle
+        assert c.d.c is None # 2 cycles
 
     def test_new_create_n_laps_in_cycle(self):
         self.ddf = DynamicFixture(data_fixture, number_of_laps=2)
         c = self.ddf.new(ModelWithCyclicDependency)
-        self.assertNotEquals(None, c.d)
-        self.assertNotEquals(None, c.d.c) # 1 cycle
-        self.assertNotEquals(None, c.d.c.d) # 2 cycles
-        self.assertEquals(None, c.d.c.d.c) # 3 cycles
+        assert c.d is not None
+        assert c.d.c is not None # 1 cycle
+        assert c.d.c.d is not None # 2 cycles
+        assert c.d.c.d.c is None # 3 cycles
 
 
 class NewDealWithInheritanceTest(DDFTestCase):
@@ -388,67 +388,67 @@ class NewDealWithInheritanceTest(DDFTestCase):
 
     def test_get_must_fill_parent_fields_too(self):
         instance = self.ddf.get(ModelParent)
-        self.assertTrue(isinstance(instance.integer, int))
-        self.assertEquals(1, ModelParent.objects.count())
+        assert isinstance(instance.integer, int)
+        assert ModelParent.objects.count() == 1
 
     def test_get_must_fill_grandparent_fields_too(self):
         instance = self.ddf.get(ModelChild)
-        self.assertTrue(isinstance(instance.integer, int))
-        self.assertEquals(1, ModelParent.objects.count())
-        self.assertEquals(1, ModelChild.objects.count())
+        assert isinstance(instance.integer, int)
+        assert ModelParent.objects.count() == 1
+        assert ModelChild.objects.count() == 1
 
     def test_get_must_ignore_parent_link_attributes_but_the_parent_object_must_be_created(self):
         instance = self.ddf.get(ModelChildWithCustomParentLink)
-        self.assertTrue(isinstance(instance.integer, int))
-        self.assertEquals(1, ModelParent.objects.count())
-        self.assertEquals(1, ModelChildWithCustomParentLink.objects.count())
-        self.assertNotEquals(None, instance.my_custom_ref.id)
-        self.assertNotEquals(None, instance.my_custom_ref.my_custom_ref_x.id)
+        assert isinstance(instance.integer, int)
+        assert ModelParent.objects.count() == 1
+        assert ModelChildWithCustomParentLink.objects.count() == 1
+        assert instance.my_custom_ref.id is not None
+        assert instance.my_custom_ref.my_custom_ref_x.id is not None
 
     # TODO: need to check these tests. Here we are trying to simulate a bug with parent_link attribute
     def test_get_0(self):
         instance = self.ddf.get(ModelWithRefToParent)
-        self.assertEquals(1, ModelWithRefToParent.objects.count())
-        self.assertEquals(1, ModelParent.objects.count())
-        self.assertTrue(isinstance(instance.parent, ModelParent))
+        assert ModelWithRefToParent.objects.count() == 1
+        assert ModelParent.objects.count() == 1
+        assert isinstance(instance.parent, ModelParent)
 
     def test_get_1(self):
         instance = self.ddf.get(ModelWithRefToParent, parent=self.ddf.get(ModelChild))
-        self.assertEquals(1, ModelWithRefToParent.objects.count())
-        self.assertEquals(1, ModelParent.objects.count())
-        self.assertEquals(1, ModelChild.objects.count())
-        self.assertTrue(isinstance(instance.parent, ModelChild))
+        assert ModelWithRefToParent.objects.count() == 1
+        assert ModelParent.objects.count() == 1
+        assert ModelChild.objects.count() == 1
+        assert isinstance(instance.parent, ModelChild)
 
     def test_get_2(self):
         instance = self.ddf.get(ModelWithRefToParent, parent=self.ddf.get(ModelChildWithCustomParentLink))
-        self.assertEquals(1, ModelWithRefToParent.objects.count())
-        self.assertEquals(1, ModelParent.objects.count())
-        self.assertEquals(1, ModelChildWithCustomParentLink.objects.count())
-        self.assertTrue(isinstance(instance.parent, ModelChildWithCustomParentLink))
+        assert ModelWithRefToParent.objects.count() == 1
+        assert ModelParent.objects.count() == 1
+        assert ModelChildWithCustomParentLink.objects.count() == 1
+        assert isinstance(instance.parent, ModelChildWithCustomParentLink)
 
 
 class CustomFieldsTest(DDFTestCase):
     def test_new_field_that_extends_django_field_must_be_supported(self):
         instance = self.ddf.new(ModelWithCustomFields)
-        self.assertEquals(1, instance.x)
+        assert instance.x == 1
 
     def test_unsupported_field_is_filled_with_null_if_it_is_possible(self):
         instance = self.ddf.new(ModelWithCustomFields)
-        self.assertEquals(None, instance.y)
+        assert instance.y is None
 
     def test_unsupported_field_raise_an_error_if_it_does_not_accept_null_value(self):
         self.assertRaises(UnsupportedFieldError, self.ddf.new, ModelWithUnsupportedField)
 
     def test_new_field_that_double_inherits_django_field_must_be_supported(self):
         instance = self.ddf.new(ModelWithCustomFieldsMultipleInheritance)
-        self.assertEquals(1, instance.x)
+        assert instance.x == 1
 
 
 class ComplexFieldsTest(DDFTestCase):
     def test_x(self):
         if django_greater_than('1.8'):
             instance = self.ddf.new(ModelForUUID)
-            self.assertTrue(isinstance(instance.uuid, uuid.UUID))
+            assert isinstance(instance.uuid, uuid.UUID)
 
 
 if (hasattr(settings, 'DDF_TEST_GEODJANGO') and settings.DDF_TEST_GEODJANGO):
@@ -456,28 +456,28 @@ if (hasattr(settings, 'DDF_TEST_GEODJANGO') and settings.DDF_TEST_GEODJANGO):
         def test_geodjango_fields(self):
             if django_greater_than('1.7'):
                 instance = self.ddf.new(ModelForGeoDjango)
-                self.assertTrue(isinstance(instance.geometry, GEOSGeometry), msg=str(type(instance.geometry)))
-                self.assertTrue(isinstance(instance.point, Point))
-                self.assertTrue(isinstance(instance.line_string, LineString))
-                self.assertTrue(isinstance(instance.polygon, Polygon))
-                self.assertTrue(isinstance(instance.multi_point, MultiPoint))
-                self.assertTrue(isinstance(instance.multi_line_string, MultiLineString))
-                self.assertTrue(isinstance(instance.multi_polygon, MultiPolygon))
-                self.assertTrue(isinstance(instance.geometry_collection, GeometryCollection))
+                assert isinstance(instance.geometry, GEOSGeometry), str(type(instance.geometry))
+                assert isinstance(instance.point, Point)
+                assert isinstance(instance.line_string, LineString)
+                assert isinstance(instance.polygon, Polygon)
+                assert isinstance(instance.multi_point, MultiPoint)
+                assert isinstance(instance.multi_line_string, MultiLineString)
+                assert isinstance(instance.multi_polygon, MultiPolygon)
+                assert isinstance(instance.geometry_collection, GeometryCollection)
 
 
 class ModelValidatorsTest(DDFTestCase):
     def test_it_must_create_if_validation_is_disabled(self):
         instance = self.ddf.get(ModelWithValidators, field_validator='nok', clean_validator='nok')
         self.ddf.validate_models = False
-        self.assertEquals('nok', instance.field_validator)
-        self.assertEquals('nok', instance.clean_validator)
+        assert instance.field_validator == 'nok'
+        assert instance.clean_validator == 'nok'
 
     def test_it_must_create_if_there_is_no_validation_errors(self):
         instance = self.ddf.get(ModelWithValidators, field_validator='ok', clean_validator='ok')
         self.ddf.validate_models = True
-        self.assertEquals('ok', instance.field_validator)
-        self.assertEquals('ok', instance.clean_validator)
+        assert instance.field_validator == 'ok'
+        assert instance.clean_validator == 'ok'
 
     def test_it_must_raise_a_bad_data_error_if_data_is_not_valid(self):
         self.ddf.validate_models = True
@@ -494,59 +494,59 @@ class ConfigurationValidatorTest(DDFTestCase):
 class DisableAutoGeneratedDateTimesTest(DDFTestCase):
     def test_auto_generated_datetimes_must_be_respected_if_nothing_is_specified(self):
         instance = self.ddf.get(ModelWithAutoDateTimes)
-        self.assertEquals(datetime.today().date(), instance.auto_now_add)
-        self.assertEquals(datetime.today().date(), instance.auto_now)
+        assert datetime.today().date() == instance.auto_now_add
+        assert datetime.today().date() == instance.auto_now
 
     def test_it_must_ignore_auto_generated_datetime_if_a_custom_value_is_provided(self):
         instance = self.ddf.get(ModelWithAutoDateTimes, auto_now_add=date(2000, 12, 31))
-        self.assertEquals(date(2000, 12, 31), instance.auto_now_add)
+        assert instance.auto_now_add == date(2000, 12, 31)
 
         instance = self.ddf.get(ModelWithAutoDateTimes, auto_now=date(2000, 12, 31))
-        self.assertEquals(date(2000, 12, 31), instance.auto_now)
+        assert instance.auto_now == date(2000, 12, 31)
 
     def test_checking_if_implementation_works_for_m2m_fields_too(self):
         instance = self.ddf.get(ModelWithAutoDateTimes, manytomany=[DynamicFixture(data_fixture, auto_now_add=date(2000, 12, 31))])
-        self.assertEquals(date(2000, 12, 31), instance.manytomany.all()[0].auto_now_add)
+        assert instance.manytomany.all()[0].auto_now_add == date(2000, 12, 31)
 
         instance = self.ddf.get(ModelWithAutoDateTimes, manytomany=[DynamicFixture(data_fixture, auto_now=date(2000, 12, 31))])
-        self.assertEquals(date(2000, 12, 31), instance.manytomany.all()[0].auto_now)
+        assert instance.manytomany.all()[0].auto_now == date(2000, 12, 31)
 
 
 
 class CopyTest(DDFTestCase):
     def test_it_should_copy_from_model_fields(self):
         instance = self.ddf.get(ModelForCopy, int_a=Copier('int_b'), int_b=3)
-        self.assertEquals(3, instance.int_a)
+        assert instance.int_a == 3
 
     def test_simple_scenario(self):
         instance = self.ddf.get(ModelForCopy, int_b=Copier('int_a'))
-        self.assertEquals(instance.int_b, instance.int_a)
+        assert instance.int_b == instance.int_a
 
     def test_order_of_attributes_must_be_superfluous(self):
         instance = self.ddf.get(ModelForCopy, int_a=Copier('int_b'))
-        self.assertEquals(instance.int_a, instance.int_b)
+        assert instance.int_a == instance.int_b
 
     def test_it_should_deal_with_multiple_copiers(self):
         instance = self.ddf.get(ModelForCopy, int_a=Copier('int_b'), int_c=Copier('int_d'))
-        self.assertEquals(instance.int_a, instance.int_b)
-        self.assertEquals(instance.int_c, instance.int_d)
+        assert instance.int_a == instance.int_b
+        assert instance.int_c == instance.int_d
 
     def test_multiple_copiers_can_depend_of_one_field(self):
         instance = self.ddf.get(ModelForCopy, int_a=Copier('int_c'), int_b=Copier('int_c'))
-        self.assertEquals(instance.int_a, instance.int_c)
-        self.assertEquals(instance.int_b, instance.int_c)
+        assert instance.int_a == instance.int_c
+        assert instance.int_b == instance.int_c
 
     def test_it_should_deal_with_dependent_copiers(self):
         instance = self.ddf.get(ModelForCopy, int_a=Copier('int_b'), int_b=Copier('int_c'))
-        self.assertEquals(instance.int_a, instance.int_b)
-        self.assertEquals(instance.int_b, instance.int_c)
+        assert instance.int_a == instance.int_b
+        assert instance.int_b == instance.int_c
 
     def test_it_should_deal_with_relationships(self):
         instance = self.ddf.get(ModelForCopy, int_a=Copier('e.int_e'))
-        self.assertEquals(instance.int_a, instance.e.int_e)
+        assert instance.int_a == instance.e.int_e
 
         instance = self.ddf.get(ModelForCopy, int_a=Copier('e.int_e'), e=DynamicFixture(data_fixture, int_e=5))
-        self.assertEquals(5, instance.int_a)
+        assert instance.int_a == 5
 
     def test_it_should_raise_a_bad_data_error_if_value_is_invalid(self):
         self.assertRaises(BadDataError, self.ddf.get, ModelForCopy, int_a=Copier('int_b'), int_b=None)
@@ -563,17 +563,17 @@ class ShelveAndLibraryTest(DDFTestCase):
     def test_shelve_store_the_current_configuration_as_default_configuration(self):
         self.ddf.use_library = False
         instance = self.ddf.get(ModelForLibrary, integer=1000, shelve=True)
-        self.assertEquals(1000, instance.integer)
+        assert instance.integer == 1000
         self.ddf.use_library = True
         instance = self.ddf.get(ModelForLibrary)
-        self.assertEquals(1000, instance.integer)
+        assert instance.integer == 1000
 
     def test_do_not_use_library_if_the_programmer_do_not_want_to(self):
         self.ddf.use_library = False
         self.ddf.get(ModelForLibrary, integer=1000, shelve=True)
         self.ddf.use_library = False
         instance = self.ddf.get(ModelForLibrary)
-        self.assertNotEquals(1000, instance.integer)
+        assert instance.integer != 1000
 
     def test_shelve_may_be_overrided(self):
         self.ddf.use_library = False
@@ -581,7 +581,7 @@ class ShelveAndLibraryTest(DDFTestCase):
         self.ddf.get(ModelForLibrary, integer=1001, shelve=True)
         self.ddf.use_library = True
         instance = self.ddf.get(ModelForLibrary)
-        self.assertEquals(1001, instance.integer)
+        assert instance.integer == 1001
 
     def test_it_must_NOT_raise_an_error_if_user_try_to_use_a_not_saved_default_configuration(self):
         self.ddf.use_library = True
@@ -596,14 +596,14 @@ class ShelveAndLibraryTest(DDFTestCase):
     def test_it_must_NOT_propagate_shelve_for_internal_dependencies(self):
         self.ddf.get(ModelForLibrary, foreignkey=DynamicFixture(data_fixture, integer=1000), shelve=True)
         instance = self.ddf.get(ModelForLibrary2)
-        self.assertNotEquals(1000, instance.integer)
+        assert instance.integer != 1000
 
     def test_it_must_propagate_use_library_for_internal_dependencies(self):
         self.ddf.use_library = True
         self.ddf.get(ModelForLibrary, integer=1000, shelve=True)
         self.ddf.get(ModelForLibrary2, integer=1000, shelve=True)
         instance = self.ddf.get(ModelForLibrary)
-        self.assertEquals(1000, instance.foreignkey.integer)
+        assert instance.foreignkey.integer == 1000
 
 #    def test_shelve_must_store_ddf_configs_too(self):
 #        self.ddf.use_library = True
@@ -611,7 +611,7 @@ class ShelveAndLibraryTest(DDFTestCase):
 #        self.ddf.get(ModelForLibrary, shelve=True)
 #        self.ddf.fill_nullable_fields = True
 #        instance = self.ddf.get(ModelForLibrary)
-#        self.assertEquals(None, instance.integer)
+#        assert instance.integer is None
 #
 #    def test_shelved_ddf_configs_must_NOT_be_propagated_to_another_models(self):
 #        self.ddf.use_library = True
@@ -619,8 +619,8 @@ class ShelveAndLibraryTest(DDFTestCase):
 #        self.ddf.get(ModelForLibrary, shelve=True)
 #        self.ddf.fill_nullable_fields = True
 #        instance = self.ddf.get(ModelForLibrary)
-#        self.assertEquals(None, instance.integer)
-#        self.assertEquals(None, instance.foreignkey.integer)
+#        assert instance.integer is None
+#        assert instance.foreignkey.integer is None
 
 
 class NamedShelveAndLibraryTest(DDFTestCase):
@@ -628,19 +628,19 @@ class NamedShelveAndLibraryTest(DDFTestCase):
         self.ddf.use_library = True
         self.ddf.get(ModelForLibrary, integer=1000, shelve='a name')
         instance = self.ddf.get(ModelForLibrary, named_shelve='a name')
-        self.assertEquals(1000, instance.integer)
+        assert instance.integer == 1000
 
     def test_named_shelves_must_not_be_used_if_not_explicity_specified(self):
         self.ddf.use_library = True
         self.ddf.get(ModelForLibrary, integer=1000, shelve='a name')
         instance = self.ddf.get(ModelForLibrary)
-        self.assertNotEquals(1000, instance.integer)
+        assert 1000, instance.integer != 1000
 
     def test_use_library_must_be_enable_to_use_named_shelves(self):
         self.ddf.use_library = False
         self.ddf.get(ModelForLibrary, integer=1000, shelve='a name')
         instance = self.ddf.get(ModelForLibrary, named_shelve='a name')
-        self.assertNotEquals(1000, instance.integer)
+        assert instance.integer != 1000
 
     def test_a_model_can_have_many_named_shelved_configurations(self):
         self.ddf.get(ModelForLibrary, integer=1000, shelve='a name')
@@ -648,10 +648,10 @@ class NamedShelveAndLibraryTest(DDFTestCase):
 
         self.ddf.use_library = True
         instance = self.ddf.get(ModelForLibrary, named_shelve='a name')
-        self.assertEquals(1000, instance.integer)
+        assert instance.integer == 1000
 
         instance = self.ddf.get(ModelForLibrary, named_shelve='a name 2')
-        self.assertEquals(1001, instance.integer)
+        assert instance.integer == 1001
 
     def test_it_must_raise_an_error_if_user_try_to_use_a_not_saved_configuration(self):
         self.ddf.use_library = True
@@ -664,11 +664,11 @@ class NamedShelveAndLibraryTest(DDFTestCase):
         self.ddf.get(ModelForLibrary, integer=1002, shelve='a name2')
         self.ddf.use_library = True
         instance = self.ddf.get(ModelForLibrary, named_shelve='a name')
-        self.assertEquals(1000, instance.integer)
+        assert instance.integer == 1000
         instance = self.ddf.get(ModelForLibrary)
-        self.assertEquals(1001, instance.integer)
+        assert instance.integer == 1001
         instance = self.ddf.get(ModelForLibrary, named_shelve='a name2')
-        self.assertEquals(1002, instance.integer)
+        assert instance.integer == 1002
 
     def test_default_shelve_and_named_shelve_must_work_together_for_different_models(self):
         # regression test
@@ -680,18 +680,18 @@ class NamedShelveAndLibraryTest(DDFTestCase):
         self.ddf.get(ModelForLibrary2, integer=2002, shelve='a name2')
         self.ddf.use_library = True
         instance = self.ddf.get(ModelForLibrary, named_shelve='a name')
-        self.assertEquals(1000, instance.integer)
+        assert instance.integer == 1000
         instance = self.ddf.get(ModelForLibrary)
-        self.assertEquals(1001, instance.integer)
+        assert instance.integer == 1001
         instance = self.ddf.get(ModelForLibrary, named_shelve='a name2')
-        self.assertEquals(1002, instance.integer)
+        assert instance.integer == 1002
 
         instance = self.ddf.get(ModelForLibrary2, named_shelve='a name')
-        self.assertEquals(2000, instance.integer)
+        assert instance.integer == 2000
         instance = self.ddf.get(ModelForLibrary2)
-        self.assertEquals(2001, instance.integer)
+        assert instance.integer == 2001
         instance = self.ddf.get(ModelForLibrary2, named_shelve='a name2')
-        self.assertEquals(2002, instance.integer)
+        assert instance.integer == 2002
 
 
 class DDFLibraryTest(TestCase):
@@ -700,23 +700,23 @@ class DDFLibraryTest(TestCase):
 
     def test_add_and_get_configuration_without_string_name(self):
         self.lib.add_configuration(ModelForLibrary, {'a': 1})
-        self.assertEquals({'a': 1}, self.lib.get_configuration(ModelForLibrary))
-        self.assertEquals({'a': 1}, self.lib.get_configuration(ModelForLibrary, name=DDFLibrary.DEFAULT_KEY))
-        self.assertEquals({'a': 1}, self.lib.get_configuration(ModelForLibrary, name=None))
+        assert self.lib.get_configuration(ModelForLibrary) == {'a': 1}
+        assert self.lib.get_configuration(ModelForLibrary, name=DDFLibrary.DEFAULT_KEY) == {'a': 1}
+        assert self.lib.get_configuration(ModelForLibrary, name=None) == {'a': 1}
 
         self.lib.add_configuration(ModelForLibrary, {'a': 2}, name=None)
-        self.assertEquals({'a': 2}, self.lib.get_configuration(ModelForLibrary))
-        self.assertEquals({'a': 2}, self.lib.get_configuration(ModelForLibrary, name=DDFLibrary.DEFAULT_KEY))
-        self.assertEquals({'a': 2}, self.lib.get_configuration(ModelForLibrary, name=None))
+        assert self.lib.get_configuration(ModelForLibrary) == {'a': 2}
+        assert self.lib.get_configuration(ModelForLibrary, name=DDFLibrary.DEFAULT_KEY) == {'a': 2}
+        assert self.lib.get_configuration(ModelForLibrary, name=None) == {'a': 2}
 
         self.lib.add_configuration(ModelForLibrary, {'a': 3}, name=True)
-        self.assertEquals({'a': 3}, self.lib.get_configuration(ModelForLibrary))
-        self.assertEquals({'a': 3}, self.lib.get_configuration(ModelForLibrary, name=DDFLibrary.DEFAULT_KEY))
-        self.assertEquals({'a': 3}, self.lib.get_configuration(ModelForLibrary, name=None))
+        assert self.lib.get_configuration(ModelForLibrary) == {'a': 3}
+        assert self.lib.get_configuration(ModelForLibrary, name=DDFLibrary.DEFAULT_KEY) == {'a': 3}
+        assert self.lib.get_configuration(ModelForLibrary, name=None) == {'a': 3}
 
     def test_add_and_get_configuration_with_name(self):
         self.lib.add_configuration(ModelForLibrary, {'a': 1}, name='x')
-        self.assertEquals({'a': 1}, self.lib.get_configuration(ModelForLibrary, name='x'))
+        assert self.lib.get_configuration(ModelForLibrary, name='x') == {'a': 1}
 
     def test_clear_config(self):
         self.lib.clear_configuration(ModelForLibrary) # run ok if empty
@@ -724,9 +724,9 @@ class DDFLibraryTest(TestCase):
         self.lib.add_configuration(ModelForLibrary, {'a': 2}, name='x')
         self.lib.add_configuration(ModelForLibrary2, {'a': 3})
         self.lib.clear_configuration(ModelForLibrary)
-        self.assertEquals({}, self.lib.get_configuration(ModelForLibrary))
+        assert self.lib.get_configuration(ModelForLibrary) == {}
         self.assertRaises(Exception, self.lib.get_configuration, ModelForLibrary, name='x')
-        self.assertEquals({'a': 3}, self.lib.get_configuration(ModelForLibrary2))
+        assert self.lib.get_configuration(ModelForLibrary2) == {'a': 3}
 
     def test_clear(self):
         self.lib.add_configuration(ModelForLibrary, {'a': 1})
@@ -734,9 +734,9 @@ class DDFLibraryTest(TestCase):
         self.lib.add_configuration(ModelForLibrary2, {'a': 3})
         self.lib.add_configuration(ModelForLibrary2, {'a': 4}, name='x')
         self.lib.clear()
-        self.assertEquals({}, self.lib.get_configuration(ModelForLibrary))
+        assert self.lib.get_configuration(ModelForLibrary) == {}
         self.assertRaises(Exception, self.lib.get_configuration, ModelForLibrary, name='x')
-        self.assertEquals({}, self.lib.get_configuration(ModelForLibrary2))
+        assert self.lib.get_configuration(ModelForLibrary2) == {}
         self.assertRaises(Exception, self.lib.get_configuration, ModelForLibrary2, name='x')
 
 
@@ -773,7 +773,7 @@ class PreSaveTest(DDFTestCase):
             self.ddf.get(ModelForSignals2)
         set_pre_save_receiver(ModelForSignals, callback_function)
         self.ddf.get(ModelForSignals)
-        self.assertEquals(1, ModelForSignals2.objects.count())
+        assert ModelForSignals2.objects.count() == 1
 
     def test_bugged_pre_save_receiver_must_raise_an_error(self):
         def callback_function(instance):
@@ -808,7 +808,7 @@ class PostSaveTest(DDFTestCase):
             self.ddf.get(ModelForSignals2)
         set_post_save_receiver(ModelForSignals, callback_function)
         self.ddf.get(ModelForSignals)
-        self.assertEquals(1, ModelForSignals2.objects.count())
+        assert ModelForSignals2.objects.count() == 1
 
     def test_bugged_post_save_receiver_must_raise_an_error(self):
         def callback_function(instance):
@@ -823,7 +823,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.new(ModelWithUnsupportedField)
             self.fail()
         except UnsupportedFieldError as e:
-            self.assertTrue("""django_dynamic_fixture.models_test.ModelWithUnsupportedField.z""" in str(e))
+            assert """django_dynamic_fixture.models_test.ModelWithUnsupportedField.z""" in str(e)
 
     def test_BadDataError(self):
         self.ddf = DynamicFixture(data_fixture, ignore_fields=['required', 'required_with_default'])
@@ -831,8 +831,8 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.get(ModelForIgnoreList)
             self.fail()
         except BadDataError as e:
-            self.assertTrue('IntegrityError' in str(e), msg=str(e))
-            self.assertTrue('NULL' in str(e), msg=str(e))
+            assert 'IntegrityError' in str(e), str(e)
+            assert 'NULL' in str(e), str(e)
 
 
     def test_InvalidConfigurationError(self):
@@ -840,25 +840,23 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.new(ModelWithNumbers, integer=lambda x: ''.invalidmethod())
             self.fail()
         except InvalidConfigurationError as e:
-            self.assertTrue('django_dynamic_fixture.models_test.ModelWithNumbers.integer' in str(e))
-            self.assertTrue('AttributeError' in str(e))
-            self.assertTrue('invalidmethod' in str(e))
+            assert 'django_dynamic_fixture.models_test.ModelWithNumbers.integer' in str(e)
+            assert 'AttributeError' in str(e)
+            assert 'invalidmethod' in str(e)
 
     def test_InvalidManyToManyConfigurationError(self):
         try:
             self.ddf.get(ModelWithRelationships, manytomany='a')
             self.fail()
         except InvalidManyToManyConfigurationError as e:
-            self.assertEquals("""('Field: manytomany', 'a')""",
-                              str(e))
+            assert """('Field: manytomany', 'a')""" == str(e)
 
     def test_InvalidModelError(self):
         try:
             self.ddf.get(ModelAbstract)
             self.fail()
         except InvalidModelError as e:
-            self.assertEquals("""django_dynamic_fixture.models_test.ModelAbstract""",
-                              str(e))
+            assert """django_dynamic_fixture.models_test.ModelAbstract""" == str(e)
 
     def test_InvalidModelError_for_common_object(self):
         class MyClass(object): pass
@@ -866,8 +864,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.ddf.new(MyClass)
             self.fail()
         except InvalidModelError as e:
-            self.assertEquals("""django_dynamic_fixture.tests.test_ddf.MyClass""",
-                              str(e))
+            assert """django_dynamic_fixture.tests.test_ddf.MyClass""" == str(e)
 
 
 class SanityTest(DDFTestCase):
@@ -880,27 +877,27 @@ class AvoidNameCollisionTest(DDFTestCase):
     def test_avoid_common_name_instance(self):
         self.ddf = DynamicFixture(data_fixture, fill_nullable_fields=False)
         instance = self.ddf.new(ModelWithCommonNames)
-        self.assertNotEquals(None, instance.instance)
+        assert instance.instance != None
 
         instance = self.ddf.new(ModelWithCommonNames, instance=3)
-        self.assertEquals(3, instance.instance)
+        assert instance.instance == 3
 
         instance = self.ddf.get(ModelWithCommonNames)
-        self.assertNotEquals(None, instance.instance)
+        assert instance.instance != None
 
         instance = self.ddf.get(ModelWithCommonNames, instance=4)
-        self.assertEquals(4, instance.instance)
+        assert instance.instance == 4
 
     def test_avoid_common_name_field(self):
         self.ddf = DynamicFixture(data_fixture, fill_nullable_fields=False)
         instance = self.ddf.new(ModelWithCommonNames)
-        self.assertNotEquals(None, instance.field)
+        assert instance.field != None
 
         instance = self.ddf.new(ModelWithCommonNames, field=5)
-        self.assertEquals(5, instance.field)
+        assert instance.field == 5
 
         instance = self.ddf.get(ModelWithCommonNames)
-        self.assertNotEquals(None, instance.field)
+        assert instance.field != None
 
         instance = self.ddf.get(ModelWithCommonNames, field=6)
-        self.assertEquals(6, instance.field)
+        assert instance.field == 6

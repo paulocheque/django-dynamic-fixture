@@ -20,7 +20,7 @@ class RandomDataFixtureTestCase(TestCase, DataFixtureTestCase):
             results.add(
                 self.fixture.generate_data(models.CharField(max_length=10))
             )
-        self.assertEqual(len(results), self.fixture.OBJECT_COUNT)
+        assert len(results) == self.fixture.OBJECT_COUNT
 
     def test_generated_signed_integers_are_unique(self):
         results = set()
@@ -28,9 +28,9 @@ class RandomDataFixtureTestCase(TestCase, DataFixtureTestCase):
         for _ in xrange(self.fixture.OBJECT_COUNT):
             integer = self.fixture.generate_data(models.IntegerField())
             results.add(integer)
-            self.assertTrue(abs(integer) > abs(prev))
+            assert abs(integer) > abs(prev)
             prev = integer
-        self.assertEqual(len(results), self.fixture.OBJECT_COUNT)
+        assert len(results) == self.fixture.OBJECT_COUNT
 
     def test_generated_unsigned_integers_are_unique(self):
         results = set()
@@ -38,17 +38,17 @@ class RandomDataFixtureTestCase(TestCase, DataFixtureTestCase):
         for _ in xrange(self.fixture.OBJECT_COUNT):
             integer = self.fixture.generate_data(models.PositiveIntegerField())
             results.add(integer)
-            self.assertTrue(integer > prev)
+            assert integer > prev
             prev = integer
-        self.assertEqual(len(results), self.fixture.OBJECT_COUNT)
+        assert len(results) == self.fixture.OBJECT_COUNT
 
     def test_warning(self):
         with catch_warnings(record=True) as w:
             for _ in xrange(self.fixture.OBJECT_COUNT + 1):
                 self.fixture.generate_data(models.CharField(max_length=10))
             warning = w[-1]
-            self.assertTrue(issubclass(warning.category, RuntimeWarning))
+            assert issubclass(warning.category, RuntimeWarning)
             expected_message = (
                 self.fixture.WARNING_MESSAGE_TMPL % self.fixture.OBJECT_COUNT
             )
-            self.assertTrue(expected_message in str(warning.message))
+            assert expected_message in str(warning.message)

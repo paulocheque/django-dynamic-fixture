@@ -21,11 +21,11 @@ class SkipForDatabaseTest(TestCase):
     def test_annotated_method_only_for_postgres(self):
         decorators.DATABASE_ENGINE = decorators.SQLITE3
         self.method_postgres()
-        self.assertEquals(False, self.it_was_executed)
+        assert self.it_was_executed == False
 
         decorators.DATABASE_ENGINE = decorators.POSTGRES
         self.method_postgres()
-        self.assertEquals(True, self.it_was_executed)
+        assert self.it_was_executed
 
 
 class OnlyForDatabaseTest(TestCase):
@@ -43,8 +43,8 @@ class OnlyForDatabaseTest(TestCase):
     def test_annotated_method_skip_for_sqlite3(self):
         decorators.DATABASE_ENGINE = decorators.SQLITE3
         self.method_sqlite3()
-        self.assertEquals(False, self.it_was_executed)
+        assert self.it_was_executed == False
 
         decorators.DATABASE_ENGINE = decorators.POSTGRES
         self.method_sqlite3()
-        self.assertEquals(True, self.it_was_executed)
+        assert self.it_was_executed

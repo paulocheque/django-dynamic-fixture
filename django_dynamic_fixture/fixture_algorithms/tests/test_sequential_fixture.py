@@ -12,18 +12,18 @@ class SequentialDataFixtureTestCase(TestCase, DataFixtureTestCase):
         self.fixture = SequentialDataFixture()
 
     def test_it_must_fill_integer_fields_sequencially_by_attribute(self):
-        self.assertEquals(1, self.fixture.generate_data(models.IntegerField()))
+        assert self.fixture.generate_data(models.IntegerField()) == 1
         field = models.IntegerField()
         field.name = 'x'
-        self.assertEquals(1, self.fixture.generate_data(field))
-        self.assertEquals(2, self.fixture.generate_data(field))
+        assert self.fixture.generate_data(field) == 1
+        assert self.fixture.generate_data(field) == 2
 
     def test_it_must_fill_string_with_sequences_of_numbers_by_attribute(self):
-        self.assertEquals('1', self.fixture.generate_data(models.CharField(max_length=1)))
+        assert self.fixture.generate_data(models.CharField(max_length=1)) == '1'
         field = models.CharField(max_length=1)
         field.name = 'x'
-        self.assertEquals('1', self.fixture.generate_data(field))
-        self.assertEquals('2', self.fixture.generate_data(field))
+        assert self.fixture.generate_data(field) == '1'
+        assert self.fixture.generate_data(field) == '2'
 
 
 class StaticSequentialDataFixtureTestCase(TestCase, DataFixtureTestCase):
@@ -33,12 +33,12 @@ class StaticSequentialDataFixtureTestCase(TestCase, DataFixtureTestCase):
     def test_it_must_fill_fields_sequencially_by_attribute_if_field_is_unique(self):
         field = models.IntegerField(unique=True)
         field.name = 'x'
-        self.assertEquals(1, self.fixture.generate_data(field))
-        self.assertEquals(2, self.fixture.generate_data(field))
+        assert self.fixture.generate_data(field) == 1
+        assert self.fixture.generate_data(field) == 2
 
     def test_it_must_fill_fields_with_static_value_by_attribute_if_field_is_not_unique(self):
         field = models.IntegerField(unique=False)
         field.name = 'x'
-        self.assertEquals(1, self.fixture.generate_data(field))
-        self.assertEquals(1, self.fixture.generate_data(field))
+        assert self.fixture.generate_data(field) == 1
+        assert self.fixture.generate_data(field) == 1
 

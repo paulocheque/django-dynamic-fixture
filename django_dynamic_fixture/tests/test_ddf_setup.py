@@ -15,7 +15,7 @@ class ModuleDDFSetUpTest(TestCase):
 
     def test_setup_module_load_before_any_test_of_this_module(self):
         instance = G(ModelForDDFSetup, use_library=True)
-        self.assertEquals(9999, instance.integer)
+        assert instance.integer == 9999
 
 
 class ApplicationDDFSetupTest(TestCase):
@@ -30,8 +30,8 @@ class ApplicationDDFSetupTest(TestCase):
 
     def test_ddf_setup_will_load_initial_shelves(self):
         instance = G(ModelForDDFSetup, use_library=True)
-        self.assertEquals(1001, instance.integer)
+        assert instance.integer == 1001
         instance = G(ModelForDDFSetup, named_shelve='test1', use_library=True)
-        self.assertEquals(1000, instance.integer)
+        assert instance.integer == 1000
         instance = G(ModelForDDFSetup, named_shelve='test2', use_library=True)
-        self.assertEquals(1002, instance.integer)
+        assert instance.integer == 1002

@@ -39,12 +39,12 @@ class FileSystemDjangoTestCaseDealWithTemporaryFilesTest(FileSystemDjangoTestCas
 
     def test_create_temp_file_must_create_an_empty_temporary_file(self):
         filepath = self.create_temp_file()
-        self.assertEquals('', self.get_content_of_file(filepath))
+        assert self.get_content_of_file(filepath) == ''
 
     def test_create_temp_file_must_is_ready_to_add_content_to_it(self):
         filepath = self.create_temp_file()
         self.add_text_to_file(filepath, 'abc')
-        self.assertEquals('abc', self.get_content_of_file(filepath))
+        assert self.get_content_of_file(filepath) == 'abc'
 
 
 class FileSystemDjangoTestCaseDealWithSpecificTemporaryFilesTest(FileSystemDjangoTestCase):
@@ -54,21 +54,21 @@ class FileSystemDjangoTestCaseDealWithSpecificTemporaryFilesTest(FileSystemDjang
         filepath = self.create_temp_file_with_name(directory, 'x.txt')
         self.assertFileExists(filepath)
 
-        self.assertEquals(directory, self.get_directory_of_the_file(filepath))
-        self.assertEquals('x.txt', self.get_filename(filepath))
+        assert self.get_directory_of_the_file(filepath) == directory
+        assert self.get_filename(filepath) == 'x.txt'
         self.assertDirectoryContainsFile(directory, self.get_filename(filepath))
         self.assertNumberOfFiles(directory, 1)
 
     def test_create_temp_file_with_name_must_create_an_empty_file(self):
         directory = self.create_temp_directory()
         filepath = self.create_temp_file_with_name(directory, 'x.txt')
-        self.assertEquals('', self.get_content_of_file(filepath))
+        assert self.get_content_of_file(filepath) == ''
 
     def test_create_temp_file_with_name_is_ready_to_add_content_to_it(self):
         directory = self.create_temp_directory()
         filepath = self.create_temp_file_with_name(directory, 'x.txt')
         self.add_text_to_file(filepath, 'abc')
-        self.assertEquals('abc', self.get_content_of_file(filepath))
+        assert self.get_content_of_file(filepath) == 'abc'
 
 
 class FileSystemDjangoTestCaseCanRenameFilesTest(FileSystemDjangoTestCase):
@@ -93,7 +93,7 @@ class FileSystemDjangoTestCaseCanRenameFilesTest(FileSystemDjangoTestCase):
 
         new_filepath = self.rename_temp_file(old_filepath, 'y.txt')
 
-        self.assertEquals('abc', self.get_content_of_file(new_filepath))
+        assert self.get_content_of_file(new_filepath) == 'abc'
 
 
 class FileSystemDjangoTestCaseCanRemoveFilesTest(FileSystemDjangoTestCase):
@@ -133,15 +133,15 @@ class FileSystemDjangoTestCaseCanCopyFilesTest(FileSystemDjangoTestCase):
         self.add_text_to_file(filepath, 'abc')
 
         new_filepath = self.copy_file_to_dir(filepath, directory)
-        self.assertEquals('abc', self.get_content_of_file(new_filepath))
+        self.get_content_of_file(new_filepath) == 'abc'
 
 
 class FileSystemDjangoTestCaseDealWithDjangoFileFieldTest(FileSystemDjangoTestCase):
 
     def test_django_file_must_create_a_django_file_object(self):
         django_file = self.create_django_file_with_temp_file('x.txt')
-        self.assertTrue(isinstance(django_file, File))
-        self.assertEquals('x.txt', django_file.name)
+        assert isinstance(django_file, File)
+        assert django_file.name == 'x.txt'
 
     def test_django_file_must_create_a_temporary_file_ready_to_add_content(self):
         django_file = self.create_django_file_with_temp_file('x.txt')
@@ -149,7 +149,7 @@ class FileSystemDjangoTestCaseDealWithDjangoFileFieldTest(FileSystemDjangoTestCa
 
         self.add_text_to_file(filepath, 'abc')
 
-        self.assertEquals('abc', self.get_content_of_file(filepath))
+        assert self.get_content_of_file(filepath) == 'abc'
 
 
 class FileSystemDjangoTestCaseTearDownTest(FileSystemDjangoTestCase):

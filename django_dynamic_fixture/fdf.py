@@ -159,18 +159,18 @@ class FileSystemDjangoTestCase(TestCase):
         return django_file
 
     def assertFileExists(self, filepath):
-        self.assertTrue(os.path.exists(filepath), msg='%s does not exist' % filepath)
+        assert os.path.exists(filepath), '%s does not exist' % filepath
 
     def assertFileDoesNotExists(self, filepath):
-        self.assertFalse(os.path.exists(filepath), msg='%s exist' % filepath)
+        assert os.path.exists(filepath) is False, '%s exist' % filepath
 
     def assertDirectoryExists(self, directory):
         "@directory must be the directory path"
-        self.assertTrue(os.path.exists(directory), msg='%s does not exist' % directory)
+        assert os.path.exists(directory), '%s does not exist' % directory
 
     def assertDirectoryDoesNotExists(self, directory):
         "@directory must be the directory path"
-        self.assertFalse(os.path.exists(directory), msg='%s exist' % directory)
+        assert os.path.exists(directory) is False, '%s exist' % directory
 
     def assertDirectoryContainsFile(self, directory, filename):
         filepath = os.path.join(directory, filename)
@@ -181,11 +181,11 @@ class FileSystemDjangoTestCase(TestCase):
         self.assertFileDoesNotExists(filepath)
 
     def assertFilesHaveEqualLastModificationTimestamps(self, filepath1, filepath2):
-        self.assertEquals(0, os.path.getmtime(filepath1) - os.path.getmtime(filepath2))
+        assert os.path.getmtime(filepath1) - os.path.getmtime(filepath2) == 0
 
     def assertFilesHaveNotEqualLastModificationTimestamps(self, filepath1, filepath2):
-        self.assertNotEquals(0, os.path.getmtime(filepath1) - os.path.getmtime(filepath2))
+        assert os.path.getmtime(filepath1) - os.path.getmtime(filepath2) != 0
 
     def assertNumberOfFiles(self, directory, number_of_files):
         filenames = [filename for filename in os.listdir(directory) if os.path.isfile(os.path.join(directory, filename))]
-        self.assertEquals(number_of_files, len(filenames), msg='[%s] %s' % (len(filenames), filenames))
+        assert len(filenames) == number_of_files, '[%s] %s' % (len(filenames), filenames)
