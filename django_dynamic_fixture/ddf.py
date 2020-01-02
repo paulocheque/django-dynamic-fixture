@@ -65,13 +65,30 @@ class PendingField(Exception):
     "Internal exception to control pending fields when using Copier."
 
 
+def _validate_model(model_class):
+    if not is_model_class(model_class):
+        raise InvalidReceiverError(model_class, 'Invalid model')
+
+
+def _validate_function(model_class, callback_function):
+    if not inspect.isfunction(callback_function) or not callback_function:
+        raise InvalidReceiverError(model_class, 'Invalid function')
+    if callback_function:
+        if six.PY3:
+            args = len(inspect.getfullargspec(callback_function).args)
+        else:
+            args = len(inspect.getargspec(callback_function).args)
+    if args != 1:
+        raise InvalidReceiverError(model_class, 'Invalid number of function arguments')
+
+
 def set_pre_save_receiver(model_class, callback_function):
     """
     :model_class: a model_class can have only one receiver. Do not complicate yourself.
     :callback_function must be a function that receive the instance as unique parameter.
     """
-    if not is_model_class(model_class) or not inspect.isfunction(callback_function) or len(inspect.getargspec(callback_function).args) != 1:
-        raise InvalidReceiverError(model_class)
+    _validate_model(model_class)
+    _validate_function(model_class, callback_function)
     _PRE_SAVE[model_class] = callback_function
 
 
@@ -80,8 +97,8 @@ def set_post_save_receiver(model_class, callback_function):
     :model_class: a model_class can have only one receiver. Do not complicate yourself.
     :callback_function must be a function that receive the instance as unique parameter.
     """
-    if not is_model_class(model_class) or not inspect.isfunction(callback_function) or len(inspect.getargspec(callback_function).args) != 1:
-        raise(InvalidReceiverError(model_class))
+    _validate_model(model_class)
+    _validate_function(model_class, callback_function)
     _POST_SAVE[model_class] = callback_function
 
 
