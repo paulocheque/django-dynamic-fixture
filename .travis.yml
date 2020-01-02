@@ -24,6 +24,8 @@ matrix:
       env: DJANGO=django20
 
 script:
+  - mkdir -p env/bin
+  - ln -s pytest env/bin/pytest
   - tox -e $DJANGO-py${TRAVIS_PYTHON_VERSION//[.]/}
 
 after_success:
