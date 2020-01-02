@@ -2,31 +2,27 @@ dist: trusty
 sudo: true
 
 language: python
-python:
-  - 2.7
-  - 3.6
-  - 3.7
-  - 3.8
+
+matrix:
+  include:
+  - python: 2.7
+    env: DJANGO=1.11
+  - python: 3.5
+    env: DJANGO=1.11
+  - python: 3.6
+    env: DJANGO=2.2
+  - python: 3.7
+    env: DJANGO=3.0
+  - python: 3.8
+    env: DJANGO=3.0
 
 install:
-  - pip install tox
-  - pip install coveralls
-  #- pip install python-coveralls
-
-env:
-  - DJANGO=django111
-  # - DJANGO=django20
-
-# Workaround for Travis issues with unknown python interpreters
-matrix:
-  exclude:
-    - python: 2.7
-      env: DJANGO=django20
+  - pip install -r requirements.txt
+  - pip install -r requirements-dev.txt
+  - pip install Django~=${DJANGO}.0
 
 script:
-  - mkdir -p env/bin
-  - ln -s pytest env/bin/pytest
-  - tox -e $DJANGO-py${TRAVIS_PYTHON_VERSION//[.]/}
+  - pytest
 
 after_success:
   - coveralls
