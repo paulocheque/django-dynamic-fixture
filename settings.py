@@ -61,7 +61,6 @@ if DDF_TEST_GEODJANGO:
 
 INSTALLED_APPS += (
     'queries',
-    'django_coverage',
     'django_nose',
     'django_dynamic_fixture',
 )
