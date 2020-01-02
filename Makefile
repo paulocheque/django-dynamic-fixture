@@ -62,7 +62,7 @@ doc:
 	clear ; cd docs ; make clean html ; open build/html/index.html
 
 tox:
-	clear ; time env/bin/tox
+	clear ; time env/bin/tox --parallel all
 
 build: clean prepare os_deps deps test
 
