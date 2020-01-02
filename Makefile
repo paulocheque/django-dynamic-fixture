@@ -39,6 +39,9 @@ test:
 cov:
 	clear ; env/bin/pytest -n 3 --cov=django_dynamic_fixture tests/
 
+coveralls:
+	clear ; env/bin/coveralls
+
 code_style:
 	# Code Style
 	clear ; env/bin/pylint ddf django_dynamic_fixture ddf_setup queries
@@ -50,6 +53,9 @@ code_checking:
 code_feedbacks:
 	# PEP8, code style and circular complexity
 	clear ; env/bin/flake8 ddf django_dynamic_fixture ddf_setup queries
+
+doc:
+	clear ; cd docs ; make clean html ; open build/html/index.html
 
 tox:
 	clear ; time env/bin/tox
