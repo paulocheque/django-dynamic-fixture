@@ -2,6 +2,7 @@
 
 from django.test import TestCase
 from django.db import models
+import pytest
 
 from django_dynamic_fixture import N, G
 from django_dynamic_fixture.models_test import *
@@ -21,8 +22,10 @@ class DjangoHelperAppsTest(TestCase):
         assert len(get_apps()) - apps == 1
 
     def test_app_name_must_be_valid(self):
-        self.assertRaises(Exception, get_apps, application_labels=['x'])
-        self.assertRaises(Exception, get_apps, exclude_application_labels=['x'])
+        with pytest.raises(Exception):
+            get_apps(application_labels=['x'])
+        with pytest.raises(Exception):
+            get_apps(exclude_application_labels=['x'])
 
     def test_get_app_name_must(self):
         import django_dynamic_fixture.models as ddf

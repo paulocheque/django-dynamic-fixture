@@ -3,6 +3,7 @@
 from django import conf
 
 from django.test import TestCase
+import pytest
 
 from django_dynamic_fixture import global_settings
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture, \
@@ -48,7 +49,8 @@ class DDF_DEFAULT_DATA_FIXTURE_TestCase(AbstractGlobalSettingsTestCase):
 
     def test_if_path_can_not_be_found_it_will_raise_an_exception(self):
         conf.settings.DDF_DEFAULT_DATA_FIXTURE = 'unknown_path.CustomDataFixture'
-        self.assertRaises(Exception, reload_module, global_settings)
+        with pytest.raises(Exception):
+            reload_module(global_settings)
 
 
 class DDF_FILL_NULLABLE_FIELDS_TestCase(AbstractGlobalSettingsTestCase):
@@ -63,7 +65,8 @@ class DDF_FILL_NULLABLE_FIELDS_TestCase(AbstractGlobalSettingsTestCase):
 
     def test_must_raise_an_exception_if_it_is_not_a_boolean(self):
         conf.settings.DDF_FILL_NULLABLE_FIELDS = 'x'
-        self.assertRaises(Exception, reload_module, global_settings)
+        with pytest.raises(Exception):
+            reload_module(global_settings)
 
 
 class DDF_IGNORE_FIELDS_TestCase(AbstractGlobalSettingsTestCase):
@@ -78,7 +81,8 @@ class DDF_IGNORE_FIELDS_TestCase(AbstractGlobalSettingsTestCase):
 
     def test_must_raise_an_exception_if_it_is_not_an_list_of_strings(self):
         conf.settings.DDF_IGNORE_FIELDS = None
-        self.assertRaises(Exception, reload_module, global_settings)
+        with pytest.raises(Exception):
+            reload_module(global_settings)
 
 
 class DDF_NUMBER_OF_LAPS_TestCase(AbstractGlobalSettingsTestCase):
@@ -93,7 +97,8 @@ class DDF_NUMBER_OF_LAPS_TestCase(AbstractGlobalSettingsTestCase):
 
     def test_must_raise_an_exception_if_it_is_not_an_integer(self):
         conf.settings.DDF_NUMBER_OF_LAPS = None
-        self.assertRaises(Exception, reload_module, global_settings)
+        with pytest.raises(Exception):
+            reload_module(global_settings)
 
 
 class DDF_VALIDATE_MODELS_TestCase(AbstractGlobalSettingsTestCase):
@@ -108,7 +113,8 @@ class DDF_VALIDATE_MODELS_TestCase(AbstractGlobalSettingsTestCase):
 
     def test_must_raise_an_exception_if_it_is_not_a_boolean(self):
         conf.settings.DDF_VALIDATE_MODELS = 'x'
-        self.assertRaises(Exception, reload_module, global_settings)
+        with pytest.raises(Exception):
+            reload_module(global_settings)
 
 
 class DDF_USE_LIBRARY_TestCase(AbstractGlobalSettingsTestCase):
@@ -123,4 +129,5 @@ class DDF_USE_LIBRARY_TestCase(AbstractGlobalSettingsTestCase):
 
     def test_must_raise_an_exception_if_it_is_not_a_boolean(self):
         conf.settings.DDF_USE_LIBRARY = 'x'
-        self.assertRaises(Exception, reload_module, global_settings)
+        with pytest.raises(Exception):
+            reload_module(global_settings)
