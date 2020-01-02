@@ -1,5 +1,7 @@
 VERSION=2.0.0
 
+# Python env tasks
+
 clean:
 	clear
 	@find . -type f -name "*.py[co]" -delete
@@ -29,6 +31,8 @@ deps:
 shell:
 	#clear ; env/bin/python -i -c "from ddf import *"
 	clear ; env/bin/python manage.py shell"
+
+# Python code tasks
 
 compile:
 	env/bin/python -OO -m compileall .
@@ -62,8 +66,7 @@ tox:
 
 build: clean prepare os_deps deps test
 
-push: test
-	clear ; git push origin master
+# Python package tasks
 
 setup_clean:
 	clear ; env/bin/python setup.py clean --all
@@ -90,6 +93,11 @@ publish: setup_clean setup_test
 	# Update version and save
 	# Go to 'files' link and upload the file
 	clear ; env/bin/python setup.py clean sdist upload
+
+# Git tasks
+
+push: tox cov doc
+	clear ; git push origin master
 
 tag:
 	git tag ${VERSION}
