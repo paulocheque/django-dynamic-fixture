@@ -6,16 +6,13 @@ import re
 from distutils.version import StrictVersion
 
 import django
+from django.apps import apps
 from django.db import models
 from django.db.models import *
 from django.db.models.fields import NOT_PROVIDED, AutoField, FieldDoesNotExist
 from django.db.models.base import ModelBase
 from django.db.models.query import QuerySet
 
-try:
-    from django.apps import apps
-except ImportError:
-    pass # Django < 1.7
 
 
 def django_greater_than(version):
@@ -34,22 +31,13 @@ def get_apps(application_labels=[], exclude_application_labels=[]):
     if application_labels:
         applications = []
         for app_label in application_labels:
-            if django_greater_than('1.7'):
-                app_config = apps.get_app_config(app_label)
-                applications.append(app_config.label)
-            else:
-                applications.append(get_app_name(models.get_app(app_label)))
+            app_config = apps.get_app_config(app_label)
+            applications.append(app_config.label)
     else:
-        if django_greater_than('1.7'):
-            applications = [
-                app_config.label
-                for app_config in apps.get_app_configs()
-            ]
-        else:
-            applications = [
-                get_app_name(app_module)
-                for app_module in models.get_apps()
-            ]
+        applications = [
+            app_config.label
+            for app_config in apps.get_app_configs()
+        ]
     if exclude_application_labels:
         for app_label in exclude_application_labels:
             if app_label:
@@ -73,12 +61,8 @@ def get_models_of_an_app(app_label):
     """
     app_module is the object returned by get_apps method (python module)
     """
-    if django_greater_than('1.7'):
-        app_config = apps.get_app_config(app_label)
-        return list(app_config.get_models())
-    else:
-        app_module = models.get_app(app_label)
-        return models.get_models(app_module)
+    app_config = apps.get_app_config(app_label)
+    return list(app_config.get_models())
 
 
 # Models
@@ -127,10 +111,7 @@ def get_field_names_of_model(model_class):
 
 def get_field_by_name_or_raise(model_class, field_name):
     "Get field by name, including inherited fields and M2M fields."
-    if django_greater_than('1.8'):
-        return model_class._meta.get_field(field_name)
-    else:
-        return model_class._meta.get_field_by_name(field_name)[0]
+    return model_class._meta.get_field(field_name)
 
 
 def is_model_class(instance_or_model_class):
@@ -263,7 +244,4 @@ def is_file(field):
     return isinstance(field, (FileField, FilePathField))
 
 def is_binary(field):
-    if django_greater_than('1.6'):
-        return isinstance(field, (BinaryField))
-    else:
-        return False
+    return isinstance(field, (BinaryField))

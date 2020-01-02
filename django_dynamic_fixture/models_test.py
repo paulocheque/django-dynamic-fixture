@@ -6,7 +6,6 @@ from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
-from django_dynamic_fixture.django_helper import django_greater_than
 
 
 class EmptyModel(models.Model):
@@ -61,18 +60,17 @@ class ModelWithDateTimes(models.Model):
         app_label = 'django_dynamic_fixture'
 
 
-if django_greater_than('1.6'):
-    class ModelWithBinary(models.Model):
-        binary = models.BinaryField()
-        class Meta:
-            app_label = 'django_dynamic_fixture'
+class ModelWithBinary(models.Model):
+    binary = models.BinaryField()
+    class Meta:
+        app_label = 'django_dynamic_fixture'
+
 
 class ModelWithFieldsWithCustomValidation(models.Model):
     email = models.EmailField(null=True, unique=True)
     url = models.URLField(null=True, unique=True)
     ip = models.IPAddressField(null=True, unique=False)
-    if django_greater_than('1.4'):
-        ipv6 = models.GenericIPAddressField(null=True, unique=False)
+    ipv6 = models.GenericIPAddressField(null=True, unique=False)
 
     class Meta:
         verbose_name = 'Custom validation'
@@ -397,8 +395,7 @@ class ModelWithCommonNames(models.Model):
 class ModelWithNamedPrimaryKey(models.Model):
     named_pk = models.AutoField(primary_key=True)
 
-# GeoDjango requires Django 1.7+
-if django_greater_than('1.7') and (hasattr(settings, 'DDF_TEST_GEODJANGO') and settings.DDF_TEST_GEODJANGO):
+if (hasattr(settings, 'DDF_TEST_GEODJANGO') and settings.DDF_TEST_GEODJANGO):
     from django.contrib.gis.db import models as geomodels
     class ModelForGeoDjango(geomodels.Model):
         geometry = geomodels.GeometryField()
@@ -413,25 +410,22 @@ if django_greater_than('1.7') and (hasattr(settings, 'DDF_TEST_GEODJANGO') and s
             app_label = 'django_dynamic_fixture'
 
 
-if django_greater_than('1.8'):
-    class ModelForUUID(models.Model):
-        uuid = models.UUIDField()
+class ModelForUUID(models.Model):
+    uuid = models.UUIDField()
+    class Meta:
+        app_label = 'django_dynamic_fixture'
+
+
+try:
+    from jsonfield import JSONField
+    from jsonfield import JSONCharField
+    class ModelForPlugins1(models.Model):
+        json_field1 = JSONCharField(max_length=10)
+        json_field2 = JSONField()
         class Meta:
             app_label = 'django_dynamic_fixture'
-
-
-# jsonfield requires Django 1.4+
-if django_greater_than('1.4'):
-    try:
-        from jsonfield import JSONField
-        from jsonfield import JSONCharField
-        class ModelForPlugins1(models.Model):
-            json_field1 = JSONCharField(max_length=10)
-            json_field2 = JSONField()
-            class Meta:
-                app_label = 'django_dynamic_fixture'
-    except ImportError:
-        pass
+except ImportError:
+    pass
 
 
 try:

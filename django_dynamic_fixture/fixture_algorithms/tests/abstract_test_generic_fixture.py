@@ -7,8 +7,6 @@ from decimal import Decimal
 import six
 from six.moves import xrange
 
-from django_dynamic_fixture.django_helper import django_greater_than
-
 
 class DataFixtureTestCase(object):
     def setUp(self):
@@ -53,8 +51,7 @@ class DataFixtureTestCase(object):
         assert isinstance(self.fixture.generate_data(models.EmailField(max_length=100)), six.text_type)
         assert isinstance(self.fixture.generate_data(models.URLField(max_length=100)), six.text_type)
         assert isinstance(self.fixture.generate_data(models.IPAddressField(max_length=100)), six.text_type)
-        if django_greater_than('1.4'):
-            assert isinstance(self.fixture.generate_data(models.GenericIPAddressField(max_length=100)), six.text_type)
+        assert isinstance(self.fixture.generate_data(models.GenericIPAddressField(max_length=100)), six.text_type)
 
     def test_files(self):
         assert isinstance(self.fixture.generate_data(models.FilePathField(max_length=100)), six.text_type)

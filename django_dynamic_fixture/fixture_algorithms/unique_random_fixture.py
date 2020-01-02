@@ -20,8 +20,6 @@ except ImportError:
 
 try:
     from django.contrib.gis.geos import *
-except ImportError:
-    pass # Django < 1.7
 except ImproperlyConfigured:
     pass  # enviroment without geo libs
 except Exception:

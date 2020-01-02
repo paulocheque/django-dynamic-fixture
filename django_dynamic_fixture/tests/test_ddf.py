@@ -10,15 +10,11 @@ from django.core.exceptions import ImproperlyConfigured
 
 try:
     from django.contrib.gis.geos import *
-except ImportError:
-    pass  # Django < 1.7
 except ImproperlyConfigured:
     pass  # enviroment without geo libs
 
 try:
     from django.contrib.gis.db import models as geomodel
-except ImportError:
-    pass  # Django < 1.7
 except ImproperlyConfigured:
     pass  # enviroment without geo libs
 
@@ -29,7 +25,6 @@ from django_dynamic_fixture.models_test import *
 from django_dynamic_fixture.ddf import *
 from django_dynamic_fixture.ddf import _PRE_SAVE, _POST_SAVE
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture
-from django_dynamic_fixture.django_helper import django_greater_than
 
 
 data_fixture = SequentialDataFixture()
@@ -100,8 +95,7 @@ class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
         assert isinstance(instance.email, six.text_type)
         assert isinstance(instance.url, six.text_type)
         assert isinstance(instance.ip, six.text_type)
-        if django_greater_than('1.4'):
-            assert isinstance(instance.ipv6, six.text_type)
+        assert isinstance(instance.ipv6, six.text_type)
 
     def test_new_fill_file_fields_with_basic_strings(self):
         instance = self.ddf.new(ModelWithFileFields)
@@ -115,16 +109,15 @@ class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
             pass
 
     def test_new_fill_binary_fields_with_basic_data(self):
-        if django_greater_than('1.6'):
-            value = b'\x00\x46\xFE'
-            instance = self.ddf.new(ModelWithBinary, binary=value)
-            assert bytes(instance.binary) == bytes(value)
+        value = b'\x00\x46\xFE'
+        instance = self.ddf.new(ModelWithBinary, binary=value)
+        assert bytes(instance.binary) == bytes(value)
 
-            instance = self.ddf.get(ModelWithBinary)
-            if six.PY3:
-                assert isinstance(instance.binary, six.binary_type), type(instance.binary)
-            else:
-                assert isinstance(instance.binary, (six.binary_type, str, unicode)), type(instance.binary)
+        instance = self.ddf.get(ModelWithBinary)
+        if six.PY3:
+            assert isinstance(instance.binary, six.binary_type), type(instance.binary)
+        else:
+            assert isinstance(instance.binary, (six.binary_type, str, unicode)), type(instance.binary)
 
 
 class NewFullFillAttributesWithDefaultDataTest(DDFTestCase):
@@ -199,35 +192,33 @@ class NewFullFillAttributesUsingPluginsTest(DDFTestCase):
     # Real Custom Field
     def test_json_field_not_registered_must_raise_an_unsupported_field_exception(self):
         # jsonfield requires Django 1.4+
-        if django_greater_than('1.4'):
-            try:
-                from jsonfield import JSONCharField, JSONField
-                instance = self.ddf.new(ModelForPlugins1)
-                assert False, 'JSON fields must not be supported by default'
-            except ImportError:
-                pass
-            except UnsupportedFieldError as e:
-                pass
+        try:
+            from jsonfield import JSONCharField, JSONField
+            instance = self.ddf.new(ModelForPlugins1)
+            assert False, 'JSON fields must not be supported by default'
+        except ImportError:
+            pass
+        except UnsupportedFieldError as e:
+            pass
 
     def test_new_fill_json_field_with_data_generated_by_plugins(self):
         # jsonfield requires Django 1.4+
-        if django_greater_than('1.4'):
+        try:
+            import json
+            from jsonfield import JSONCharField, JSONField
+            data_fixture.plugins = django.conf.settings.DDF_FIELD_FIXTURES
             try:
-                import json
-                from jsonfield import JSONCharField, JSONField
-                data_fixture.plugins = django.conf.settings.DDF_FIELD_FIXTURES
-                try:
-                    instance = self.ddf.new(ModelForPlugins1)
-                    assert isinstance(instance.json_field1, str), type(instance.json_field1)
-                    assert isinstance(instance.json_field2, str), type(instance.json_field2)
-                    assert isinstance(json.loads(instance.json_field1), dict)
-                    assert isinstance(json.loads(instance.json_field2), list)
-                    assert instance.json_field1 == '{"some random value": "c"}'
-                    assert instance.json_field2 == '[1, 2, 3]'
-                finally:
-                    data_fixture.plugins = {}
-            except ImportError:
-                pass
+                instance = self.ddf.new(ModelForPlugins1)
+                assert isinstance(instance.json_field1, str), type(instance.json_field1)
+                assert isinstance(instance.json_field2, str), type(instance.json_field2)
+                assert isinstance(json.loads(instance.json_field1), dict)
+                assert isinstance(json.loads(instance.json_field2), list)
+                assert instance.json_field1 == '{"some random value": "c"}'
+                assert instance.json_field2 == '[1, 2, 3]'
+            finally:
+                data_fixture.plugins = {}
+        except ImportError:
+            pass
 
 
 class NewIgnoringNullableFieldsTest(DDFTestCase):
@@ -454,24 +445,22 @@ class CustomFieldsTest(DDFTestCase):
 
 class ComplexFieldsTest(DDFTestCase):
     def test_x(self):
-        if django_greater_than('1.8'):
-            instance = self.ddf.new(ModelForUUID)
-            assert isinstance(instance.uuid, uuid.UUID)
+        instance = self.ddf.new(ModelForUUID)
+        assert isinstance(instance.uuid, uuid.UUID)
 
 
 if (hasattr(settings, 'DDF_TEST_GEODJANGO') and settings.DDF_TEST_GEODJANGO):
     class GeoDjangoFieldsTest(DDFTestCase):
         def test_geodjango_fields(self):
-            if django_greater_than('1.7'):
-                instance = self.ddf.new(ModelForGeoDjango)
-                assert isinstance(instance.geometry, GEOSGeometry), str(type(instance.geometry))
-                assert isinstance(instance.point, Point)
-                assert isinstance(instance.line_string, LineString)
-                assert isinstance(instance.polygon, Polygon)
-                assert isinstance(instance.multi_point, MultiPoint)
-                assert isinstance(instance.multi_line_string, MultiLineString)
-                assert isinstance(instance.multi_polygon, MultiPolygon)
-                assert isinstance(instance.geometry_collection, GeometryCollection)
+            instance = self.ddf.new(ModelForGeoDjango)
+            assert isinstance(instance.geometry, GEOSGeometry), str(type(instance.geometry))
+            assert isinstance(instance.point, Point)
+            assert isinstance(instance.line_string, LineString)
+            assert isinstance(instance.polygon, Polygon)
+            assert isinstance(instance.multi_point, MultiPoint)
+            assert isinstance(instance.multi_line_string, MultiLineString)
+            assert isinstance(instance.multi_polygon, MultiPolygon)
+            assert isinstance(instance.geometry_collection, GeometryCollection)
 
 
 class ModelValidatorsTest(DDFTestCase):
