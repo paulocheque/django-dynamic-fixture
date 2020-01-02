@@ -136,83 +136,58 @@ It is possible to copy values of internal relationships, but only in the bottom-
     print instance.some_field == instance.some_fk_field.another_field # this will print True
 
 
-Default Shelve (New in 1.6.0)
+Teaching DDF with Lessons (New in 2.1.0)
 ===============================================================================
 
-Sometimes DDF can not generate a valid and persisted instance because it contains custom fields or custom validations (field or model validation). In these cases it is possible to teach DDF how to build a valid instance. It is necessary to create a valid configuration and shelve it in an internal and global DDF library of configurations. All future instances of that model will use the shelved configuration as base. All custom configurations will override the shelved option just for the current model instance generation. But to use the default configuration it is necessary to enable the use of the DDF library.
+Sometimes DDF can not generate a valid and persisted instance because it contains custom fields or custom validations (field or model validation). In these cases it is possible to teach DDF how to build a valid instance. It is necessary to create a valid configuration and save it in an internal and global DDF library of configurations. All future instances of that model will use the saved lesson as base.
 
-In settings.py::
+It is also possible to save custom lessons that will override the default one. But avoid having too many of them, since this will became the test suite very complex.
 
-    DDF_USE_LIBRARY = True
+In the PyTest *conftext.py* file, the DDF-Nose plugin *your_app.tests.ddf_setup.py* file or another global module that will be loaded before the test suite::
 
-In the test file::
+    from ddf import teach
+    teach(Model, field_x=99)
 
-    instance = G(Model, shelve=True, field_x=99)
-    print instance.field_x # this will print 99
+In the test files:
 
-    instance = G(Model, use_library=True)
-    print instance.field_x # this will print 99
+    from ddf import G
+    instance = G(Model)
+    print(instance.field_x) # this will print 99
 
-    instance = G(Model, use_library=False)
-    print instance.field_x # this will a dynamic generated data
 
-It is possible to override shelved configuration::
+It is possible to override the lessons though::
 
-    G(Model, shelve=True, field_x=888)
-    instance = G(Model, use_library=True, field_x=999)
-    print instance.field_x # this will print 999
+    instance = G(Model, field_x=888)
+    print(instance.field_x) # this will print 888
 
 It is possible to store custom functions of data fixtures for fields too::
 
     zip_code_data_fixture = lambda field: 'MN 55416'
-    instance = G(Model, shelve=True, zip_code=zip_code_data_fixture)
+    teach(Model, zip_code=zip_code_data_fixture)
 
-    instance = G(Model, use_library=True)
-    print instance.zip_code # this will print 'MN 55416'
+    instance = G(Model)
+    print(instance.zip_code) # this will print 'MN 55416'
 
 It is possible to store Copiers too::
 
-    instance = G(Model, shelve=True, x=C('y'))
+    teach(Model, x=C('y'))
 
-    instance = G(Model, use_library=True, y=5)
-    print instance.x # this will print 5
-
-If the model is used by another applications, it is important to put the code that shelve configurations in the file *your_app.tests.ddf_setup.py* because DDF can not control the order tests will be executed, so a test of other application can be executed before the valid configuration is shelved. The file *ddf_setup.py* prevents this, because it is loaded before DDF starts to generate the instance of a particular model. It works like a "setup suite", like the DDF Setup Nose plugin.
+    instance = G(Model, y=5)
+    print(instance.x) # this will print 5
 
 
-Named Shelve (New in 1.6.0)
-===============================================================================
+You can have many custom lessons too:
 
-The named shelve works like default shelve, but it has to have a name. It is possible to store more than one configuration by model type.
+    from ddf import teach
+    teach(Model, field_x=77)
+    teach(Model, field_x=88, lesson='my custom lesson 1')
+    teach(Model, field_x=99, lesson='my custom lesson 2')
 
-In settings.py::
+    instance = G(Model)
+    print(instance.field_x) # this will print 77
 
-    DDF_USE_LIBRARY = True
+    instance = G(Model, lesson='my custom lesson 1')
+    print(instance.field_x) # this will print 88
 
-In the test file::
-
-    G(Model, shelve='some name', field_x=888)
-    G(Model, shelve='another name', field_x=999)
-
-    instance = G(Model, named_shelve='some name', use_library=True)
-    print instance.field_x # this will print 888
-
-    instance = G(Model, named_shelve='another name', use_library=True)
-    print instance.field_x # this will print 999
-
-    instance = G(Model, named_shelve='some name', use_library=False)
-    print instance.field_x # this will print a dynaimc generated data
-
-If a DDF does not found the named shelve, it will raise an error::
-
-    G(Model, named_shelve='name not found in DDF library', use_library=True)
-
-It is important to note that all named shelve will inherit the configuration from the default shelve::
-
-    G(Model, shelve=True, x=999)
-    G(Model, shelve='some name', y=888)
-
-    instance = G(Model, named_shelve='some name', use_library=True)
-    print instance.x # this will print 999
-    print instance.y # this will print 888
-
+    instance = G(Model, lesson='my custom lesson 2')
+    print(instance.field_x) # this will print 99
