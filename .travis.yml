@@ -1,4 +1,4 @@
-dist: trusty
+dist: xenial
 sudo: true
 
 language: python
@@ -6,8 +6,6 @@ language: python
 matrix:
   include:
   - python: 2.7
-    env: DJANGO=1.11
-  - python: 3.5
     env: DJANGO=1.11
   - python: 3.6
     env: DJANGO=2.2
