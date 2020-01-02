@@ -96,8 +96,8 @@ publish: setup_clean setup_test
 
 # Git tasks
 
-push: tox cov doc
-	clear ; git push origin master
+push: tox doc
+	clear ; git push origin `git symbolic-ref --short HEAD`
 
 tag:
 	git tag ${VERSION}
