@@ -1,8 +1,8 @@
 pytest
 pytest-django
-pytest-xdist
+pytest-xdist # Run tests in parallel
 pytest-cov
-tox
+tox # For the CI
 
 psycopg2==2.8.4 # For tests with Postgres fields
 #or psycopg2cffi==2.7.5 # For pypy
@@ -10,9 +10,9 @@ psycopg2==2.8.4 # For tests with Postgres fields
 coveralls
 python-coveralls
 
-flake8==2.1.0
-pyflakes==1.5.0
-pylint==1.6.5
+flake8==3.7.9
+pyflakes==2.1.1
+pylint==2.4.4
 
 sphinx==1.5.3
 sphinx_rtd_theme==0.2.2
