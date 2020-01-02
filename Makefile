@@ -38,10 +38,10 @@ compile:
 	env/bin/python -OO -m compileall .
 
 test:
-	clear ; env/bin/pytest -n 3
+	clear ; env/bin/pytest -n 3 --benchmark-disable
 
 cov:
-	clear ; env/bin/pytest -n 3 --cov=django_dynamic_fixture tests/
+	clear ; env/bin/pytest -n 3 --benchmark-disable --cov=django_dynamic_fixture tests/
 
 coveralls:
 	clear ; env/bin/coveralls
