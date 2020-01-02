@@ -161,13 +161,6 @@ You can configure DDF in ``settings.py`` file. You can also override the global 
     DDF_FIELD_FIXTURES = {'path.to.your.Field': lambda: random.randint(0, 10) }
 
 
-* **DDF_USE_LIBRARY** (Default = False): For using the Shelve feature::
-
-    # You can override the global config for one case:
-    G(Model, use_library=False)
-    G(Model, use_library=True)
-
-
 * **DDF_NUMBER_OF_LAPS** (Default = 1):  For models with foreign keys to itself (``ForeignKey('self')``), DDF will avoid infinite loops because it stops creating objects after it create **n** **laps** for the cycle::
 
     # You can override the global config for one case:
