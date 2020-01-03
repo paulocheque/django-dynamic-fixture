@@ -3,7 +3,7 @@
 from django.test import TestCase
 
 from django_dynamic_fixture.models_test import EmptyModel, ModelWithRelationships, ModelForLibrary
-from django_dynamic_fixture import N, G, F, C, P, look_up_alias, PRE_SAVE, POST_SAVE
+from django_dynamic_fixture import N, G, F, C, P, teach, look_up_alias, PRE_SAVE, POST_SAVE
 
 
 class NShortcutTest(TestCase):
@@ -116,19 +116,17 @@ class CShortcutTest(TestCase):
         assert instance1.integer == instance1.integer_b
 
 
-class ShelveAndLibraryTest(TestCase):
-    def test_shelve(self):
-        instance = G(ModelForLibrary, integer=1000, shelve=True)
+class TeachingAndLessonsTest(TestCase):
+    def test_global_lesson(self):
+        teach(ModelForLibrary, integer=1000)
+        instance = G(ModelForLibrary)
         assert instance.integer == 1000
 
-        instance = G(ModelForLibrary, use_library=False)
-        assert instance.integer != 1000
-
-        instance = G(ModelForLibrary, use_library=True)
-        assert instance.integer == 1000
-
-        instance = G(ModelForLibrary, integer=1001, use_library=True)
+        instance = G(ModelForLibrary, integer=1001)
         assert instance.integer == 1001
+
+        instance = G(ModelForLibrary)
+        assert instance.integer == 1000
 
 
 class CreatingMultipleObjectsTest(TestCase):

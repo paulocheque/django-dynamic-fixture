@@ -65,6 +65,10 @@ class PendingField(Exception):
     "Internal exception to control pending fields when using Copier."
 
 
+class CantOverrideLesson(Exception):
+    "Override a lesson is an anti-pattern and will turn your test suite very hard to understand."
+
+
 def _validate_model(model_class):
     if not is_model_class(model_class):
         raise InvalidReceiverError(model_class, 'Invalid model')
@@ -203,6 +207,8 @@ class DDFLibrary(object):
     def add_configuration(self, model_class, kwargs, name=None):
         if name in [None, True]:
             name = self.DEFAULT_KEY
+        if model_class in self.configs and name in self.configs[model_class]:
+            raise CantOverrideLesson('A lesson {} has already been saved for the model {}'.format(name, model_class))
         model_class_config = self.configs.setdefault(model_class, {})
         model_class_config[name] = kwargs
 
@@ -212,11 +218,11 @@ class DDFLibrary(object):
         # copy is important because this dict will be updated every time in the algorithm.
         config = self.configs.get(model_class, {})
         if name != self.DEFAULT_KEY and name not in config.keys():
-            raise InvalidConfigurationError('There is no shelved configuration for model %s with the name "%s"' % (get_unique_model_name(model_class), name))
+            raise InvalidConfigurationError('There is no lesson for model %s with the name "%s"' % (get_unique_model_name(model_class), name))
         return config.get(name, {}).copy() # default configuration never raises an error
 
     def clear(self):
-        "Remove all shelved configurations of the library."
+        "Remove all lessons of the library. Util for the DDF tests."
         self.configs = {}
 
     def clear_configuration(self, model_class):
@@ -230,17 +236,16 @@ class DynamicFixture(object):
     Responsibility: create a valid model instance according to the given configuration.
     """
 
-    _DDF_CONFIGS = ['fill_nullable_fields', 'ignore_fields', 'data_fixture', 'number_of_laps', 'use_library',
+    _DDF_CONFIGS = ['fill_nullable_fields', 'ignore_fields', 'data_fixture', 'number_of_laps',
                     'validate_models', 'validate_args', 'print_errors']
 
-    def __init__(self, data_fixture, fill_nullable_fields=True, ignore_fields=[], number_of_laps=1, use_library=False,
+    def __init__(self, data_fixture, fill_nullable_fields=True, ignore_fields=[], number_of_laps=1,
                  validate_models=False, validate_args=False, print_errors=True, model_path=[], debug_mode=False, **kwargs):
         """
         :data_fixture: algorithm to fill field data.
         :fill_nullable_fields: flag to decide if nullable fields must be filled with data.
         :ignore_fields: list of field names that must not be filled with data.
         :number_of_laps: number of laps for each cyclic dependency.
-        :use_library: flag to decide if DDF library will be used to load default fixtures.
         :validate_models: flag to decide if the model_instance.full_clean() must be called before saving the object.
         :validate_args: flag to enable field name validation of custom fixtures.
         :print_errors: flag to determine if the model data must be printed to console on errors. For some scripts is interesting to disable it.
@@ -255,7 +260,6 @@ class DynamicFixture(object):
         # extend ignore_fields with globally declared ignore_fields
         self.ignore_fields.extend(DDF_IGNORE_FIELDS)
         self.number_of_laps = number_of_laps
-        self.use_library = use_library
         # other ddfs configs
         self.validate_models = validate_models
         self.validate_args = validate_args
@@ -347,7 +351,6 @@ class DynamicFixture(object):
                                      fill_nullable_fields=self.fill_nullable_fields,
                                      ignore_fields=ignore_fields,
                                      number_of_laps=self.number_of_laps,
-                                     use_library=self.use_library,
                                      validate_models=self.validate_models,
                                      validate_args=self.validate_args,
                                      print_errors=self.print_errors,
@@ -426,7 +429,7 @@ class DynamicFixture(object):
             if not model_has_the_field(model_class, field_name):
                 raise InvalidConfigurationError('Field "%s" does not exist.' % field_name)
 
-    def _configure_params(self, model_class, shelve, named_shelve, **kwargs):
+    def _configure_params(self, model_class, lesson, **kwargs):
         """
         1) validate kwargs
         2) load default fixture from DDF library. Store default fixture in DDF library.
@@ -434,53 +437,47 @@ class DynamicFixture(object):
         """
         if self.validate_args:
             self._validate_kwargs(model_class, kwargs)
+
+        # load ddf_setup.py of the model application
+        app_name = get_app_name_of_model(model_class)
+        if app_name not in _LOADED_DDF_SETUP_MODULES:
+            full_module_name = '%s.tests.ddf_setup' % app_name
+            try:
+                _LOADED_DDF_SETUP_MODULES.append(app_name)
+                import_module(full_module_name)
+            except ImportError:
+                pass # ignoring if module does not exist
+            except Exception as e:
+                six.reraise(InvalidDDFSetupError, InvalidDDFSetupError(e), sys.exc_info()[2])
+
         library = DDFLibrary.get_instance()
-        if shelve: # shelving before use_library property: do not twist two different configurations (anti-pattern)
-            for field_name in kwargs.keys():
-                if field_name in self._DDF_CONFIGS:
-                    continue
-                field = get_field_by_name_or_raise(model_class, field_name)
-                fixture = kwargs[field_name]
-                if field.unique and not (isinstance(fixture, (DynamicFixture, Copier, DataFixture)) or callable(fixture)):
-                    raise InvalidConfigurationError('It is not possible to store static values for fields with unique=True (%s). Try using a lambda function instead.' % get_unique_field_name(field))
-            library.add_configuration(model_class, kwargs, name=shelve)
-        if self.use_library:
-            # load ddf_setup.py of the model application
-            app_name = get_app_name_of_model(model_class)
-            if app_name not in _LOADED_DDF_SETUP_MODULES:
-                full_module_name = '%s.tests.ddf_setup' % app_name
-                try:
-                    _LOADED_DDF_SETUP_MODULES.append(app_name)
-                    import_module(full_module_name)
-                except ImportError:
-                    pass # ignoring if module does not exist
-                except Exception as e:
-                    six.reraise(InvalidDDFSetupError, InvalidDDFSetupError(e), sys.exc_info()[2])
-            configuration_default = library.get_configuration(model_class, name=DDFLibrary.DEFAULT_KEY)
-            configuration_custom = library.get_configuration(model_class, name=named_shelve)
-            configuration = {}
-            configuration.update(configuration_default) # always use default configuration
+        configuration = {}
+        # 1. Load the default/global lesson for the model.
+        configuration_default = library.get_configuration(model_class, name=DDFLibrary.DEFAULT_KEY)
+        configuration.update(configuration_default) # always use default configuration
+        # 2. Load a custom lesson for the model.
+        if lesson:
+            configuration_custom = library.get_configuration(model_class, name=lesson)
             configuration.update(configuration_custom) # override default configuration
-            configuration.update(kwargs) # override shelved configuration with current configuration
-        else:
-            configuration = kwargs
+        # 3. Load the custom `kwargs` attributes.
+        configuration.update(kwargs) # override the configuration with current configuration
         configuration.update(self.kwargs) # Used by F: kwargs are passed by constructor, not by get.
+
         return configuration
 
-    def new(self, model_class, shelve=False, named_shelve=None, persist_dependencies=True, **kwargs):
+    def new(self, model_class, lesson=None, persist_dependencies=True, **kwargs):
         """
         Create an instance filled with data without persist it.
         1) validate all kwargs match Model.fields.
         2) validate model is a model.Model class.
         3) Iterate model fields: for each field, fill it with data.
 
-        :shelve: the current configuration will be stored in the DDF library. It can be True or a string (named shelve).
-        :named_shelve: restore configuration saved in DDF library with a name.
+        :lesson: the lesson that will be used to create the model instance, if exists.
         :persist_dependencies: tell if internal dependencies will be saved in the database or not.
         """
         if self.debug_mode:
             LOGGER.debug('>>> [%s] Generating instance.' % get_unique_model_name(model_class))
-        configuration = self._configure_params(model_class, shelve, named_shelve, **kwargs)
+        configuration = self._configure_params(model_class, lesson, **kwargs)
         instance = model_class()
         if not is_model_class(instance):
             raise InvalidModelError(get_unique_model_name(model_class))
@@ -574,14 +571,13 @@ class DynamicFixture(object):
         for field in self.fields_to_disable_auto_now_add:
             enable_auto_now_add(field)
 
-    def get(self, model_class, shelve=False, named_shelve=None, **kwargs):
+    def get(self, model_class, lesson=None, **kwargs):
         """
         Create an instance with data and persist it.
 
-        :shelve: the current configuration will be stored in the DDF library.
-        :named_shelve: restore configuration saved in DDF library with a name.
+        :lesson: a custom lesson that will be used to create the model object.
         """
-        instance = self.new(model_class, shelve=shelve, named_shelve=named_shelve, **kwargs)
+        instance = self.new(model_class, lesson=lesson, **kwargs)
         if is_model_abstract(model_class):
             raise InvalidModelError(get_unique_model_name(model_class))
         try:
@@ -615,3 +611,17 @@ class DynamicFixture(object):
                 except Exception as e:
                     six.reraise(InvalidManyToManyConfigurationError, InvalidManyToManyConfigurationError(get_unique_field_name(field), e), sys.exc_info()[2])
         return instance
+
+    def teach(self, model_class, lesson=None, **kwargs):
+        """
+        @raise an CantOverrideLesson error if the same model/lesson were called twice.
+        """
+        library = DDFLibrary.get_instance()
+        for field_name in kwargs.keys():
+            if field_name in self._DDF_CONFIGS:
+                continue
+            field = get_field_by_name_or_raise(model_class, field_name)
+            fixture = kwargs[field_name]
+            if field.unique and not (isinstance(fixture, (DynamicFixture, Copier, DataFixture)) or callable(fixture)):
+                raise InvalidConfigurationError('It is not possible to store static values for fields with unique=True (%s). Try using a lambda function instead.' % get_unique_field_name(field))
+        library.add_configuration(model_class, kwargs, name=lesson)

@@ -115,19 +115,3 @@ class DDF_VALIDATE_MODELS_TestCase(AbstractGlobalSettingsTestCase):
         conf.settings.DDF_VALIDATE_MODELS = 'x'
         with pytest.raises(Exception):
             reload_module(global_settings)
-
-
-class DDF_USE_LIBRARY_TestCase(AbstractGlobalSettingsTestCase):
-    def test_not_configured_must_load_default_value(self):
-        reload_module(global_settings)
-        assert global_settings.DDF_USE_LIBRARY == True
-
-    def test_must_be_a_boolean(self):
-        conf.settings.DDF_USE_LIBRARY = False
-        reload_module(global_settings)
-        assert global_settings.DDF_USE_LIBRARY == False
-
-    def test_must_raise_an_exception_if_it_is_not_a_boolean(self):
-        conf.settings.DDF_USE_LIBRARY = 'x'
-        with pytest.raises(Exception):
-            reload_module(global_settings)

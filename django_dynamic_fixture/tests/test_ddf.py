@@ -562,140 +562,127 @@ class CopyTest(DDFTestCase):
             self.ddf.get(ModelForCopy, int_a=Copier('int_b'), int_b=Copier('int_a'))
 
 
-class ShelveAndLibraryTest(DDFTestCase):
-    def test_shelve_store_the_current_configuration_as_default_configuration(self):
-        self.ddf.use_library = False
-        instance = self.ddf.get(ModelForLibrary, integer=1000, shelve=True)
-        assert instance.integer == 1000
-        self.ddf.use_library = True
+class TeachAndLessonsTest(DDFTestCase):
+    def test_teach_a_default_lesson_for_a_model(self):
+        self.ddf.teach(ModelForLibrary, integer=1000)
         instance = self.ddf.get(ModelForLibrary)
         assert instance.integer == 1000
 
-    def test_do_not_use_library_if_the_programmer_do_not_want_to(self):
-        self.ddf.use_library = False
-        self.ddf.get(ModelForLibrary, integer=1000, shelve=True)
-        self.ddf.use_library = False
-        instance = self.ddf.get(ModelForLibrary)
-        assert instance.integer != 1000
-
-    def test_shelve_may_be_overrided(self):
-        self.ddf.use_library = False
-        self.ddf.get(ModelForLibrary, integer=1000, shelve=True)
-        self.ddf.get(ModelForLibrary, integer=1001, shelve=True)
-        self.ddf.use_library = True
-        instance = self.ddf.get(ModelForLibrary)
-        assert instance.integer == 1001
+    def test_default_lesson_must_NOT_be_overrided(self):
+        self.ddf.teach(ModelForLibrary, integer=1000)
+        with pytest.raises(CantOverrideLesson):
+            self.ddf.teach(ModelForLibrary, integer=1001)
 
     def test_it_must_NOT_raise_an_error_if_user_try_to_use_a_not_saved_default_configuration(self):
-        self.ddf.use_library = True
         self.ddf.get(ModelForLibrary)
 
     def test_it_must_raise_an_error_if_try_to_set_a_static_value_to_a_field_with_unicity(self):
         with pytest.raises(InvalidConfigurationError):
-            self.ddf.get(ModelForLibrary, integer_unique=1000, shelve=True)
+            self.ddf.teach(ModelForLibrary, integer_unique=1000)
 
     def test_it_must_accept_dynamic_values_for_fields_with_unicity(self):
-        self.ddf.get(ModelForLibrary, integer_unique=lambda field: 1000, shelve=True)
+        self.ddf.teach(ModelForLibrary, integer_unique=lambda field: 1000)
 
-    def test_it_must_NOT_propagate_shelve_for_internal_dependencies(self):
-        self.ddf.get(ModelForLibrary, foreignkey=DynamicFixture(data_fixture, integer=1000), shelve=True)
-        instance = self.ddf.get(ModelForLibrary2)
-        assert instance.integer != 1000
-
-    def test_it_must_propagate_use_library_for_internal_dependencies(self):
-        self.ddf.use_library = True
-        self.ddf.get(ModelForLibrary, integer=1000, shelve=True)
-        self.ddf.get(ModelForLibrary2, integer=1000, shelve=True)
+    def test_it_must_NOT_propagate_lessons_for_internal_dependencies(self):
+        self.ddf.teach(ModelForLibrary, foreignkey=DynamicFixture(data_fixture, integer=1000))
         instance = self.ddf.get(ModelForLibrary)
+        assert instance.integer != 1000
         assert instance.foreignkey.integer == 1000
 
-#    def test_shelve_must_store_ddf_configs_too(self):
-#        self.ddf.use_library = True
-#        self.ddf.fill_nullable_fields = False
-#        self.ddf.get(ModelForLibrary, shelve=True)
-#        self.ddf.fill_nullable_fields = True
-#        instance = self.ddf.get(ModelForLibrary)
-#        assert instance.integer is None
-#
-#    def test_shelved_ddf_configs_must_NOT_be_propagated_to_another_models(self):
-#        self.ddf.use_library = True
-#        self.ddf.fill_nullable_fields = False
-#        self.ddf.get(ModelForLibrary, shelve=True)
-#        self.ddf.fill_nullable_fields = True
-#        instance = self.ddf.get(ModelForLibrary)
-#        assert instance.integer is None
-#        assert instance.foreignkey.integer is None
-
-
-class NamedShelveAndLibraryTest(DDFTestCase):
-    def test_a_model_can_have_named_configurations(self):
-        self.ddf.use_library = True
-        self.ddf.get(ModelForLibrary, integer=1000, shelve='a name')
-        instance = self.ddf.get(ModelForLibrary, named_shelve='a name')
-        assert instance.integer == 1000
-
-    def test_named_shelves_must_not_be_used_if_not_explicity_specified(self):
-        self.ddf.use_library = True
-        self.ddf.get(ModelForLibrary, integer=1000, shelve='a name')
+    def test_it_must_use_lessons_for_internal_dependencies(self):
+        # ModelForLibrary.foreignkey is a `ModelForLibrary2`
+        self.ddf.teach(ModelForLibrary, integer=1000)
+        self.ddf.teach(ModelForLibrary2, integer=1001)
         instance = self.ddf.get(ModelForLibrary)
-        assert 1000, instance.integer != 1000
+        assert instance.integer == 1000
+        assert instance.foreignkey.integer == 1001
 
-    def test_use_library_must_be_enable_to_use_named_shelves(self):
-        self.ddf.use_library = False
-        self.ddf.get(ModelForLibrary, integer=1000, shelve='a name')
-        instance = self.ddf.get(ModelForLibrary, named_shelve='a name')
+    # Not implemented yet
+    # def test_teaching_must_store_ddf_configs_too(self):
+    #     self.ddf.teach(ModelForLibrary, fill_nullable_fields=False)
+    #     instance = self.ddf.get(ModelForLibrary)
+    #     assert instance.integer is None
+
+    #     DDFLibrary.get_instance().clear()
+    #     self.ddf.teach(ModelForLibrary, fill_nullable_fields=True)
+    #     instance = self.ddf.get(ModelForLibrary)
+    #     assert instance.integer is not None
+
+    # Not implemented yet
+    # def test_teaching_ddf_configs_must_NOT_be_propagated_to_another_models(self):
+    #     self.ddf.teach(ModelForLibrary, fill_nullable_fields=False)
+    #     instance = self.ddf.get(ModelForLibrary)
+    #     assert instance.integer is None
+    #     assert instance.foreignkey.integer is None
+
+    #     DDFLibrary.get_instance().clear()
+    #     self.ddf.teach(ModelForLibrary, fill_nullable_fields=True)
+    #     instance = self.ddf.get(ModelForLibrary)
+    #     assert instance.integer is not None
+    #     assert instance.foreignkey.integer is None # not populated
+
+
+class TeachingAndCustomLessonsTest(DDFTestCase):
+    def test_a_model_can_have_custom_lessons(self):
+        self.ddf.teach(ModelForLibrary, integer=1000, lesson=None)
+        self.ddf.teach(ModelForLibrary, integer=1001, lesson='a name')
+        instance = self.ddf.get(ModelForLibrary)
+        assert instance.integer == 1000
+        instance = self.ddf.get(ModelForLibrary, lesson='a name')
+        assert instance.integer == 1001
+
+    def test_custom_lessons_must_not_be_used_if_not_explicity_specified(self):
+        self.ddf.teach(ModelForLibrary, integer=1000, lesson='a name')
+        instance = self.ddf.get(ModelForLibrary)
         assert instance.integer != 1000
 
-    def test_a_model_can_have_many_named_shelved_configurations(self):
-        self.ddf.get(ModelForLibrary, integer=1000, shelve='a name')
-        self.ddf.get(ModelForLibrary, integer=1001, shelve='a name 2')
+    def test_a_model_can_have_many_custom_lessons(self):
+        self.ddf.teach(ModelForLibrary, integer=1000, lesson='a name')
+        self.ddf.teach(ModelForLibrary, integer=1001, lesson='a name 2')
 
-        self.ddf.use_library = True
-        instance = self.ddf.get(ModelForLibrary, named_shelve='a name')
+        instance = self.ddf.get(ModelForLibrary, lesson='a name')
         assert instance.integer == 1000
 
-        instance = self.ddf.get(ModelForLibrary, named_shelve='a name 2')
+        instance = self.ddf.get(ModelForLibrary, lesson='a name 2')
         assert instance.integer == 1001
 
     def test_it_must_raise_an_error_if_user_try_to_use_a_not_saved_configuration(self):
-        self.ddf.use_library = True
         with pytest.raises(InvalidConfigurationError):
-            self.ddf.get(ModelForLibrary, named_shelve='a name')
+            self.ddf.get(ModelForLibrary, lesson='a not teached lesson')
 
-    def test_default_shelve_and_named_shelve_must_work_together(self):
+    def test_default_lesson_and_custom_lesson_must_work_together(self):
         # regression test
-        self.ddf.get(ModelForLibrary, integer=1000, shelve='a name')
-        self.ddf.get(ModelForLibrary, integer=1001, shelve=True)
-        self.ddf.get(ModelForLibrary, integer=1002, shelve='a name2')
-        self.ddf.use_library = True
-        instance = self.ddf.get(ModelForLibrary, named_shelve='a name')
+        self.ddf.teach(ModelForLibrary, integer=1000, lesson='a name')
+        self.ddf.teach(ModelForLibrary, integer=1001, lesson=True)
+        self.ddf.teach(ModelForLibrary, integer=1002, lesson='a name2')
+        instance = self.ddf.get(ModelForLibrary, lesson='a name')
         assert instance.integer == 1000
         instance = self.ddf.get(ModelForLibrary)
         assert instance.integer == 1001
-        instance = self.ddf.get(ModelForLibrary, named_shelve='a name2')
+        instance = self.ddf.get(ModelForLibrary, lesson='a name2')
         assert instance.integer == 1002
 
-    def test_default_shelve_and_named_shelve_must_work_together_for_different_models(self):
+    def test_default_lesson_and_custom_lesson_must_work_together_for_different_models(self):
         # regression test
-        self.ddf.get(ModelForLibrary, integer=1000, shelve='a name')
-        self.ddf.get(ModelForLibrary, integer=1001, shelve=True)
-        self.ddf.get(ModelForLibrary, integer=1002, shelve='a name2')
-        self.ddf.get(ModelForLibrary2, integer=2000, shelve='a name')
-        self.ddf.get(ModelForLibrary2, integer=2001, shelve=True)
-        self.ddf.get(ModelForLibrary2, integer=2002, shelve='a name2')
-        self.ddf.use_library = True
-        instance = self.ddf.get(ModelForLibrary, named_shelve='a name')
+        self.ddf.teach(ModelForLibrary, integer=1000, lesson='a name')
+        self.ddf.teach(ModelForLibrary, integer=1001, lesson=True)
+        self.ddf.teach(ModelForLibrary, integer=1002, lesson='a name2')
+        self.ddf.teach(ModelForLibrary2, integer=2000, lesson='a name')
+        self.ddf.teach(ModelForLibrary2, integer=2001, lesson=True)
+        self.ddf.teach(ModelForLibrary2, integer=2002, lesson='a name2')
+
+        instance = self.ddf.get(ModelForLibrary, lesson='a name')
         assert instance.integer == 1000
         instance = self.ddf.get(ModelForLibrary)
         assert instance.integer == 1001
-        instance = self.ddf.get(ModelForLibrary, named_shelve='a name2')
+        instance = self.ddf.get(ModelForLibrary, lesson='a name2')
         assert instance.integer == 1002
 
-        instance = self.ddf.get(ModelForLibrary2, named_shelve='a name')
+        instance = self.ddf.get(ModelForLibrary2, lesson='a name')
         assert instance.integer == 2000
         instance = self.ddf.get(ModelForLibrary2)
         assert instance.integer == 2001
-        instance = self.ddf.get(ModelForLibrary2, named_shelve='a name2')
+        instance = self.ddf.get(ModelForLibrary2, lesson='a name2')
         assert instance.integer == 2002
 
 
@@ -709,11 +696,13 @@ class DDFLibraryTest(TestCase):
         assert self.lib.get_configuration(ModelForLibrary, name=DDFLibrary.DEFAULT_KEY) == {'a': 1}
         assert self.lib.get_configuration(ModelForLibrary, name=None) == {'a': 1}
 
+        self.lib.clear()
         self.lib.add_configuration(ModelForLibrary, {'a': 2}, name=None)
         assert self.lib.get_configuration(ModelForLibrary) == {'a': 2}
         assert self.lib.get_configuration(ModelForLibrary, name=DDFLibrary.DEFAULT_KEY) == {'a': 2}
         assert self.lib.get_configuration(ModelForLibrary, name=None) == {'a': 2}
 
+        self.lib.clear()
         self.lib.add_configuration(ModelForLibrary, {'a': 3}, name=True)
         assert self.lib.get_configuration(ModelForLibrary) == {'a': 3}
         assert self.lib.get_configuration(ModelForLibrary, name=DDFLibrary.DEFAULT_KEY) == {'a': 3}

@@ -6,7 +6,8 @@ Nose plugins
 DDF Setup Nose Plugin (New in 1.6.0)
 ===============================================================================
 
-This plugin create a "setup suite". It will load the file *ddf_setup.py* in the root of your Django project before to execute the first test. The file *ddf_setup.py* may contain shelved configurations or pythonic initial data. Django just load initial data from YAML, JSON, XML etc::
+This plugin create a "setup suite". It will load the file *ddf_setup.py* in the root of your Django project before to execute the first test.
+The file *ddf_setup.py* may contain default and custom lessons configurations or pythonic initial data. Django just load initial data from YAML, JSON, XML etc::
 
     python manage.py test --with-ddf-setup
 

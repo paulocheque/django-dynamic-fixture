@@ -2,7 +2,6 @@
 from datetime import datetime
 import six
 
-from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.test import TestCase
 
@@ -13,6 +12,7 @@ from django_dynamic_fixture.fixture_algorithms.unique_random_fixture import Uniq
 
 try:
     import psycopg2
+    from django.contrib.postgres.fields import ArrayField
 
     class PostgresDataFixtureTestMixin(object):
         def test_arrayfield_integer_config(self):
@@ -60,5 +60,5 @@ try:
                 pass
             self.fixture = CustomFixture()
 
-except ImportError:
+except (ImportError, ModuleNotFoundError):
     print('Skipping Postgres tests because psycopg2 has not been installed.')
