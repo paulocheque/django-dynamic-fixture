@@ -14,9 +14,16 @@ matrix:
   - python: 3.8
     env: DJANGO=3.0
 
+addons:
+  postgresql: 9.6
+  apt:
+    packages:
+    - postgresql-9.6-postgis-2.3
+
 before_script:
   - export DJANGO_SETTINGS_MODULE=settings
   - export PYTHONPATH=$PYTHONPATH:$(pwd)
+  - psql -U postgres -c "create extension postgis"
 
 install:
   - pip install -r requirements.txt
