@@ -838,8 +838,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             self.fail()
         except BadDataError as e:
             assert 'IntegrityError' in str(e), str(e)
-            assert 'NULL' in str(e), str(e)
-
+            assert 'NULL' in str(e).upper(), str(e)
 
     def test_InvalidConfigurationError(self):
         try:
