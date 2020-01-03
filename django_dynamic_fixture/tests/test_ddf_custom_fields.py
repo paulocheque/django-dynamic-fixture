@@ -6,8 +6,8 @@ import pytest
 
 from django_dynamic_fixture.models_test import *
 from django_dynamic_fixture.ddf import *
+from django_dynamic_fixture.decorators import only_for_database, POSTGRES
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture
-
 
 data_fixture = SequentialDataFixture()
 
@@ -15,6 +15,24 @@ data_fixture = SequentialDataFixture()
 class DDFTestCase(TestCase):
     def setUp(self):
         self.ddf = DynamicFixture(data_fixture)
+
+
+class CustomFieldsTest(DDFTestCase):
+    def test_new_field_that_extends_django_field_must_be_supported(self):
+        instance = self.ddf.new(ModelWithCustomFields)
+        assert instance.x == 1
+
+    def test_unsupported_field_is_filled_with_null_if_it_is_possible(self):
+        instance = self.ddf.new(ModelWithCustomFields)
+        assert instance.y is None
+
+    def test_unsupported_field_raise_an_error_if_it_does_not_accept_null_value(self):
+        with pytest.raises(UnsupportedFieldError):
+            self.ddf.new(ModelWithUnsupportedField)
+
+    def test_new_field_that_double_inherits_django_field_must_be_supported(self):
+        instance = self.ddf.new(ModelWithCustomFieldsMultipleInheritance)
+        assert instance.x == 1
 
 
 class NewFullFillAttributesUsingPluginsTest(DDFTestCase):
@@ -72,19 +90,29 @@ class NewFullFillAttributesUsingPluginsTest(DDFTestCase):
             pass
 
 
-class CustomFieldsTest(DDFTestCase):
-    def test_new_field_that_extends_django_field_must_be_supported(self):
-        instance = self.ddf.new(ModelWithCustomFields)
-        assert instance.x == 1
+class PostgresCustomFieldsTest(DDFTestCase):
+    @only_for_database(POSTGRES)
+    def test_json_field(self):
+        instance = self.ddf.get(ModelForPostgresFields)
+        assert instance.nullable_json_field == {}
+        assert instance.json_field == {}
 
-    def test_unsupported_field_is_filled_with_null_if_it_is_possible(self):
-        instance = self.ddf.new(ModelWithCustomFields)
-        assert instance.y is None
+    @only_for_database(POSTGRES)
+    def test_json_field_as_null(self):
+        instance = self.ddf.get(ModelForPostgresFields, nullable_json_field=None)
+        assert instance.nullable_json_field is None
 
-    def test_unsupported_field_raise_an_error_if_it_does_not_accept_null_value(self):
-        with pytest.raises(UnsupportedFieldError):
-            self.ddf.new(ModelWithUnsupportedField)
+    @only_for_database(POSTGRES)
+    def test_json_field_as_dicts(self):
+        instance = self.ddf.get(ModelForPostgresFields, json_field={'a': 1})
+        assert instance.json_field == {'a': 1}
 
-    def test_new_field_that_double_inherits_django_field_must_be_supported(self):
-        instance = self.ddf.new(ModelWithCustomFieldsMultipleInheritance)
-        assert instance.x == 1
+    @only_for_database(POSTGRES)
+    def test_json_field_as_lists(self):
+        instance = self.ddf.get(ModelForPostgresFields, json_field=['str1', 2, {'c': 3}])
+        assert instance.json_field == ['str1', 2, {'c': 3}]
+
+    @only_for_database(POSTGRES)
+    def test_json_field_as_strings(self):
+        instance = self.ddf.get(ModelForPostgresFields, json_field='str')
+        assert instance.json_field == 'str'

@@ -39,6 +39,10 @@ class BaseDataFixture(DataFixture):
     def genericipaddressfield_config(self, field, key):
         return self.ipaddressfield_config(field, key)
 
+    # POSTGRES
+    def  jsonfield_config(self, field, key):
+        return {}
+
 
 # GIS/GeoDjango
 class GeoDjangoFixtureMixin(object):
