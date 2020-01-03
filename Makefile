@@ -1,5 +1,7 @@
 VERSION=2.0.0
 
+# Python env tasks
+
 clean:
 	clear
 	@find . -type f -name "*.py[co]" -delete
@@ -11,36 +13,61 @@ clean:
 	rm -rf data/
 	rm -rf dist/
 	rm -rf .eggs/
-	env/bin/python setup.py clean --all
 
 prepare:
-	clear ; python3.7 -m venv env
-	#clear ; virtualenv env -p python3.5
+	clear ; python3 -m venv env
 
 os_deps:
 	brew install gdal
+	env/bin/pip install --upgrade pip
 
 deps:
 	clear
+	env/bin/pip install --upgrade pip
 	env/bin/pip install -r requirements.txt
 	env/bin/pip install -r requirements-dev.txt
 
 shell:
-	clear ; env/bin/python
+	# clear ; env/bin/python -i -c "from ddf import *"
+	clear ; env/bin/python manage.py shell
+
+# Python code tasks
 
 compile:
 	env/bin/python -OO -m compileall .
 
 test:
-	clear ; time env/bin/python manage.py test
+	clear ; env/bin/pytest --reuse-db --no-migrations
+	# clear ; time env/bin/tox --parallel all -e django111-py27
+	# clear ; time env/bin/tox --parallel all -e django20-py37
+
+cov:
+	clear ; env/bin/pytest --no-migrations --reuse-db --cov=django_dynamic_fixture
+
+coveralls:
+	clear ; env/bin/coveralls
+
+code_style:
+	# Code Style
+	clear ; env/bin/pylint ddf django_dynamic_fixture ddf_setup queries
+
+code_checking:
+	# Code error checking
+	clear ; env/bin/python -m pyflakes ddf django_dynamic_fixture ddf_setup queries
+
+code_feedbacks:
+	# PEP8, code style and circular complexity
+	clear ; env/bin/flake8 ddf django_dynamic_fixture ddf_setup queries
+
+doc:
+	clear ; cd docs ; make clean html ; open build/html/index.html
+
+tox:
+	clear ; time env/bin/tox --parallel all
 
 build: clean prepare os_deps deps test
 
-tox:
-	clear ; time env/bin/tox
-
-push: test
-	clear ; git push origin master
+# Python package tasks
 
 setup_clean:
 	clear ; env/bin/python setup.py clean --all
@@ -67,6 +94,11 @@ publish: setup_clean setup_test
 	# Update version and save
 	# Go to 'files' link and upload the file
 	clear ; env/bin/python setup.py clean sdist upload
+
+# Git tasks
+
+push: tox doc
+	clear ; git push origin `git symbolic-ref --short HEAD`
 
 tag:
 	git tag ${VERSION}

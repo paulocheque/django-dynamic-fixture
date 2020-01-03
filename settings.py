@@ -2,16 +2,20 @@ from distutils.version import StrictVersion
 import django
 DJANGO_VERSION = django.get_version()[0:3]
 
+DEBUG = True
+
 IMPORT_DDF_MODELS = True
 
 DDF_TEST_GEODJANGO = False
 
 # Postgres and PostGis
+# > psql -d ddf -c "CREATE EXTENSION postgis;"
+# > psql -d ddf -c "select postgis_lib_version();"
 # DATABASES = {
 #     'default': {
 #         # Postgis supports all Django features
 #         # createdb ddf
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
 #         'NAME': 'ddf',
 #         'USER': 'paulocheque', # please, change this if you want to run tests in your machine
 #         'PASSWORD': '',
@@ -19,11 +23,6 @@ DDF_TEST_GEODJANGO = False
 #         'PORT': 5432,
 #     }
 # }
-# if StrictVersion(DJANGO_VERSION) >= StrictVersion('1.7'):
-#     # psql -d ddf -c "CREATE EXTENSION postgis;"
-#     # psql -d ddf -c "select postgis_lib_version();"
-#     DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
-#     DDF_TEST_GEODJANGO = True
 
 # MySQL
 # DATABASES = {
@@ -61,7 +60,6 @@ if DDF_TEST_GEODJANGO:
 
 INSTALLED_APPS += (
     'queries',
-    'django_coverage',
     'django_nose',
     'django_dynamic_fixture',
 )

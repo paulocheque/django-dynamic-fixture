@@ -1,0 +1,4 @@
+[flake8]
+max-line-length=200
+exclude=.git,*migrations/*,tmp/*,scripts/*,docs/*,*/tests/*,proto,env/*
+max-complexity=15

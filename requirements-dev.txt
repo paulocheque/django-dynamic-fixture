@@ -1,14 +1,18 @@
-tox==3.14.0
+pytest
+pytest-django
+pytest-xdist # Run tests in parallel
+pytest-cov
+tox # For the CI
 
-psycopg2==2.7 # For tests with Postgres fields
+psycopg2==2.8.4 # For tests with Postgres fields
 #or psycopg2cffi==2.7.5 # For pypy
 
 coveralls
 python-coveralls
 
-flake8==2.1.0
-pyflakes==1.5.0
-pylint==1.6.5
+flake8
+pyflakes
+pylint
 
-sphinx==1.5.3
-sphinx_rtd_theme==0.2.2
+sphinx
+sphinx_rtd_theme

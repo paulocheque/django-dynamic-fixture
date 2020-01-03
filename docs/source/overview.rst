@@ -29,8 +29,8 @@ Test sample::
             book1 = G(Book, authors=[author1])
             book2 = G(Book, authors=[author2])
             books = Book.objects.search_by_author(author1.name)
-            self.assertTrue(book1 in books)
-            self.assertTrue(book2 not in books)
+            assert book1 in books
+            assert book2 not in books
 
 
 Installation

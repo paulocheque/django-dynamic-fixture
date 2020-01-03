@@ -68,7 +68,7 @@ except Exception as e:
 
 # DDF_NUMBER_OF_LAPS default = 1
 try:
-    DDF_NUMBER_OF_LAPS = int(settings.DDF_NUMBER_OF_LAPS) if hasattr(settings, 'DDF_NUMBER_OF_LAPS') else 1
+    DDF_NUMBER_OF_LAPS = int(settings.DDF_NUMBER_OF_LAPS) if hasattr(settings, 'DDF_NUMBER_OF_LAPS') else 0
 except Exception as e:
     six.reraise(DDFImproperlyConfigured, DDFImproperlyConfigured("DDF_NUMBER_OF_LAPS (%s) must be a integer number." % settings.DDF_NUMBER_OF_LAPS), sys.exc_info()[2])
 
@@ -82,9 +82,9 @@ except Exception as e:
 
 
 
-DDF_FILL_NULLABLE_FIELDS = get_boolean_config('DDF_FILL_NULLABLE_FIELDS', default=True)
+DDF_FILL_NULLABLE_FIELDS = get_boolean_config('DDF_FILL_NULLABLE_FIELDS', default=False)
 DDF_VALIDATE_MODELS = get_boolean_config('DDF_VALIDATE_MODELS', default=False)
 DDF_VALIDATE_ARGS = get_boolean_config('DDF_VALIDATE_ARGS', default=False)
-DDF_USE_LIBRARY = get_boolean_config('DDF_USE_LIBRARY', default=False)
+DDF_USE_LIBRARY = get_boolean_config('DDF_USE_LIBRARY', default=True)
 DDF_DEBUG_MODE = get_boolean_config('DDF_DEBUG_MODE', default=False)
 

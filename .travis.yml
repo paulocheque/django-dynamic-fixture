@@ -1,31 +1,55 @@
-dist: trusty
+dist: bionic
 sudo: true
 
 language: python
-python:
-  - 2.7
-  - 3.6
+
+services:
+  - postgresql
+
+# https://trac.osgeo.org/postgis/wiki/UsersWikiPostgreSQLPostGIS
+addons:
+  postgresql: "10"
+  apt:
+    packages:
+    - libgdal-dev
+    - postgresql-10
+    - postgresql-10-postgis-2.4
+
+matrix:
+  include:
+  # https://docs.djangoproject.com/en/1.11/ref/contrib/gis/install/
+  - python: 2.7
+    env: DJANGO=1.11
+  # https://docs.djangoproject.com/en/2.2/ref/contrib/gis/install/
+  - python: 3.6
+    env: DJANGO=2.2
+  # https://docs.djangoproject.com/en/3.0/ref/contrib/gis/install/
+  # https://docs.djangoproject.com/en/3.0/releases/3.0/#id2
+  - python: 3.7
+    env: DJANGO=3.0
+  - python: 3.8
+    env: DJANGO=3.0
+
+before_script:
+  - export DJANGO_SETTINGS_MODULE=settings
+  - export PYTHONPATH=$PYTHONPATH:$(pwd)
+  # check gis
+  - gdal-config --version
+  - gdal-config --cflags
+  - psql -U postgres -c "create extension postgis"
+  # set up postgresql
+  - psql -U postgres -c "create role cacheops login superuser"
+  # postgis django backend requires these to exist
+  - psql -U postgres -c "create database cacheops"
+  - psql -U postgres -c "create database cacheops_slave"
 
 install:
-  - pip install tox
-  - pip install coveralls
-  #- pip install python-coveralls
-
-env:
-  - DJANGO=django18
-  - DJANGO=django19
-  - DJANGO=django110
-  - DJANGO=django111
-  # - DJANGO=django20
-
-# Workaround for Travis issues with unknown python interpreters
-matrix:
-  exclude:
-    - python: 2.7
-      env: DJANGO=django20
+  - pip install -r requirements.txt
+  - pip install psycopg2 pytest pytest-django coveralls
+  - pip install Django~=${DJANGO}.0
 
 script:
-  - tox -e $DJANGO-py${TRAVIS_PYTHON_VERSION//[.]/}
+  - pytest --reuse-db --migrations --create-db
 
 after_success:
   - coveralls

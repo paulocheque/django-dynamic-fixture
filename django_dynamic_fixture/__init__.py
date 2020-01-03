@@ -4,14 +4,20 @@
 This is the facade of all features of DDF.
 Module that contains wrappers and shortcuts (aliases).
 """
+import warnings
+
 from django_dynamic_fixture.ddf import DynamicFixture, Copier, DDFLibrary, \
     set_pre_save_receiver, set_post_save_receiver
-from django_dynamic_fixture.django_helper import print_field_values
+from django_dynamic_fixture.django_helper import print_field_values, django_greater_than
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture, \
     StaticSequentialDataFixture
 from django_dynamic_fixture.global_settings import DDF_DEFAULT_DATA_FIXTURE, DDF_FILL_NULLABLE_FIELDS, DDF_NUMBER_OF_LAPS, \
                                                     DDF_IGNORE_FIELDS, DDF_VALIDATE_MODELS, DDF_VALIDATE_ARGS, DDF_USE_LIBRARY, \
                                                     DDF_DEBUG_MODE, DDF_FIELD_FIXTURES
+
+
+if not django_greater_than('1.10'):
+    warnings.warn("DDF supports oficially only Django 1.11 or higher.", DeprecationWarning)
 
 
 LOOKUP_SEP = '__'
