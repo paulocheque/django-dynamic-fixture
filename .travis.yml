@@ -3,6 +3,9 @@ sudo: true
 
 language: python
 
+services:
+  - postgresql
+
 matrix:
   include:
   - python: 2.7
@@ -18,12 +21,12 @@ addons:
   postgresql: 9.6
   apt:
     packages:
-    - postgresql-9.6-postgis-2.3
+    - postgresql-9.6-postgis-2.4
 
 before_script:
   - export DJANGO_SETTINGS_MODULE=settings
   - export PYTHONPATH=$PYTHONPATH:$(pwd)
-  - psql -U postgres -c "create extension postgis"
+  - psql -c "create extension postgis;" -U postgres
 
 install:
   - pip install -r requirements.txt
