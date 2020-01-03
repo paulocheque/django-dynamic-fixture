@@ -4,6 +4,7 @@
 This is the facade of all features of DDF.
 Module that contains wrappers and shortcuts (aliases).
 """
+import typing
 import warnings
 
 from django_dynamic_fixture.ddf import DynamicFixture, Copier, DDFLibrary, \
@@ -14,6 +15,9 @@ from django_dynamic_fixture.fixture_algorithms.sequential_fixture import Sequent
 from django_dynamic_fixture.global_settings import DDF_DEFAULT_DATA_FIXTURE, DDF_FILL_NULLABLE_FIELDS, DDF_NUMBER_OF_LAPS, \
                                                     DDF_IGNORE_FIELDS, DDF_VALIDATE_MODELS, DDF_VALIDATE_ARGS, \
                                                     DDF_DEBUG_MODE, DDF_FIELD_FIXTURES
+
+
+INSTANCE_TYPE = typing.TypeVar('INSTANCE')
 
 
 if not django_greater_than('1.10'):
@@ -57,7 +61,7 @@ def fixture(**kwargs):
 
 
 # Wrappers
-def new(model, n=1, lesson=None, persist_dependencies=True, **kwargs):
+def new(model: typing.Type[INSTANCE_TYPE], n=1, lesson=None, persist_dependencies=True, **kwargs) -> INSTANCE_TYPE:
     """
     Return one or many valid instances of Django Models with fields filled with auto generated or customized data.
     All instances will NOT be persisted in the database, except its dependencies, in case @persist_dependencies is True.
@@ -87,7 +91,7 @@ def new(model, n=1, lesson=None, persist_dependencies=True, **kwargs):
     return instances
 
 
-def get(model, n=1, lesson=None, **kwargs):
+def get(model: typing.Type[INSTANCE_TYPE], n=1, lesson=None, **kwargs) -> INSTANCE_TYPE:
     """
     Return one or many valid instances of Django Models with fields filled with auto generated or customized data.
     All instances will be persisted in the database.
@@ -116,7 +120,7 @@ def get(model, n=1, lesson=None, **kwargs):
     return instances
 
 
-def teach(model, lesson=None, **kwargs):
+def teach(model: typing.Type[INSTANCE_TYPE], lesson=None, **kwargs):
     '''
     @model: The class of the Django model.
     @lesson: Name of custom lesson to be created.
