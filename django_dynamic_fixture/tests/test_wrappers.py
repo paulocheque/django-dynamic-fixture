@@ -165,6 +165,11 @@ class LookUpSeparatorTest(TestCase):
 
 
 class PreAndPostSaveTest(TestCase):
+    def tearDown(self):
+        # Workaround to pass the tests in Travis, caused by an unknown issue
+        # with LazySettings and ALLOWED_HOSTS
+        pass
+
     def test_pre_save(self):
         PRE_SAVE(EmptyModel, lambda x: x)
 
