@@ -30,7 +30,7 @@ before_script:
 
 install:
   - pip install -r requirements.txt
-  - pip install pytest coveralls
+  - pip install psycopg2 pytest coveralls
   - pip install Django~=${DJANGO}.0
 
 script:
