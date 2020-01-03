@@ -14,6 +14,10 @@ matrix:
   - python: 3.8
     env: DJANGO=3.0
 
+before_script:
+  - export DJANGO_SETTINGS_MODULE=settings
+  - export PYTHONPATH=$PYTHONPATH:$(pwd)
+
 install:
   - pip install -r requirements.txt
   - pip install pytest coveralls
