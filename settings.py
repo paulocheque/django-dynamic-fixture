@@ -8,35 +8,6 @@ IMPORT_DDF_MODELS = True
 
 DDF_TEST_GEODJANGO = False
 
-# Postgres and PostGis
-# > psql -d ddf -c "CREATE EXTENSION postgis;"
-# > psql -d ddf -c "select postgis_lib_version();"
-# DATABASES = {
-#     'default': {
-#         # Postgis supports all Django features
-#         # createdb ddf
-#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-#         'NAME': 'ddf',
-#         'USER': 'paulocheque', # please, change this if you want to run tests in your machine
-#         'PASSWORD': '',
-#         'HOST': 'localhost',
-#         'PORT': 5432,
-#     }
-# }
-
-# MySQL
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'ddf',
-#         'USER': 'paulocheque', # please, change this if you want to run tests in your machine
-#         'PASSWORD': '',
-#         'HOST': 'localhost',
-#         'PORT': 3306,
-#     }
-# }
-
-
 # SQlite and SpatialLite
 # brew install spatialite-tools
 # brew install gdal

@@ -42,6 +42,9 @@ before_script:
   # postgis django backend requires these to exist
   - psql -U postgres -c "create database cacheops"
   - psql -U postgres -c "create database cacheops_slave"
+  # create db and user
+  - psql -c "CREATE DATABASE ddf;" -U postgres
+  - psql -c "CREATE USER ddf_user WITH PASSWORD 'ddf_pass';" -U postgres
 
 install:
   - pip install -r requirements.txt
