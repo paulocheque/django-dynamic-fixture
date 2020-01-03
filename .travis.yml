@@ -20,15 +20,24 @@ matrix:
   # https://docs.djangoproject.com/en/1.11/ref/contrib/gis/install/
   - python: 2.7
     env: DJANGO=1.11
+  - python: 2.7
+    env: DJANGO=1.11
+    env: DATABASE=_postgres
   # https://docs.djangoproject.com/en/2.2/ref/contrib/gis/install/
   - python: 3.6
     env: DJANGO=2.2
+  - python: 3.6
+    env: DJANGO=2.2
+    env: DATABASE=_postgres
   # https://docs.djangoproject.com/en/3.0/ref/contrib/gis/install/
   # https://docs.djangoproject.com/en/3.0/releases/3.0/#id2
   - python: 3.7
     env: DJANGO=3.0
   - python: 3.8
     env: DJANGO=3.0
+  - python: 3.8
+    env: DJANGO=3.0
+    env: DATABASE=_postgres
 
 before_script:
   - export DJANGO_SETTINGS_MODULE=settings
@@ -52,7 +61,7 @@ install:
   - pip install Django~=${DJANGO}.0
 
 script:
-  - pytest --reuse-db --migrations --create-db
+  - pytest --reuse-db --migrations --create-db --ds=settings${DATABASE}
 
 after_success:
   - coveralls
