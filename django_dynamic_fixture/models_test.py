@@ -417,6 +417,15 @@ class ModelForUUID(models.Model):
 
 
 try:
+    from django.contrib.postgres.fields import JSONField
+    class ModelForPostgresFields(models.Model):
+        json_field1 = JSONField()
+        class Meta:
+            app_label = 'django_dynamic_fixture'
+except ImportError:
+    pass
+
+try:
     from jsonfield import JSONField
     from jsonfield import JSONCharField
     class ModelForPlugins1(models.Model):
