@@ -10,6 +10,7 @@ addons:
   postgresql: "10"
   apt:
     packages:
+    - libgdal-dev
     - postgresql-10
     - postgresql-10-postgis-2.4
     - libgdal-dev
@@ -44,7 +45,7 @@ install:
   - pip install Django~=${DJANGO}.0
 
 script:
-  - GDAL_VERSION=1.10 pytest
+  - pytest
 
 after_success:
   - coveralls
