@@ -1,5 +1,9 @@
 # PyTest file for global set up.
 
+# Django initialisation
+import django
+django.setup()
+
 # Django-Nose must import test_models to avoid 'no such table' problem
 from django_dynamic_fixture import models_test
 
