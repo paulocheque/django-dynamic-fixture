@@ -13,7 +13,6 @@ clean:
 	rm -rf data/
 	rm -rf dist/
 	rm -rf .eggs/
-	env/bin/python setup.py clean --all
 
 prepare:
 	clear ; python3 -m venv env
