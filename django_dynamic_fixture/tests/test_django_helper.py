@@ -107,7 +107,7 @@ class DjangoHelperModelsTest(TestCase):
     def test_model_has_the_field(self):
         class ModelWithWithoutFields_test_model_has_the_field(models.Model):
             integer = models.IntegerField()
-            selfforeignkey = models.ForeignKey('self', null=True, on_delete=None)
+            selfforeignkey = models.ForeignKey('self', null=True, on_delete=models.DO_NOTHING)
             manytomany = models.ManyToManyField('self', related_name='m2m')
         assert model_has_the_field(ModelWithWithoutFields_test_model_has_the_field, 'integer')
         assert model_has_the_field(ModelWithWithoutFields_test_model_has_the_field, 'selfforeignkey')
@@ -125,7 +125,7 @@ class DjangoHelperFieldsTest(TestCase):
     def test_get_related_model(self):
         class ModelRelated_test_get_related_model(models.Model): pass
         class Model4GetRelatedModel_test_get_related_model(models.Model):
-            fk = models.ForeignKey(ModelRelated_test_get_related_model, on_delete=None)
+            fk = models.ForeignKey(ModelRelated_test_get_related_model, on_delete=models.DO_NOTHING)
         assert get_related_model(get_field_by_name_or_raise(Model4GetRelatedModel_test_get_related_model, 'fk')) == \
                ModelRelated_test_get_related_model
 
@@ -133,9 +133,9 @@ class DjangoHelperFieldsTest(TestCase):
     def test_field_is_a_parent_link(self):
         class ModelParent_test_get_related_model(models.Model): pass
         class Model4FieldIsParentLink_test_get_related_model(ModelParent):
-            o2o_with_parent_link = models.OneToOneField(ModelParent_test_get_related_model, parent_link=True, related_name='my_custom_ref_x', on_delete=None)
+            o2o_with_parent_link = models.OneToOneField(ModelParent_test_get_related_model, parent_link=True, related_name='my_custom_ref_x', on_delete=models.DO_NOTHING)
         class Model4FieldIsParentLink2(ModelParent):
-            o2o_without_parent_link = models.OneToOneField(ModelParent_test_get_related_model, parent_link=False, related_name='my_custom_ref_y', on_delete=None)
+            o2o_without_parent_link = models.OneToOneField(ModelParent_test_get_related_model, parent_link=False, related_name='my_custom_ref_y', on_delete=models.DO_NOTHING)
         # FIXME
         # assert field_is_a_parent_link(get_field_by_name_or_raise(Model4FieldIsParentLink, 'o2o_with_parent_link'))
         assert field_is_a_parent_link(get_field_by_name_or_raise(Model4FieldIsParentLink2, 'o2o_without_parent_link')) == False
@@ -169,8 +169,8 @@ class DjangoHelperFieldsTest(TestCase):
 
     def test_is_relationship_field(self):
         class ModelForRelationshipField_test_is_relationship_field(models.Model):
-            fk = models.ForeignKey('self', on_delete=None)
-            one2one = models.OneToOneField('self', on_delete=None)
+            fk = models.ForeignKey('self', on_delete=models.DO_NOTHING)
+            one2one = models.OneToOneField('self', on_delete=models.DO_NOTHING)
         assert is_relationship_field(get_field_by_name_or_raise(ModelForRelationshipField_test_is_relationship_field, 'fk'))
         assert is_relationship_field(get_field_by_name_or_raise(ModelForRelationshipField_test_is_relationship_field, 'one2one'))
         assert is_relationship_field(get_field_by_name_or_raise(ModelForRelationshipField_test_is_relationship_field, 'id')) == False
