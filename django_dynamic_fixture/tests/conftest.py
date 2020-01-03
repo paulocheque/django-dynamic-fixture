@@ -16,11 +16,8 @@ from django.test import utils
 original_teardown_test_environment = utils.teardown_test_environment
 def fixed_teardown_test_environment():
     try:
-        print('ae1')
         original_teardown_test_environment()
-        print('ae2')
     except TypeError:
-        print('ae3')
         # Ignore some Django or PyTest-Django bug
         pass
 utils.teardown_test_environment = fixed_teardown_test_environment
