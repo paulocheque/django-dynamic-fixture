@@ -2,6 +2,8 @@ from distutils.version import StrictVersion
 import django
 DJANGO_VERSION = django.get_version()[0:3]
 
+DEBUG = True
+
 IMPORT_DDF_MODELS = True
 
 DDF_TEST_GEODJANGO = False
