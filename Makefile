@@ -37,10 +37,12 @@ compile:
 	env/bin/python -OO -m compileall .
 
 test:
-	clear ; env/bin/pytest -n 3 --benchmark-disable --no-migrations --reuse-db
+	clear ; env/bin/pytest --reuse-db --no-migrations
+	# clear ; time env/bin/tox --parallel all -e django111-py27
+	# clear ; time env/bin/tox --parallel all -e django20-py37
 
 cov:
-	clear ; env/bin/pytest -n 3 --benchmark-disable  --no-migrations --reuse-db --cov=django_dynamic_fixture tests/
+	clear ; env/bin/pytest --no-migrations --reuse-db --cov=django_dynamic_fixture
 
 coveralls:
 	clear ; env/bin/coveralls
