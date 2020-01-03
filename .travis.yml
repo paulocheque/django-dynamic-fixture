@@ -61,6 +61,8 @@ before_script:
   # create db and user
   - psql -c "CREATE DATABASE ddf;" -U postgres
   - psql -c "CREATE USER ddf_user WITH PASSWORD 'ddf_pass';" -U postgres
+  - psql -c "ALTER USER ddf_user CREATEDB;" -U postgres
+  - psql -c "ALTER USER ddf_user WITH SUPERUSER;" -U postgres
 
 install:
   - pip install -r requirements.txt
@@ -68,7 +70,7 @@ install:
   - pip install Django~=${DJANGO}.0
 
 script:
-  - pytest --reuse-db --migrations --create-db --ds=settings${DATABASE}
+  - pytest --create-db --reuse-db --no-migrations --ds=settings${DATABASE}
 
 after_success:
   - coveralls

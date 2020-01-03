@@ -37,7 +37,7 @@ compile:
 	env/bin/python -OO -m compileall .
 
 test:
-	clear ; env/bin/pytest --reuse-db --no-migrations
+	clear ; env/bin/pytest --create-db --reuse-db --no-migrations
 	# clear ; time env/bin/tox --parallel all -e django111-py27
 	# clear ; time env/bin/tox --parallel all -e django20-py37
 
@@ -51,6 +51,8 @@ config_postgres:
 	# create db and user
 	psql -c "CREATE DATABASE ddf;" -U postgres
 	psql -c "CREATE USER ddf_user WITH PASSWORD 'ddf_pass';" -U postgres
+	psql -c "ALTER USER ddf_user CREATEDB;" -U postgres
+	psql -c "ALTER USER ddf_user WITH SUPERUSER;" -U postgres
 
 test_postgres:
 	clear ; env/bin/pytest --reuse-db --no-migrations --ds=settings_postgres
@@ -59,7 +61,7 @@ test_mysql:
 	clear ; env/bin/pytest --reuse-db --no-migrations --ds=settings_mysql
 
 cov:
-	clear ; env/bin/pytest --no-migrations --reuse-db --cov=django_dynamic_fixture
+	clear ; env/bin/pytest --create-db --reuse-db --no-migrations --cov=django_dynamic_fixture
 
 coveralls:
 	clear ; env/bin/coveralls
