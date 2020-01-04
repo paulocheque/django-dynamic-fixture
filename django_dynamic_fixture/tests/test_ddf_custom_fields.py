@@ -22,6 +22,10 @@ class CustomFieldsTest(DDFTestCase):
         instance = self.ddf.new(ModelWithCustomFields)
         assert instance.x == 1
 
+    def test_new_field_that_extends_django_field_must_be_supported_with_custom_value(self):
+        instance = self.ddf.new(ModelWithCustomFields, x=6)
+        assert instance.x == 6
+
     def test_unsupported_field_is_filled_with_null_if_it_is_possible(self):
         instance = self.ddf.new(ModelWithCustomFields)
         assert instance.y is None
@@ -33,6 +37,10 @@ class CustomFieldsTest(DDFTestCase):
     def test_new_field_that_double_inherits_django_field_must_be_supported(self):
         instance = self.ddf.new(ModelWithCustomFieldsMultipleInheritance)
         assert instance.x == 1
+
+    def test_new_field_that_double_inherits_django_field_must_be_supported_with_custom_value(self):
+        instance = self.ddf.new(ModelWithCustomFieldsMultipleInheritance, x=5)
+        assert instance.x == 5
 
 
 class NewFullFillAttributesUsingPluginsTest(DDFTestCase):
