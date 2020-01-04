@@ -20,7 +20,7 @@ tests_require = [
 ]
 
 install_requires = [
-    'six',
+    'six'
 ]
 
 setup(name='django-dynamic-fixture',
