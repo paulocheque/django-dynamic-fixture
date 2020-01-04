@@ -46,9 +46,9 @@ create a not persisted instance that will be manipulated before saving it (usual
     print instance.some_field # this will print the auto generated data
 
 
-It is possible to disable saving all instances, but it has to be disabled manually::
+It is possible to enable saving its dependencies, but it has to be enabled manually::
 
-    instance = N(MyModel, persist_dependencies=False)
+    instance = N(MyModel, persist_dependencies=True)
     print instance.id # this will print None
     print instance.some_fk_field.id # this will print None
 
