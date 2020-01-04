@@ -21,33 +21,36 @@ matrix:
   - python: 2.7
     env:
       - DJANGO=1.11
+      - DATABASE=sqlite
   - python: 2.7
     env:
       - DJANGO=1.11
-      - DATABASE=_postgres
+      - DATABASE=postgres
   # https://docs.djangoproject.com/en/2.2/ref/contrib/gis/install/
   - python: 3.6
     env:
       - DJANGO=2.2
+      - DATABASE=sqlite
   - python: 3.6
     env:
       - DJANGO=2.2
-      - DATABASE=_postgres
+      - DATABASE=postgres
   # https://docs.djangoproject.com/en/3.0/ref/contrib/gis/install/
   # https://docs.djangoproject.com/en/3.0/releases/3.0/#id2
   - python: 3.7
     env:
       - DJANGO=3.0
+      - DATABASE=sqlite
   - python: 3.8
     env:
       - DJANGO=3.0
+      - DATABASE=sqlite
   - python: 3.8
     env:
       - DJANGO=3.0
-      - DATABASE=_postgres
+      - DATABASE=postgres
 
 before_script:
-  - export DJANGO_SETTINGS_MODULE=settings
   - export PYTHONPATH=$PYTHONPATH:$(pwd)
   # check gis
   - gdal-config --version
@@ -70,7 +73,7 @@ install:
   - pip install Django~=${DJANGO}.0
 
 script:
-  - pytest --create-db --reuse-db --no-migrations --ds=settings${DATABASE}
+  - pytest --create-db --reuse-db --no-migrations --ds=settings_${DATABASE}
 
 after_success:
   - coveralls

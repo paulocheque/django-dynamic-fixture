@@ -1,4 +1,4 @@
-from settings import *
+from settings_ddf import *
 
 DDF_TEST_GEODJANGO = True
 
@@ -13,3 +13,6 @@ DATABASES = {
         'PORT': 3306,
     }
 }
+
+if DDF_TEST_GEODJANGO:
+    INSTALLED_APPS += ('django.contrib.gis',)
