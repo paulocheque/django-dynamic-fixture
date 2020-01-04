@@ -38,8 +38,8 @@ compile:
 
 test:
 	# Run specific test:
-	# ARGS=pytest django_dynamic_fixture.tests.FILE::CLASS::METHOD make test
-	clear ; env/bin/pytest --create-db --reuse-db --no-migrations ${ARGS}
+	# TESTS=pytest django_dynamic_fixture.tests.FILE::CLASS::METHOD make test
+	clear ; env/bin/pytest --create-db --reuse-db --no-migrations ${TESTS}
 	# clear ; time env/bin/tox --parallel all -e django111-py27
 	# clear ; time env/bin/tox --parallel all -e django20-py37
 
@@ -57,13 +57,16 @@ config_postgres:
 	psql -c "ALTER USER ddf_user WITH SUPERUSER;" -U postgres
 
 test_postgres:
-	clear ; env/bin/pytest --reuse-db --no-migrations --ds=settings_postgres
+	# TESTS=pytest django_dynamic_fixture.tests.FILE::CLASS::METHOD make test_postgres
+	clear ; env/bin/pytest --reuse-db --no-migrations --ds=settings_postgres ${TESTS}
 
 test_mysql:
-	clear ; env/bin/pytest --reuse-db --no-migrations --ds=settings_mysql
+	# TESTS=pytest django_dynamic_fixture.tests.FILE::CLASS::METHOD make test_mysql
+	clear ; env/bin/pytest --reuse-db --no-migrations --ds=settings_mysql ${TESTS}
 
 cov:
-	clear ; env/bin/pytest --create-db --reuse-db --no-migrations --cov=django_dynamic_fixture
+	# TESTS=pytest django_dynamic_fixture.tests.FILE::CLASS::METHOD make cov
+	clear ; env/bin/pytest --create-db --reuse-db --no-migrations --cov=django_dynamic_fixture ${TESTS}
 
 coveralls:
 	clear ; env/bin/coveralls
