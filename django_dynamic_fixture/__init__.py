@@ -4,8 +4,8 @@
 This is the facade of all features of DDF.
 Module that contains wrappers and shortcuts (aliases).
 """
-import typing
 import warnings
+import six
 
 from django_dynamic_fixture.ddf import DynamicFixture, Copier, DDFLibrary, \
     set_pre_save_receiver, set_post_save_receiver
@@ -15,9 +15,6 @@ from django_dynamic_fixture.fixture_algorithms.sequential_fixture import Sequent
 from django_dynamic_fixture.global_settings import DDF_DEFAULT_DATA_FIXTURE, DDF_FILL_NULLABLE_FIELDS, DDF_NUMBER_OF_LAPS, \
                                                     DDF_IGNORE_FIELDS, DDF_VALIDATE_MODELS, DDF_VALIDATE_ARGS, \
                                                     DDF_DEBUG_MODE, DDF_FIELD_FIXTURES
-
-
-INSTANCE_TYPE = typing.TypeVar('INSTANCE')
 
 
 if not django_greater_than('1.10'):
@@ -61,7 +58,8 @@ def fixture(**kwargs):
 
 
 # Wrappers
-def new(model: typing.Type[INSTANCE_TYPE], n=1, lesson=None, persist_dependencies=True, **kwargs) -> INSTANCE_TYPE:
+
+def _new(model, n=1, lesson=None, persist_dependencies=True, **kwargs):
     """
     Return one or many valid instances of Django Models with fields filled with auto generated or customized data.
     All instances will NOT be persisted in the database, except its dependencies, in case @persist_dependencies is True.
@@ -91,7 +89,7 @@ def new(model: typing.Type[INSTANCE_TYPE], n=1, lesson=None, persist_dependencie
     return instances
 
 
-def get(model: typing.Type[INSTANCE_TYPE], n=1, lesson=None, **kwargs) -> INSTANCE_TYPE:
+def _get(model, n=1, lesson=None, **kwargs):
     """
     Return one or many valid instances of Django Models with fields filled with auto generated or customized data.
     All instances will be persisted in the database.
@@ -120,7 +118,7 @@ def get(model: typing.Type[INSTANCE_TYPE], n=1, lesson=None, **kwargs) -> INSTAN
     return instances
 
 
-def teach(model: typing.Type[INSTANCE_TYPE], lesson=None, **kwargs):
+def _teach(model, lesson=None, **kwargs):
     '''
     @model: The class of the Django model.
     @lesson: Name of custom lesson to be created.
@@ -144,11 +142,34 @@ def teach(model: typing.Type[INSTANCE_TYPE], lesson=None, **kwargs):
 
 
 # Shortcuts
-N = new
-G = get
+N = new = _new
+G = get = _get
+T = teach = _teach
 F = fixture
 C = Copier
 P = print_field_values
 DDFLibrary = DDFLibrary
 PRE_SAVE = set_pre_save_receiver
 POST_SAVE = set_post_save_receiver
+
+if six.PY3:
+    # Add type hints for Python >= 3.5
+    try:
+        import typing
+
+        INSTANCE_TYPE = typing.TypeVar('INSTANCE')
+
+        def new(model: typing.Type[INSTANCE_TYPE], n=1, lesson=None, persist_dependencies=True, **kwargs) -> INSTANCE_TYPE:
+            return _new(model, n=n, lesson=lesson, persist_dependencies=persist_dependencies, **kwargs)
+
+        def get(model: typing.Type[INSTANCE_TYPE], n=1, lesson=None, **kwargs) -> INSTANCE_TYPE:
+            return _get(model, n=n, lesson=lesson, **kwargs)
+
+        def teach(model: typing.Type[INSTANCE_TYPE], lesson=None, **kwargs):
+            return _teach(model, lesson=lesson, **kwargs)
+
+        N = new
+        G = get
+        T = teach
+    except ImportError:
+        pass
