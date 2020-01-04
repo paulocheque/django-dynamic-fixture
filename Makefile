@@ -37,7 +37,9 @@ compile:
 	env/bin/python -OO -m compileall .
 
 test:
-	clear ; env/bin/pytest --create-db --reuse-db --no-migrations
+	# Run specific test:
+	# ARGS=pytest django_dynamic_fixture.tests.FILE::CLASS::METHOD make test
+	clear ; env/bin/pytest --create-db --reuse-db --no-migrations ${ARGS}
 	# clear ; time env/bin/tox --parallel all -e django111-py27
 	# clear ; time env/bin/tox --parallel all -e django20-py37
 

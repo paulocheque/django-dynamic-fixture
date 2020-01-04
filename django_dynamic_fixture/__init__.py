@@ -25,20 +25,41 @@ if not django_greater_than('1.10'):
 
 LOOKUP_SEP = '__'
 
-def look_up_alias(**kwargs):
+def look_up_alias(ddf_as_f=True, **kwargs):
     """
-    a__b__c=1 => a=F(b=F(c=1))
+    Example of parameters:
+    a__b__c=1 => {a: {b: {c: 1}}}
     """
     field_dict = {}
-    for key, value in kwargs.items():
-        parts = key.split(LOOKUP_SEP)
-        current_dict = {parts[-1]: value}
-        first_fields = parts[:-1]
-        first_fields.reverse()
-        for part in first_fields:
-            current_dict = {part: F(**current_dict)}
-        field_dict.update(current_dict)
+    for alias, value in kwargs.items():
+        parts = alias.split(LOOKUP_SEP)
+        level_dict = field_dict
+        for part in parts[:-1]:
+            level_dict = level_dict.setdefault(part, {})
+        level_dict[parts[-1]] = value
+    if ddf_as_f:
+        for root, value in field_dict.items():
+            field_dict[root] = dict_to_f(value)
     return field_dict
+
+
+def dict_to_f(value):
+    """
+    Example:
+    1 => 1
+    {b: 1 => F(b=1)
+    {b: {c: 1}} => F(b=F(c=1))
+    """
+    if not isinstance(value, dict):
+        return value
+    else:
+        kwargs = {}
+        for k, v in value.items():
+            if not isinstance(v, dict):
+                kwargs[k] = v
+            else:
+                kwargs[k] = dict_to_f(v)
+        return F(**kwargs)
 
 
 def fixture(**kwargs):
@@ -184,3 +205,4 @@ T = teach
         exec(hack_to_avoid_py2_syntax_errors)
     except (ImportError, SyntaxError) as e:
         pass
+
