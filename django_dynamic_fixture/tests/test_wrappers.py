@@ -74,6 +74,12 @@ class FShortcutTest(TestCase):
         assert instance.manytomany.all()[1].integer == 1005
         assert instance.manytomany.all()[2].selfforeignkey.integer == 1006
 
+    def test_two_properties_same_object(self):
+        instance = G(ModelWithRelationships, integer=1000, foreignkey=F(integer=1001, integer_b=1002))
+        assert instance.integer == 1000
+        assert instance.foreignkey.integer == 1001
+        assert instance.foreignkey.integer_b == 1002
+
     def test_using_look_up_alias(self):
         instance = G(ModelWithRelationships, integer=1000,
                      foreignkey__integer=1001,
@@ -87,6 +93,22 @@ class FShortcutTest(TestCase):
         assert instance.manytomany.all()[0].integer == 1004
         assert instance.manytomany.all()[1].integer == 1005
         assert instance.manytomany.all()[2].selfforeignkey.integer == 1006
+
+    def test_using_look_up_alias_two_properties_same_object(self):
+        instance = G(ModelWithRelationships, integer=1000,
+                                             foreignkey__integer=1001,
+                                             foreignkey__integer_b=1002)
+        assert instance.integer == 1000
+        assert instance.foreignkey.integer == 1001
+        assert instance.foreignkey.integer_b == 1002
+
+    def test_using_look_up_alias_two_properties_same_object(self):
+        instance = G(ModelWithRelationships, integer=1000,
+                                             foreignkey__integer=1001,
+                                             foreignkey__integer_b=1002)
+        assert instance.integer == 1000
+        assert instance.foreignkey.integer_b == 1002
+        assert instance.foreignkey.integer == 1001
 
 
 class CShortcutTest(TestCase):
@@ -146,6 +168,26 @@ class CreatingMultipleObjectsTest(TestCase):
 
 
 class LookUpSeparatorTest(TestCase):
+    def test_look_up_alias_with_all_params_combination(self):
+        assert {'a': 1} == look_up_alias(a=1, ddf_as_f=False)
+        assert {'a': 1, 'b': 2} == look_up_alias(a=1, b=2, ddf_as_f=False)
+        assert {'a': {'b': 1}} == look_up_alias(a__b=1, ddf_as_f=False)
+        assert {'a': {'b': 1}, 'c': 2} == look_up_alias(a__b=1, c=2, ddf_as_f=False)
+        assert {'a': {'b': 1}, 'c': {'d': 2}} == look_up_alias(a__b=1, c__d=2, ddf_as_f=False)
+        assert {'a': {'b': 1, 'c': 2}} == look_up_alias(a__b=1, a__c=2, ddf_as_f=False)
+        assert {'a': {'b': 1, 'c': {'d': 2}}} == look_up_alias(a__b=1, a__c__d=2, ddf_as_f=False)
+        assert {'a': {'b': 1, 'c': {'d': 2}}, 'e': {'f': 3}, 'g': 4} == look_up_alias(a__b=1, a__c__d=2, e__f=3, g=4, ddf_as_f=False)
+
+    def test_look_up_alias_as_f_with_all_params_combination(self):
+        assert {'a': 1} == look_up_alias(a=1)
+        assert {'a': 1, 'b': 2} == look_up_alias(a=1, b=2)
+        assert {'a': F(b=1)} == look_up_alias(a__b=1)
+        assert {'a': F(b=1), 'c': 2} == look_up_alias(a__b=1, c=2)
+        assert {'a': F(b=1), 'c': F(d=2)} == look_up_alias(a__b=1, c__d=2)
+        assert {'a': F(b=1, c=2)} == look_up_alias(a__b=1, a__c=2)
+        assert {'a': F(b=1, c=F(d=2))} == look_up_alias(a__b=1, a__c__d=2)
+        assert {'a': F(b=1, c=F(d=2)), 'e': F(f=3), 'g': 4} == look_up_alias(a__b=1, a__c__d=2, e__f=3, g=4)
+
     def test_look_up_alias_with_just_one_parameter(self):
         assert {'a': 1} == look_up_alias(a=1)
         assert {'a': F()} == look_up_alias(a=F())
