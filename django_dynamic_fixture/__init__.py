@@ -171,5 +171,5 @@ if six.PY3:
         N = new
         G = get
         T = teach
-    except ImportError:
+    except (ImportError, SyntaxError):
         pass
