@@ -251,9 +251,10 @@ class DynamicFixture(object):
         :model_path: internal variable used to control the cycles of dependencies.
         """
         from django_dynamic_fixture.global_settings import DDF_IGNORE_FIELDS
-
+        from django_dynamic_fixture.fixture_algorithms import FixtureFactory
         # custom config of fixtures
-        self.data_fixture = data_fixture
+        self.data_fixture = FixtureFactory.get(data_fixture)
+
         self.fill_nullable_fields = fill_nullable_fields
         self.ignore_fields = ignore_fields
         # extend ignore_fields with globally declared ignore_fields
