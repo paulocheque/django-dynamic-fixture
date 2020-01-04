@@ -9,7 +9,6 @@ import struct
 from warnings import warn
 
 import six
-from six.moves import xrange
 
 from django.core.exceptions import ImproperlyConfigured
 
@@ -53,7 +52,7 @@ class UniqueRandomDataFixture(BaseDataFixture, GeoDjangoFixtureMixin, PostgresFi
         result = counter
         result += six.text_type('').join(
             random.choice(string.ascii_letters)
-            for _ in xrange(length - len(counter))
+            for _ in range(length - len(counter))
         )
         return result
 
