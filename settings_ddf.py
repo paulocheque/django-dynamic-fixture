@@ -6,19 +6,6 @@ DEBUG = True
 
 IMPORT_DDF_MODELS = True
 
-DDF_TEST_GEODJANGO = False
-
-# SQlite and SpatialLite
-# brew install spatialite-tools
-# brew install gdal
-SPATIALITE_LIBRARY_PATH = '/usr/local/lib/mod_spatialite.dylib'
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:',
-    }
-}
-
 SECRET_KEY = 'ddf-secret-key'
 
 ALLOWED_HOSTS = ['*'] # Since Django 1.11, it is verified when running tests

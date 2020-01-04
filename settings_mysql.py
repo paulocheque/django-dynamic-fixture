@@ -1,4 +1,4 @@
-from settings import *
+from settings_ddf import *
 
 DDF_TEST_GEODJANGO = True
 
