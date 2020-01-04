@@ -159,17 +159,20 @@ if six.PY3:
 
         INSTANCE_TYPE = typing.TypeVar('INSTANCE')
 
-        def new(model: typing.Type[INSTANCE_TYPE], n=1, lesson=None, persist_dependencies=True, **kwargs) -> INSTANCE_TYPE:
-            return _new(model, n=n, lesson=lesson, persist_dependencies=persist_dependencies, **kwargs)
+        hack_to_avoid_py2_syntax_errors = '''
+def new(model: typing.Type[INSTANCE_TYPE], n=1, lesson=None, persist_dependencies=True, **kwargs) -> INSTANCE_TYPE:
+    return _new(model, n=n, lesson=lesson, persist_dependencies=persist_dependencies, **kwargs)
 
-        def get(model: typing.Type[INSTANCE_TYPE], n=1, lesson=None, **kwargs) -> INSTANCE_TYPE:
-            return _get(model, n=n, lesson=lesson, **kwargs)
+def get(model: typing.Type[INSTANCE_TYPE], n=1, lesson=None, **kwargs) -> INSTANCE_TYPE:
+    return _get(model, n=n, lesson=lesson, **kwargs)
 
-        def teach(model: typing.Type[INSTANCE_TYPE], lesson=None, **kwargs):
-            return _teach(model, lesson=lesson, **kwargs)
+def teach(model: typing.Type[INSTANCE_TYPE], lesson=None, **kwargs):
+    return _teach(model, lesson=lesson, **kwargs)
 
-        N = new
-        G = get
-        T = teach
-    except (ImportError, SyntaxError):
+N = new
+G = get
+T = teach
+        '''
+        exec(hack_to_avoid_py2_syntax_errors)
+    except (ImportError, SyntaxError) as e:
         pass
