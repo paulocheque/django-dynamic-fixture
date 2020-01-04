@@ -174,3 +174,17 @@ class PreAndPostSaveTest(TestCase):
     def test_post_save(self):
         POST_SAVE(EmptyModel, lambda x: x)
 
+
+class UsingModelNameInsteadTest(TestCase):
+    def test_compatibility_for_new(self):
+        instance = N('django_dynamic_fixture.ModelWithNumbers', integer=5)
+        assert instance.integer == 5
+
+    def test_compatibility_for_get(self):
+        instance = G('django_dynamic_fixture.ModelWithNumbers', integer=5)
+        assert instance.integer == 5
+
+    def test_compatibility_for_teach(self):
+        teach('django_dynamic_fixture.ModelWithDefaultValues', integer_with_default=5)
+        instance = G('django_dynamic_fixture.ModelWithDefaultValues')
+        assert instance.integer_with_default == 5

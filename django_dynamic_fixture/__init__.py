@@ -7,6 +7,8 @@ Module that contains wrappers and shortcuts (aliases).
 import warnings
 import six
 
+from django.apps import apps
+
 from django_dynamic_fixture.ddf import DynamicFixture, Copier, DDFLibrary, \
     set_pre_save_receiver, set_post_save_receiver
 from django_dynamic_fixture.django_helper import print_field_values, django_greater_than
@@ -64,7 +66,7 @@ def _new(model, n=1, lesson=None, persist_dependencies=True, **kwargs):
     Return one or many valid instances of Django Models with fields filled with auto generated or customized data.
     All instances will NOT be persisted in the database, except its dependencies, in case @persist_dependencies is True.
 
-    @model: The class of the Django model.
+    @model: The class of the Django model. It can be a string `<app_label>.<model_name>`
     @n: number of instances to be created with the given configuration. Default is 1.
     @lesson: use a custom lesson to build the model object.
     @persist_dependencies: If True, save internal dependencies, otherwise just instantiate them. Default is True.
@@ -79,6 +81,8 @@ def _new(model, n=1, lesson=None, persist_dependencies=True, **kwargs):
 
     Wrapper for the method DynamicFixture.new
     """
+    if isinstance(model, str):
+        model = apps.get_model(model)
     kwargs = look_up_alias(**kwargs)
     d = fixture(**kwargs)
     if n == 1:
@@ -94,7 +98,7 @@ def _get(model, n=1, lesson=None, **kwargs):
     Return one or many valid instances of Django Models with fields filled with auto generated or customized data.
     All instances will be persisted in the database.
 
-    @model: The class of the Django model.
+    @model: The class of the Django model. It can be a string `<app_label>.<model_name>`
     @n: number of instances to be created with the given configuration. Default is 1.
     @lesson: use a custom lesson to build the model object.
 
@@ -108,6 +112,8 @@ def _get(model, n=1, lesson=None, **kwargs):
 
     Wrapper for the method DynamicFixture.get
     """
+    if isinstance(model, str):
+        model = apps.get_model(model)
     kwargs = look_up_alias(**kwargs)
     d = fixture(**kwargs)
     if n == 1:
@@ -120,7 +126,7 @@ def _get(model, n=1, lesson=None, **kwargs):
 
 def _teach(model, lesson=None, **kwargs):
     '''
-    @model: The class of the Django model.
+    @model: The class of the Django model. It can be a string `<app_label>.<model_name>`
     @lesson: Name of custom lesson to be created.
 
     @raise an CantOverrideLesson error if the same model/lesson were called twice.
@@ -136,6 +142,8 @@ def _teach(model, lesson=None, **kwargs):
     `Shelve` becomes `Teach`
     `Library` becomes `Lessons`
     '''
+    if isinstance(model, str):
+        model = apps.get_model(model)
     kwargs = look_up_alias(**kwargs)
     d = fixture(**kwargs)
     return d.teach(model, lesson=lesson, **kwargs)
