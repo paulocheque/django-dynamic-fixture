@@ -230,3 +230,31 @@ class UsingModelNameInsteadTest(TestCase):
         teach('django_dynamic_fixture.ModelWithDefaultValues', integer_with_default=5)
         instance = G('django_dynamic_fixture.ModelWithDefaultValues')
         assert instance.integer_with_default == 5
+
+
+class OverrideDataFixture(TestCase):
+    def test_random(self):
+        instance = N('django_dynamic_fixture.ModelWithNumbers', data_fixture='random')
+        assert instance is not None
+        instance = G('django_dynamic_fixture.ModelWithNumbers', data_fixture='random')
+        assert instance is not None
+
+    def test_sequential(self):
+        instance = N('django_dynamic_fixture.ModelWithNumbers', data_fixture='sequential')
+        assert instance is not None
+        instance = G('django_dynamic_fixture.ModelWithNumbers', data_fixture='sequential')
+        assert instance is not None
+
+    def test_static_sequential(self):
+        instance = N('django_dynamic_fixture.ModelWithNumbers', data_fixture='static_sequential')
+        assert instance is not None
+        instance = G('django_dynamic_fixture.ModelWithNumbers', data_fixture='static_sequential')
+        assert instance is not None
+
+    def test_custom_one(self):
+        from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture
+        instance = N('django_dynamic_fixture.ModelWithNumbers', data_fixture=SequentialDataFixture())
+        assert instance is not None
+        instance = G('django_dynamic_fixture.ModelWithNumbers', data_fixture=SequentialDataFixture())
+        assert instance is not None
+
