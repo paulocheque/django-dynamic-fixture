@@ -379,7 +379,6 @@ class ModelValidatorsTest(DDFTestCase):
 
 class ConfigurationValidatorTest(DDFTestCase):
     def test_it_must_raise_a_bad_data_error_if_data_is_not_valid(self):
-        self.ddf.validate_args = True
         with pytest.raises(InvalidConfigurationError):
             self.ddf.get(EmptyModel, unexistent_field='x')
 

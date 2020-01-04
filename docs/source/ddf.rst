@@ -146,16 +146,6 @@ You can configure DDF in ``settings.py`` file. You can also override the global 
     G(Model, validate_models=False)
 
 
-* **DDF_VALIDATE_ARGS** (Default = False): DDF can raise an exception if you are trying to fill data for a non existent field::
-
-    G(Model, nonexistent_field='data') # DDF will ignore it if DDF_VALIDATE_ARGS is False
-    G(Model, nonexistent_field='data') # DDF will raise an exception if DDF_VALIDATE_ARGS is True
-
-    # You can override the global config for one case:
-    G(Model, validate_args=False)
-    G(Model, validate_args=True)
-
-
 * **DDF_FIELD_FIXTURES** (Default = {}) (new in 1.8.0): Dictionary where the key is the full qualified name of the field and the value is a function without parameters that returns a value::
 
     DDF_FIELD_FIXTURES = {'path.to.your.Field': lambda: random.randint(0, 10) }

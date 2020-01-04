@@ -38,20 +38,6 @@ In the test file::
     G(MyModel, validate_models=True)
 
 
-Validate Arguments (New in 1.5.0)
--------------------------------------------------------------------------------
-
-This option is a flag to determine if field names passed to **G** and **N** function will be validated. In other words, DDF will check if the model has the field.
-
-In settings.py::
-
-    DDF_VALIDATE_ARGS = True # default = False for compatiblity reasons, but it is recommended to activate this option.
-
-In the test file::
-
-    G(MyModel, validate_args=True, mymodel_does_not_contains_this_field=999) # this will raise an error
-
-
 Signals PRE_SAVE and POST_SAVE:
 ===============================================================================
 

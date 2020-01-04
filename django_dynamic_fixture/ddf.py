@@ -237,17 +237,16 @@ class DynamicFixture(object):
     """
 
     _DDF_CONFIGS = ['fill_nullable_fields', 'ignore_fields', 'data_fixture', 'number_of_laps',
-                    'validate_models', 'validate_args', 'print_errors']
+                    'validate_models', 'print_errors']
 
     def __init__(self, data_fixture, fill_nullable_fields=True, ignore_fields=[], number_of_laps=1,
-                 validate_models=False, validate_args=False, print_errors=True, model_path=[], debug_mode=False, **kwargs):
+                 validate_models=False, print_errors=True, model_path=[], debug_mode=False, **kwargs):
         """
         :data_fixture: algorithm to fill field data.
         :fill_nullable_fields: flag to decide if nullable fields must be filled with data.
         :ignore_fields: list of field names that must not be filled with data.
         :number_of_laps: number of laps for each cyclic dependency.
         :validate_models: flag to decide if the model_instance.full_clean() must be called before saving the object.
-        :validate_args: flag to enable field name validation of custom fixtures.
         :print_errors: flag to determine if the model data must be printed to console on errors. For some scripts is interesting to disable it.
         :model_path: internal variable used to control the cycles of dependencies.
         """
@@ -262,7 +261,6 @@ class DynamicFixture(object):
         self.number_of_laps = number_of_laps
         # other ddfs configs
         self.validate_models = validate_models
-        self.validate_args = validate_args
         self.print_errors = print_errors
         # internal logic
         self.model_path = model_path
@@ -352,7 +350,6 @@ class DynamicFixture(object):
                                      ignore_fields=ignore_fields,
                                      number_of_laps=self.number_of_laps,
                                      validate_models=self.validate_models,
-                                     validate_args=self.validate_args,
                                      print_errors=self.print_errors,
                                      model_path=next_model_path)
             if persist_dependencies:
@@ -435,8 +432,7 @@ class DynamicFixture(object):
         2) load default fixture from DDF library. Store default fixture in DDF library.
         3) Load fixtures defined in F attributes.
         """
-        if self.validate_args:
-            self._validate_kwargs(model_class, kwargs)
+        self._validate_kwargs(model_class, kwargs)
 
         # load ddf_setup.py of the model application
         app_name = get_app_name_of_model(model_class)

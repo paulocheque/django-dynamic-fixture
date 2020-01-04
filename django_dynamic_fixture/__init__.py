@@ -15,7 +15,7 @@ from django_dynamic_fixture.django_helper import print_field_values, django_grea
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture, \
     StaticSequentialDataFixture
 from django_dynamic_fixture.global_settings import DDF_DEFAULT_DATA_FIXTURE, DDF_FILL_NULLABLE_FIELDS, DDF_NUMBER_OF_LAPS, \
-                                                    DDF_IGNORE_FIELDS, DDF_VALIDATE_MODELS, DDF_VALIDATE_ARGS, \
+                                                    DDF_IGNORE_FIELDS, DDF_VALIDATE_MODELS, \
                                                     DDF_DEBUG_MODE, DDF_FIELD_FIXTURES
 
 
@@ -73,7 +73,6 @@ def fixture(**kwargs):
                        ignore_fields=kwargs.pop('ignore_fields', []),
                        number_of_laps=kwargs.pop('number_of_laps', DDF_NUMBER_OF_LAPS),
                        validate_models=kwargs.pop('validate_models', DDF_VALIDATE_MODELS),
-                       validate_args=kwargs.pop('validate_args', DDF_VALIDATE_ARGS),
                        print_errors=kwargs.pop('print_errors', True),
                        debug_mode=kwargs.pop('debug_mode', DDF_DEBUG_MODE),
                        **kwargs)
@@ -97,7 +96,6 @@ def _new(model, n=1, lesson=None, persist_dependencies=True, **kwargs):
     @ignore_fields: List of fields that will be ignored by DDF. It will be concatenated with the global list DDF_IGNORE_FIELDS. Default is [].
     @number_of_laps: override DDF_NUMBER_OF_LAPS global configuration. Default 1.
     @validate_models: override DDF_VALIDATE_MODELS global configuration. Default is False.
-    @validate_args: override DDF_VALIDATE_ARGS global configuration. Default is False.
     @print_errors: print on console all instance values if DDF can not generate a valid object with the given configuration.
 
     Wrapper for the method DynamicFixture.new
@@ -128,7 +126,6 @@ def _get(model, n=1, lesson=None, **kwargs):
     @ignore_fields: List of fields that will be ignored by DDF. It will be concatenated with the global list DDF_IGNORE_FIELDS. Default is [].
     @number_of_laps: override DDF_NUMBER_OF_LAPS global configuration. Default 1.
     @validate_models: override DDF_VALIDATE_MODELS global configuration. Default is False.
-    @validate_args: override DDF_VALIDATE_ARGS global configuration. Default is False.
     @print_errors: print on console all instance values if DDF can not generate a valid object with the given configuration.
 
     Wrapper for the method DynamicFixture.get
