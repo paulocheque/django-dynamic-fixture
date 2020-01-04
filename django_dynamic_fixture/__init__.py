@@ -17,6 +17,7 @@ from django_dynamic_fixture.fixture_algorithms.sequential_fixture import Sequent
 from django_dynamic_fixture.global_settings import DDF_DEFAULT_DATA_FIXTURE, DDF_FILL_NULLABLE_FIELDS, DDF_NUMBER_OF_LAPS, \
                                                     DDF_IGNORE_FIELDS, DDF_VALIDATE_MODELS, \
                                                     DDF_DEBUG_MODE, DDF_FIELD_FIXTURES
+from django_dynamic_fixture.script_ddf_checkings import ddf_check_models
 
 
 if not django_greater_than('1.10'):

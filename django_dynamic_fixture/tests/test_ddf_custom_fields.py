@@ -31,6 +31,7 @@ class CustomFieldsTest(DDFTestCase):
         assert instance.y is None
 
     def test_unsupported_field_raise_an_error_if_it_does_not_accept_null_value(self):
+        DDFLibrary.get_instance().clear()
         with pytest.raises(UnsupportedFieldError):
             self.ddf.new(ModelWithUnsupportedField)
 
@@ -45,8 +46,9 @@ class CustomFieldsTest(DDFTestCase):
 
 class NewFullFillAttributesUsingPluginsTest(DDFTestCase):
     def test_custom_field_not_registered_must_raise_an_unsupported_field_exception(self):
+        DDFLibrary.get_instance().clear()
         with pytest.raises(UnsupportedFieldError):
-            self.ddf.new(ModelWithUnsupportedField)
+            self.ddf.get(ModelWithUnsupportedField)
 
     def test_new_fill_field_with_data_generated_by_plugins_with_dict(self):
         data_fixture.plugins = settings.DDF_FIELD_FIXTURES
