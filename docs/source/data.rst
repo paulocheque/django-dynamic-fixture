@@ -69,12 +69,12 @@ In settings.py::
 In the test file::
 
     instance = G(MyModel, fill_nullable_fields=False)
-    print instance.a_nullable_field # this will print None
-    print instance.a_required_field # this will print a generated data
+    assert instance.a_nullable_field is None
+    assert instance.a_required_field is not None
 
     instance = G(MyModel, fill_nullable_fields=True)
-    print instance.a_nullable_field # this will print a generated data
-    print instance.a_required_field # this will print a generated data
+    assert instance.a_nullable_field is not None
+    assert instance.a_required_field is not None
 
 
 Ignoring Fields (New in 1.2.0)
@@ -95,7 +95,7 @@ In settings.py::
 It is not possible to override the global configuration, just extend the list. So use global option with caution::
 
     instance = G(MyModel, ignore_fields=['another_field_name'])
-    print instance.another_field_name # this will print None
+    assert instance.another_field_name is None
 
 
 Number of Laps
@@ -110,13 +110,13 @@ In settings.py::
 In the test file::
 
     instance = G(MyModel, number_of_laps=1)
-    print instance.self_fk.id # this will print the ID
-    print instance.self_fk.self_fk.id # this will print None
+    assert instance.self_fk.id is not None
+    assert instance.self_fk.self_fk.id is None
 
     instance = G(MyModel, number_of_laps=2)
-    print instance.self_fk.id # this will print the ID
-    print instance.self_fk.self_fk.id  # this will print the ID
-    print instance.self_fk.self_fk.self_fk.id # this will print None
+    assert instance.self_fk.id is not None
+    assert instance.self_fk.self_fk.id is not None
+    assert instance.self_fk.self_fk.self_fk.id is None
 
 
 Copier (New in 1.6.0)
@@ -125,15 +125,15 @@ Copier (New in 1.6.0)
 Copier is a feature to copy the data of a field to another one. It is necessary to avoid cycles in the copier expression. If a cycle is found, DDF will alert the programmer the expression is invalid::
 
     instance = G(MyModel, some_field=C('another_field'))
-    print instance.some_field == instance.another_field # this will print True
+    assert instance.some_field == instance.another_field
 
     instance = G(MyModel, some_field=C('another_field'), another_field=50)
-    print instance.some_field # this will print 50
+    assert instance.some_field == 50
 
 It is possible to copy values of internal relationships, but only in the bottom-up way::
 
     instance = G(MyModel, some_field=C('some_fk_field.another_field'))
-    print instance.some_field == instance.some_fk_field.another_field # this will print True
+    assert instance.some_field == instance.some_fk_field.another_field
 
 
 Teaching DDF with Lessons (New in 2.1.0)
@@ -152,13 +152,13 @@ In the test files:
 
     from ddf import G
     instance = G(Model)
-    print(instance.field_x) # this will print 99
+    assert instance.field_x == 99
 
 
 It is possible to override the lessons though::
 
     instance = G(Model, field_x=888)
-    print(instance.field_x) # this will print 888
+    assert instance.field_x == 888
 
 It is possible to store custom functions of data fixtures for fields too::
 
@@ -166,14 +166,14 @@ It is possible to store custom functions of data fixtures for fields too::
     teach(Model, zip_code=zip_code_data_fixture)
 
     instance = G(Model)
-    print(instance.zip_code) # this will print 'MN 55416'
+    assert instance.zip_code == 'MN 55416'
 
 It is possible to store Copiers too::
 
     teach(Model, x=C('y'))
 
     instance = G(Model, y=5)
-    print(instance.x) # this will print 5
+    assert instance.x == 5
 
 
 You can have many custom lessons too:
@@ -184,10 +184,10 @@ You can have many custom lessons too:
     teach(Model, field_x=99, lesson='my custom lesson 2')
 
     instance = G(Model)
-    print(instance.field_x) # this will print 77
+    assert instance.field_x == 77
 
     instance = G(Model, lesson='my custom lesson 1')
-    print(instance.field_x) # this will print 88
+    assert instance.field_x == 88
 
     instance = G(Model, lesson='my custom lesson 2')
-    print(instance.field_x) # this will print 99
+    assert instance.field_x == 99

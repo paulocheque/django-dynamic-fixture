@@ -13,16 +13,16 @@ The **G** function is the main feature of DDF. It receives a model class and it 
     instance = G(MyModel)
     # The same as:
     # instance = get(MyModel)
-    print instance.id # this will print the ID, indicating the instance was saved
-    print instance.some_field # this will print the auto generated data
+    assert instance.id is not None # indicating the instance was saved
+    assert instance.some_field is not None
 
 
 This facilitates writing tests and it hides all dummy data that polutes the source code. But all important data of the test must be explicitily defined::
 
 
     instance = G(MyModel, my_field=123, another_field='abc')
-    print instance.my_field # this will print 123
-    print instance.another_field # this will print 'abc'
+    assert instance.my_field == 123
+    assert instance.another_field == 'abc'
 
 
 Important details:
@@ -42,15 +42,15 @@ create a not persisted instance that will be manipulated before saving it (usual
     instance = N(MyModel)
     # The same as:
     # instance = new(MyModel)
-    print instance.id # this will print None
-    print instance.some_field # this will print the auto generated data
+    assert instance.id is None
+    assert instance.some_field is not None
 
 
 It is possible to enable saving its dependencies, but it has to be enabled manually::
 
     instance = N(MyModel, persist_dependencies=True)
-    print instance.id # this will print None
-    print instance.some_fk_field.id # this will print None
+    assert instance.id is None
+    assert instance.some_fk_field.id is not None
 
 
 Fixture: F
@@ -62,24 +62,24 @@ It is possible to explicitly set a value for a relationship field(*ForeingKey*, 
     instance = G(MyModel, my_fk_field=F(my_field=1000))
     # The same as:
     # instance = G(MyModel, my_fk_field=fixture(my_field=1000))
-    print instance.my_fk_field.my_field # this will print 1000
+    assert instance.my_fk_field.my_field == 1000
 
 This is the equivalent to::
 
     my_fk_field = G(MyOtherModel, my_field=1000)
     instance = G(MyModel, my_fk_field=my_fk_field)
-    print instance.my_fk_field.my_field # this will print 1000
+    assert instance.my_fk_field.my_field == 1000
 
 **F** function is recursible::
 
     instance = G(MyModel, fk_a=F(fk_b=F(field_c=1000)))
-    print instance.fk_a.fk_b.field_c # this will print 1000
+    assert instance.fk_a.fk_b.field_c == 1000
 
 **F** can be used to customize instances of a ManyToManyField too::
 
     instance = G(MyModel, many_to_many_field=[F(field_x=1), F(field_x=2)])
-    print instance.many_to_many_field.all()[0].field_x # this will print 1
-    print instance.many_to_many_field.all()[1].field_x # this will print 2
+    assert instance.many_to_many_field.all()[0].field_x == 1
+    assert instance.many_to_many_field.all()[1].field_x == 2
 
 
 Many to Many fields
@@ -90,14 +90,14 @@ DDF can add instances in *ManyToManyFields*, but only if the instance has been p
 It is possible to define how many instances will be created dynamically::
 
     instance = G(MyModel, many_to_many_field=5)
-    print instance.many_to_many_field.all().count() # this will print 5
+    assert instance.many_to_many_field.all().count() == 5
 
 It is possible to customize each instance of the *ManyToManyField*::
 
     instance = G(MyModel, many_to_many_field=[F(field_x=10), F(field_y=20)])
-    print instance.many_to_many_field.all().count() # this will print 2
-    print instance.many_to_many_field.all()[0].field_x # this will print 10
-    print instance.many_to_many_field.all()[1].field_y # this will print 20
+    assert instance.many_to_many_field.all().count() == 2
+    assert instance.many_to_many_field.all()[0].field_x == 10
+    assert instance.many_to_many_field.all()[1].field_y == 20
 
 It is possible to pass already created instances too::
 
@@ -105,10 +105,10 @@ It is possible to pass already created instances too::
     instance2 = G(MyRelatedModel)
 
     instance = G(MyModel, many_to_many_field=[instance1, instance2])
-    print instance.many_to_many_field.all().count() # this will print 2
+    assert instance.many_to_many_field.all().count() == 2
 
     instance = G(MyModel, many_to_many_field=[F(), instance1, F(), instance2])
-    print instance.many_to_many_field.all().count() # this will print 4
+    assert instance.many_to_many_field.all().count() == 4
 
 
 Django Look Up fields syntax (New in 1.6.1)
@@ -118,7 +118,7 @@ This is an alias to F function, but it follows the Django pattern of filters tha
 
     from django_dynamic_fixture import G
     instance = G(MyModel, myfkfield__myfield=1000)
-    print instance.myfkfield__myfield # this will print 1000
+    assert instance.myfkfield__myfield == 1000
 
 Just be careful because DDF does not interpret related names yet.
 
