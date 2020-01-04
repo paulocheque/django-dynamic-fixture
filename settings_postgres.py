@@ -17,3 +17,6 @@ DATABASES = {
         'PORT': 5432,
     }
 }
+
+if DDF_TEST_GEODJANGO:
+    INSTALLED_APPS += ('django.contrib.gis',)

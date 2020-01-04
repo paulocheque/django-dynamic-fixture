@@ -13,9 +13,6 @@ ALLOWED_HOSTS = ['*'] # Since Django 1.11, it is verified when running tests
 
 INSTALLED_APPS = ()
 
-if DDF_TEST_GEODJANGO:
-    INSTALLED_APPS += ('django.contrib.gis',)
-
 INSTALLED_APPS += (
     'queries',
     'django_nose',

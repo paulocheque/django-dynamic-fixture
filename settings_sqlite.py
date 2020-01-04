@@ -13,3 +13,5 @@ DATABASES = {
     }
 }
 
+if DDF_TEST_GEODJANGO:
+    INSTALLED_APPS += ('django.contrib.gis',)
