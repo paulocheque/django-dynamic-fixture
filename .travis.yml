@@ -3,6 +3,11 @@ sudo: true
 
 language: python
 
+# Avoid Travis run the same build for `push` and `PR`
+branches:
+  only:
+    - "master"
+
 services:
   - postgresql
 
