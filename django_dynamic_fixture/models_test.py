@@ -253,7 +253,9 @@ class CustomDjangoFieldMultipleInheritance(CustomDjangoFieldMixin, models.Intege
 
 
 class NewField(models.Field):
-    pass
+    # Avoid OperationalError("table has no column named ...") errors
+    def db_type(self, connection):
+        return 'char(25)'
 
 
 class ModelWithCustomFields(models.Model):
