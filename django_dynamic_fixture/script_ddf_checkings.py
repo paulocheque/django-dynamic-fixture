@@ -4,7 +4,7 @@ from django_dynamic_fixture.django_helper import get_apps, get_models_of_an_app
 
 
 def color(color, string):
-    return f'\033[1;{color}m{string}\033[0m'
+    return '\033[1;{}m{}\033[0m'.format(color, string)
 
 def white(string):
     return color('37', string)
