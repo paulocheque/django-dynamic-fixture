@@ -17,7 +17,7 @@ def green(string):
 
 
 def ddf_check_models(application_labels=[], exclude_application_labels=[]):
-    from ddf import G
+    from django_dynamic_fixture import get
 
     succeeded = {}
     errors = {}
@@ -27,7 +27,7 @@ def ddf_check_models(application_labels=[], exclude_application_labels=[]):
             ref = '{}.{}'.format(app_label, model_class.__name__)
             try:
                 with transaction.atomic():
-                    G(model_class)
+                    get(model_class)
                 succeeded[ref] = None
             except Exception as e:
                 errors[ref] = '[{}] {}'.format(type(e), str(e))
