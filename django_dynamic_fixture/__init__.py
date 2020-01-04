@@ -81,7 +81,7 @@ def fixture(**kwargs):
 
 # Wrappers
 
-def _new(model, n=1, lesson=None, persist_dependencies=True, **kwargs):
+def _new(model, n=1, lesson=None, persist_dependencies=False, **kwargs):
     """
     Return one or many valid instances of Django Models with fields filled with auto generated or customized data.
     All instances will NOT be persisted in the database, except its dependencies, in case @persist_dependencies is True.
@@ -89,7 +89,7 @@ def _new(model, n=1, lesson=None, persist_dependencies=True, **kwargs):
     @model: The class of the Django model. It can be a string `<app_label>.<model_name>`
     @n: number of instances to be created with the given configuration. Default is 1.
     @lesson: use a custom lesson to build the model object.
-    @persist_dependencies: If True, save internal dependencies, otherwise just instantiate them. Default is True.
+    @persist_dependencies: If True, save internal dependencies, otherwise just instantiate them. Default is False.
 
     @data_fixture: override DDF_DEFAULT_DATA_FIXTURE configuration. Default is SequentialDataFixture().
     @fill_nullable_fields: override DDF_FILL_NULLABLE_FIELDS global configuration. Default is True.
