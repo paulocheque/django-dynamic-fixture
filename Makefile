@@ -107,6 +107,9 @@ register: setup_clean setup_test
 	clear ; env/bin/python setup.py register
 
 publish: setup_clean setup_test
+	# Fixing Python 3 Certificates
+	# /Applications/Python\ 3.7/Install\ Certificates.command
+	#
 	# http://guide.python-distribute.org/quickstart.html
 	# python setup.py sdist
 	# python setup.py register
