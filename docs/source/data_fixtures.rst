@@ -3,6 +3,12 @@
 Data Fixtures
 *******************************************************************************
 
+.. contents::
+   :local:
+
+Configuration
+===============================================================================
+
 This configuration defines the algorithm of data generation that will be used to populate fields with dynamic data. Do NOT mix data fixtures in the same test suite because the generated data may conflict and it will produce erratic tests.
 
 In settings.py::
@@ -32,21 +38,21 @@ In settings.py::
 In the test file::
 
     instance = G(MyModel)
-    print instance.integerfield_a # this will print 1
-    print instance.integerfield_b # this will print 1
-    print instance.charfield_b # this will print 1
-    print instance.booleanfield # this will print False
-    print instance.nullbooleanfield # this will print None
+    assert instance.integerfield_a == 1
+    assert instance.integerfield_b == 1
+    assert instance.charfield_b == 1
+    assert instance.booleanfield == False
+    assert instance.nullbooleanfield is None
 
     instance = G(MyModel)
-    print instance.integerfield_a # this will print 2
-    print instance.integerfield_b # this will print 2
-    print instance.charfield_b # this will print 2
-    print instance.booleanfield # this will print False
-    print instance.nullbooleanfield # this will print None
+    assert instance.integerfield_a == 2
+    assert instance.integerfield_b == 2
+    assert instance.charfield_b == 2
+    assert instance.booleanfield == False
+    assert instance.nullbooleanfield is None
 
     instance = G(MyOtherModel)
-    print instance.integerfield_a # this will print 1
+    assert instance.integerfield_a == 1
 
     # ...
 
@@ -62,12 +68,12 @@ In settings.py::
 In the test file::
 
     instance = G(MyModel)
-    print instance.integerfield_unique # this will print 1
-    print instance.integerfield_notunique # this will print 1
+    assert instance.integerfield_unique == 1
+    assert instance.integerfield_notunique == 2
 
     instance = G(MyModel)
-    print instance.integerfield_unique # this will print 2
-    print instance.integerfield_notunique # this will print 1
+    assert instance.integerfield_unique == 2
+    assert instance.integerfield_notunique == 2
     # ...
 
 Random Data Fixture
@@ -84,10 +90,10 @@ In settings.py::
 In the test file::
 
     instance = G(MyModel)
-    print instance.integerfield_a # this will print a random number
-    print instance.charfield_b # this will print a random string
-    print instance.booleanfield # this will print False or True
-    print instance.nullbooleanfield # this will print None, False or True
+    assert instance.integerfield_a is not None
+    assert instance.charfield_b is not None
+    assert instance.booleanfield in [False, True]
+    assert instance.nullbooleanfield in [None, False, True]
     # ...
 
 Custom Data Fixture
@@ -107,8 +113,8 @@ In the path/to/your.py file::
 In the test file::
 
     instance = G(MyModel)
-    print instance.integerfield_a # this will print 1000
-    print instance.integerfield_b # this will print 1000
+    assert instance.integerfield_a == 1000
+    assert instance.integerfield_b == 1000
     # ...
 
 

@@ -5,7 +5,6 @@ from django.db import models
 from datetime import datetime, date
 from decimal import Decimal
 import six
-from six.moves import xrange
 
 
 class DataFixtureTestCase(object):
@@ -23,7 +22,7 @@ class DataFixtureTestCase(object):
 
     def test_it_must_deal_with_decimal_max_digits(self):
         # value 10 must be a problem, need to restart the counter: 10.0 has 3 digits
-        for _ in xrange(11):
+        for _ in range(11):
             assert isinstance(self.fixture.generate_data(models.DecimalField(max_digits=1, decimal_places=1)), Decimal)
             assert isinstance(self.fixture.generate_data(models.DecimalField(max_digits=2, decimal_places=1)), Decimal)
 
