@@ -6,22 +6,27 @@
 Welcome to DDF's documentation!
 ===============================
 
-Django Dynamic Fixture (DDF) is a complete and simple library to create dynamic model instances for testing purposes.
+Django Dynamic Fixture (DDF) is a complete and simple library to create **dynamic model instances** for **testing purposes**.
 
-It lets you focus on your tests, instead of focusing on generating some dummy data which is boring and polutes the test source code.
+It lets you **focus on your tests**, instead of focusing on generating some dummy data which is boring and polutes the test source code.
+
+It exists to solve the **anti-pattern** of Static Fixtures and Factory objects. Are you tired to mantain dozens of yml/json files and factory objects?
+
 
 .. toctree::
    :maxdepth: 2
 
    overview
    ddf
-   data_fixtures
    data
+   settings
+   data_fixtures
    more
    patterns
    nose_plugins
    fdf
    about
+   change_log
 
 
 Indices and tables

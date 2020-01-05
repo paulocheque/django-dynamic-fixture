@@ -1,12 +1,16 @@
 .. _overview:
 
+
 Getting Started
 *******************************************************************************
+
+.. contents::
+   :local:
 
 Basic Example of Usage
 ===============================================================================
 
-Models sample::
+Models sample (`models.py`)::
 
     from django.db import models
 
@@ -17,10 +21,28 @@ Models sample::
         name = models.CharField(max_length=255)
         authors = models.ManyToManyField(Author)
 
-Test sample::
+        @staticmethod
+        def search_by_author(author_name):
+            return Book.objects.filter(authors__name=author_name)
+
+
+**PyTest** example (`tests/test_books.py`)::
+
+    from ddf import G
+
+    def test_search_book_by_author():
+        author1 = G(Author)
+        author2 = G(Author)
+        book1 = G(Book, authors=[author1])
+        book2 = G(Book, authors=[author2])
+        books = Book.objects.search_by_author(author1.name)
+        assert book1 in books
+        assert book2 not in books
+
+**Django TestCase** example (`tests/test_books.py`)::
 
     from django.test import TestCase
-    from django_dynamic_fixture import G
+    from ddf import G
 
     class SearchingBooks(TestCase):
         def test_search_book_by_author(self):
@@ -29,8 +51,8 @@ Test sample::
             book1 = G(Book, authors=[author1])
             book2 = G(Book, authors=[author2])
             books = Book.objects.search_by_author(author1.name)
-            assert book1 in books
-            assert book2 not in books
+            self.assertTrue(book1 in books)
+            self.assertTrue(book2 not in books)
 
 
 Installation
@@ -72,42 +94,58 @@ Upgrade
     pip install django-dynamic-fixture --upgrade --no-deps
 
 
-Compatibility
+Support and Compatibility
 ===============================================================================
 
-* Legacy: Django 1.2, 1.3 - Python: 2.7
++---------------------------------------------------------+
+| DDF current support                                     |
++================+=================+======================+
+| Python 3.8     | Django 3.x.x    | DDF 1.0.0 - Jan 2020 |
++----------------+-----------------+----------------------+
+| Python 3.7     | Django 3.x.x    | DDF 1.0.0 - Jan 2020 |
++----------------+-----------------+----------------------+
+| Python 3.6     | Django 3.x.x    | DDF 1.0.0 - Jan 2020 |
++----------------+-----------------+----------------------+
+| Python > 3.5   | Django 2.x.x    | DDF 1.0.0 - Jan 2020 |
++----------------+-----------------+----------------------+
+| Python 2.7     | Django 1.11.x   | DDF 1.0.0 - Jan 2020 |
++----------------+-----------------+----------------------+
 
-* Django 1.4 with Python 2.7
-* Django 1.5 with Python 2.7
-* Django 1.6 with Python 2.7 or 3.3
++---------------------------------------------------------+
+| DDF old support                                         |
++================+=================+======================+
+| Python 3.3     | Django < 1.11.x | DDF 2.0.0 - Dec 2017 |
++----------------+-----------------+----------------------+
+| Python <= 2.7  | Django < 1.11.x | DDF 2.0.0 - Dec 2017 |
++----------------+-----------------+----------------------+
 
-* Not tested with Django 1.7 yet
 
 List of features
 ===============================================================================
 
-  * Highly customizable: you can customize fields recursively
-  * Deals with unique=True
-  * Deals with cyclic dependencies (including self references)
-  * Deals with many to many relationship (common M2M or M2M with additional data, i.e. through='table')
-  * Deals with custom fields (especially if the custom field inherits from a django field)
-  * Support for parallel tests
-  * Deals with auto calculated attributes
-  * It is easy to debug errors
+  * Highly customizable: you can **customize fields recursively**
+  * Deals with **unique=True**
+  * Deals with **cyclic dependencies** (including self references)
+  * Deals with **many to many relationship** (common M2M or M2M with additional data, i.e. **through='table'**)
+  * Deals with **custom fields** (especially if the custom field inherits from a django field)
+  * Support for **parallel tests**
+  * Deals with **auto calculated** attributes
+  * It is **easy to debug errors**
 
 Motivation
 ===============================================================================
 
-  * It is a terrible practice to use static data in tests.
-  * Creating dynamic fixture for each model is boring and it produces a lot of replicated code.
+  * It is a terrible practice to use **static data** in tests (yml/json/sql files).
+  * It is very hard to mantain lots of **Factory objects**.
+  * Creating fixtures for each model is boring and it produces a lot of **replicated code**.
   * It is a bad idea to use uncontrolled data in tests, like bizarre random data.
 
 Comparison with other tools
 ===============================================================================
 
-The DDF was created in a context of a project with a very complex design with many cyclic dependencies. In that context, no available tool was satisfactory. Or we stumbled in some infinite loop or some bug caused by a custom field. For these reasons, the tests started to fail and it was very hard to understand why.
+The DDF was created in a context of a project with a **very complex design** with many **cyclic dependencies**. In that context, no available tool was satisfactory. Or we stumbled in some **infinite loop** or some bug caused by a **custom field**. For these reasons, the tests started to fail and it was very hard to understand why.
 
-Another thing, the DDF was planned to have a lean and clean syntax. We believe that automated tests must be developed quickly with the minimum overhead. For that reason we are in favor of less verbose approach, except in the documentation ;)
+Another thing, the DDF was planned to have a **lean and clean syntax**. We believe that automated tests must be developed quickly with the **minimum overhead**. For that reason we are in favor of **less verbose approach**, except in the documentation ;)
 
 Also, DDF is flexible, since it is possible to customize the entire data generation or by field.
 
@@ -120,20 +158,8 @@ Also, DDF is flexible, since it is possible to customize the entire data generat
 
 Plus:
 
-  * Nose plugin that enables a setup for the entire suite (unittest2 includes only setups for class and module)
-  * Nose plugin to count how many queries are executed by test
-  * Command to count how many queries are executed to save any kind of model instance
-  * FileSystemDjangoTestCase that facilitates to create tests for features that use filesystem.
-
-External references
-===============================================================================
-
-  * http://stackoverflow.com/search?q=django+dynamic+fixture
-  * http://stackoverflow.com/questions/12487337/optimizing-setup-and-teardown-for-sample-django-model-using-django-nose-and-djan
-  * http://stackoverflow.com/questions/4400609/initial-data-fixture-management-in-django
-
-
-Running tests locally
-===============================================================================
-
-Install GDAL: https://docs.djangoproject.com/en/1.11/ref/contrib/gis/install/geolibs/#gdal
+  * **PyTest** compatible
+  * **Nose plugin** that enables a setup for the entire suite (unittest2 includes only setups for class and module)
+  * **Nose plugin** to count how many queries are executed by test
+  * **Command** to count how many queries are executed to save any kind of model instance
+  * **FileSystemDjangoTestCase** that facilitates to create tests for features that use filesystem.

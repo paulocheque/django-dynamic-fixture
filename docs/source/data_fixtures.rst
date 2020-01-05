@@ -3,6 +3,12 @@
 Data Fixtures
 *******************************************************************************
 
+.. contents::
+   :local:
+
+Configuration
+===============================================================================
+
 This configuration defines the algorithm of data generation that will be used to populate fields with dynamic data. Do NOT mix data fixtures in the same test suite because the generated data may conflict and it will produce erratic tests.
 
 In settings.py::
