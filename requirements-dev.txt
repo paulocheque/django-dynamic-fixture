@@ -4,7 +4,8 @@ pytest-xdist # Run tests in parallel
 pytest-cov
 tox # For the CI
 
-psycopg2==2.8.4 # For tests with Postgres fields
+psycopg2-binary
+#psycopg2==2.8.4 # For tests with Postgres fields
 #or psycopg2cffi==2.7.5 # For pypy
 
 coveralls
