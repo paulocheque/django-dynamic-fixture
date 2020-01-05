@@ -13,3 +13,4 @@ django-json-field
 #psycopg2cffi # pypy2+ compatible
 
 geopy
+django_polymorphic

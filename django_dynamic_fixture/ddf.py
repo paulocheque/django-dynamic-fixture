@@ -478,9 +478,16 @@ class DynamicFixture(object):
         instance = model_class()
         if not is_model_class(instance):
             raise InvalidModelError(get_unique_model_name(model_class))
+        try:
+            from polymorphic import PolymorphicModel
+            is_polymorphic = isinstance(instance, PolymorphicModel)
+        except ImportError:
+            # Django-polymorphic is not installed so the model can't be polymorphic.
+            is_polymorphic = False
         for field in get_fields_from_model(model_class):
             if is_key_field(field) and field.name not in configuration: continue
             if field.name not in self.kwargs and self._is_ignored_field(field.name): continue
+            if is_polymorphic and (field.name == 'polymorphic_ctype' or field.primary_key): continue
             self.set_data_for_a_field(model_class, instance, field, persist_dependencies=persist_dependencies, **configuration)
         number_of_pending_fields = len(self.pending_fields)
         # For Copier fixtures: dealing with pending fields that need to receive values of another fields.

@@ -17,6 +17,7 @@ INSTALLED_APPS += (
     'queries',
     'django_nose',
     'django_dynamic_fixture',
+    'django.contrib.contenttypes',
 )
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
