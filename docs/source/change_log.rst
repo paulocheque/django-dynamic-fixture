@@ -8,6 +8,29 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 3.0.0 - 2020/01/05
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/3.0.0>
+  * New ``teach`` method that replaced the old ``shelve=True``.
+  * Support to ``app_label.ModelName`` strings instead of the model class.
+  * New ``ddf`` shortcut: ``from ddf import G, N, C, P, teach``.
+  * Support for **Django 3.0.0**.
+  * New ``ddf_check_models`` method to print a compatibility report.
+  * Added Python 3 Type Hints.
+  * Added native support for the ``Postgres.JSONField``.
+  * Added native support for Django-Polymorphic models.
+  * Bugfix for the ``data_fixture`` parameter to accept string alias.
+  * Another small bugfixes with ``choices`` parameter.
+  * Many internal refactorings.
+  * Travis/Tests integration fixed.
+  * Documentation organised, updated and simplified.
+  * Changed the default value of the ``persist_dependencies`` in ``N`` from True to False.
+  * DDF_USE_LIBRARY settings removed. Now, it is always activated by default.
+  * DDF_VALIDATE_ARGS settings removed. Now, it is always activated by default.
+  * DDF_FILL_NULLABLE_FIELDS default changed from True to False
+  * DDF_NUMBER_OF_LAPS default changed from 1 to 0
+  * Bugfix for named primary keys.
+
 Version 2.0.0 - 2017/12/08
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/2.0.0>
