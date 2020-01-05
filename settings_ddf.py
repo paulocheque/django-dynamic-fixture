@@ -19,6 +19,13 @@ INSTALLED_APPS += (
     'django_dynamic_fixture',
     'django.contrib.contenttypes',
 )
+try:
+    import polymorphic
+    INSTALLED_APPS += ('polymorphic',)
+except ImportError:
+    pass
+
+
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 NOSE_PLUGINS = ['queries.Queries', 'ddf_setup.DDFSetup']

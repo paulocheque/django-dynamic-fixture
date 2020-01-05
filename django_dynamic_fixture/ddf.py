@@ -413,7 +413,7 @@ class DynamicFixture(object):
                 if is_relationship_field(__field):
                     # Handle AttributeError for compatibility with django-polymorphic
                     # https://github.com/paulocheque/django-dynamic-fixture/issues/88
-                    field_value = data.id if isinstance(e, AttributeError) else data
+                    field_value = data.id if data and isinstance(e, AttributeError) else data
                     setattr(__instance, "%s_id" % __field.name, field_value) # Model.field = data
                 else:
                     six.reraise(*sys.exc_info())
@@ -479,6 +479,7 @@ class DynamicFixture(object):
         if not is_model_class(instance):
             raise InvalidModelError(get_unique_model_name(model_class))
         try:
+            # https://github.com/paulocheque/django-dynamic-fixture/pull/112
             from polymorphic import PolymorphicModel
             is_polymorphic = isinstance(instance, PolymorphicModel)
         except ImportError:
