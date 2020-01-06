@@ -9,7 +9,7 @@ Core DDF features
 Get: G
 ===============================================================================
 
-The ``G`` function (shortcut for the ``get`` function)is the main feature of DDF. It is useful to integration tests for the model logic and queries to the database.
+The ``G`` function (shortcut for the ``get`` function) is the main feature of DDF. It is useful for integration tests, for the model logic and queries to the database.
 
 It receives a model class and it will return a **valid and persisted instance** filled with dynamically generated data::
 
@@ -21,7 +21,7 @@ It receives a model class and it will return a **valid and persisted instance** 
     assert len(author.name) > 0
 
 
-This facilitates writing tests and it hides all dummy data that polutes the source code. But all **important data of the test must be explicitily defined**. This is even a good practice, because it let the test very clear and cohesive::
+This facilitates writing tests and it hides all dummy data that polutes the source code. But all **important data of the test may be explicitily defined**. This is even a good practice, because it let the test very clear and cohesive::
 
 
     book = G(Book, name='The Lord of the Rings', publish_date=date(1954, 07, 29))
@@ -52,7 +52,7 @@ It can also be usefuf to **manipulate the instance before saving it**. Usually, 
     assert book.id is None # the Book was not persisted
     assert book.publisher.id is not None # internal dependency was persisted
 
-ps: Since the instance does not have an ID, it can NOT insert instances in ``ManyToManyField`` fields. So, be aware to sue the ``G`` function for these cases.
+ps: Since the instance does not have an ID, it can NOT insert instances in ``ManyToManyField`` fields. So, be aware to use the ``G`` function for these cases.
 
 Fixture: F
 ===============================================================================
@@ -83,7 +83,7 @@ This is the equivalent to::
     book = G(Book, author__address__zipcode='123456789')
     assert book.author.address.zipcode == '123456789'
 
-``F`` can be used to customize instances of a ManyToManyField too::
+``F`` can be used to customize instances of a ``ManyToManyField`` too::
 
     book = G(Book, authors=[F(name='Eistein'), F(name='Tesla')])
     assert book.authors.all()[0].name == 'Eistein'
