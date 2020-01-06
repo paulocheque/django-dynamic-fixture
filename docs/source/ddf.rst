@@ -39,7 +39,7 @@ Important details:
 New: N
 ===============================================================================
 
-This function ``N` (shortcut to ``new``) is similar to ``G``, except it will NOT save the generated instance. This is good for **unit tests**, without touching the database::
+This function ``N`` (shortcut to ``new``) is similar to ``G``, except it will NOT save the generated instance. This is good for **unit tests**, without touching the database::
 
     from ddf import N
     not_saved_book = N(Book)
