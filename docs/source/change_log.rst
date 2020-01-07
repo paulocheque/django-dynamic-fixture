@@ -8,6 +8,13 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 3.0.1 - 2020/01/07
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/3.0.1>
+  * Fixed importing ``from ddf import ddf_check_models``
+  * Added a CSV report for the ddf_check_models
+  * Added the VERSION property in ddf: ``from ddf import VERSION``
+
 Version 3.0.0 - 2020/01/05
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/3.0.0>

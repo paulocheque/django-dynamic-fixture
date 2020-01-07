@@ -20,6 +20,9 @@ from django_dynamic_fixture.global_settings import DDF_DEFAULT_DATA_FIXTURE, DDF
 from django_dynamic_fixture.script_ddf_checkings import ddf_check_models
 
 
+VERSION = '3.0.1'
+
+
 if not django_greater_than('1.10'):
     warnings.warn("DDF supports oficially only Django 1.11 or higher.", DeprecationWarning)
 
