@@ -39,6 +39,8 @@ DDF has a simple script that will look for all Django models of all installed Dj
     from ddf import ddf_check_models
     succeeded, errors = ddf_check_models()
 
+It will also generate a **ddf_compatibility_report.csv** file so you can use it better in a CSV editor.
+
 
 Debug Mode (New in 1.6.2)
 -------------------------------------------------------------------------------

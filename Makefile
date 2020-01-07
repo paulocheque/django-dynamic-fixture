@@ -28,8 +28,9 @@ deps:
 	env/bin/pip install -r requirements-dev.txt
 
 shell:
-	# clear ; env/bin/python -i -c "from ddf import *"
+	#clear ; env/bin/python -i -c "from ddf import *"
 	clear ; env/bin/python manage.py shell
+	# from ddf import *
 
 # Python code tasks
 
