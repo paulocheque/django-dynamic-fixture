@@ -192,16 +192,16 @@ You can have **many custom lessons** too, giving names to them::
 
     from ddf import teach
     teach(Model, field_x=77)
-    teach(Model, field_x=88, lesson='my custom lesson 1')
-    teach(Model, field_x=99, lesson='my custom lesson 2')
+    teach(Model, field_x=88, ddf_lesson='my custom lesson 1')
+    teach(Model, field_x=99, ddf_lesson='my custom lesson 2')
 
     instance = G(Model)
     assert instance.field_x == 77
 
-    instance = G(Model, lesson='my custom lesson 1')
+    instance = G(Model, ddf_lesson='my custom lesson 1')
     assert instance.field_x == 88
 
-    instance = G(Model, lesson='my custom lesson 2')
+    instance = G(Model, ddf_lesson='my custom lesson 2')
     assert instance.field_x == 99
 
 ps: Just be aware that lessons can not be overriden, since this is an anti-pattern and may let your test suite very hard to understand.

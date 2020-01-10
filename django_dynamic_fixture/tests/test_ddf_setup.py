@@ -21,9 +21,9 @@ class ModuleDDFSetUpTest(TestCase):
 class ApplicationDDFSetupTest(TestCase):
     def setUp(self):
         DDFLibrary.instance = DDFLibrary()
-        teach(ModelForDDFSetup, integer=1000, lesson='test1')
+        teach(ModelForDDFSetup, integer=1000, ddf_lesson='test1')
         teach(ModelForDDFSetup, integer=1001)
-        teach(ModelForDDFSetup, integer=1002, lesson='test2')
+        teach(ModelForDDFSetup, integer=1002, ddf_lesson='test2')
 
     def tearDown(self):
         DDFLibrary.instance = DDFLibrary()
@@ -31,7 +31,7 @@ class ApplicationDDFSetupTest(TestCase):
     def test_ddf_setup_will_load_initial_lessons(self):
         instance = G(ModelForDDFSetup)
         assert instance.integer == 1001
-        instance = G(ModelForDDFSetup, lesson='test1')
+        instance = G(ModelForDDFSetup, ddf_lesson='test1')
         assert instance.integer == 1000
-        instance = G(ModelForDDFSetup, lesson='test2')
+        instance = G(ModelForDDFSetup, ddf_lesson='test2')
         assert instance.integer == 1002
