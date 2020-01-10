@@ -20,7 +20,7 @@ from django_dynamic_fixture.global_settings import DDF_DEFAULT_DATA_FIXTURE, DDF
 from django_dynamic_fixture.script_ddf_checkings import ddf_check_models
 
 
-VERSION = '3.0.1'
+__version__ = '3.0.1'
 
 
 if not django_greater_than('1.10'):
@@ -85,14 +85,14 @@ def fixture(**kwargs):
 
 # Wrappers
 
-def _new(model, n=1, lesson=None, persist_dependencies=False, **kwargs):
+def _new(model, n=1, ddf_lesson=None, persist_dependencies=False, **kwargs):
     """
     Return one or many valid instances of Django Models with fields filled with auto generated or customized data.
     All instances will NOT be persisted in the database, except its dependencies, in case @persist_dependencies is True.
 
     @model: The class of the Django model. It can be a string `<app_label>.<model_name>`
     @n: number of instances to be created with the given configuration. Default is 1.
-    @lesson: use a custom lesson to build the model object.
+    @ddf_lesson: use a custom ddf_lesson to build the model object.
     @persist_dependencies: If True, save internal dependencies, otherwise just instantiate them. Default is False.
 
     @data_fixture: override DDF_DEFAULT_DATA_FIXTURE configuration. Default is SequentialDataFixture().
@@ -109,21 +109,21 @@ def _new(model, n=1, lesson=None, persist_dependencies=False, **kwargs):
     kwargs = look_up_alias(**kwargs)
     d = fixture(**kwargs)
     if n == 1:
-        return d.new(model, lesson=lesson, persist_dependencies=persist_dependencies, **kwargs)
+        return d.new(model, ddf_lesson=ddf_lesson, persist_dependencies=persist_dependencies, **kwargs)
     instances = []
     for _ in range(n):
-        instances.append(d.new(model, lesson=lesson, persist_dependencies=persist_dependencies, **kwargs))
+        instances.append(d.new(model, ddf_lesson=ddf_lesson, persist_dependencies=persist_dependencies, **kwargs))
     return instances
 
 
-def _get(model, n=1, lesson=None, **kwargs):
+def _get(model, n=1, ddf_lesson=None, **kwargs):
     """
     Return one or many valid instances of Django Models with fields filled with auto generated or customized data.
     All instances will be persisted in the database.
 
     @model: The class of the Django model. It can be a string `<app_label>.<model_name>`
     @n: number of instances to be created with the given configuration. Default is 1.
-    @lesson: use a custom lesson to build the model object.
+    @ddf_lesson: use a custom ddf_lesson to build the model object.
 
     @data_fixture: override DDF_DEFAULT_DATA_FIXTURE configuration. Default is SequentialDataFixture().
     @fill_nullable_fields: override DDF_FILL_NULLABLE_FIELDS global configuration. Default is True.
@@ -139,19 +139,19 @@ def _get(model, n=1, lesson=None, **kwargs):
     kwargs = look_up_alias(**kwargs)
     d = fixture(**kwargs)
     if n == 1:
-        return d.get(model, lesson=lesson, **kwargs)
+        return d.get(model, ddf_lesson=ddf_lesson, **kwargs)
     instances = []
     for _ in range(n):
-        instances.append(d.get(model, lesson=lesson, **kwargs))
+        instances.append(d.get(model, ddf_lesson=ddf_lesson, **kwargs))
     return instances
 
 
-def _teach(model, lesson=None, **kwargs):
+def _teach(model, ddf_lesson=None, **kwargs):
     '''
     @model: The class of the Django model. It can be a string `<app_label>.<model_name>`
-    @lesson: Name of custom lesson to be created.
+    @ddf_lesson: Name of custom ddf_lesson to be created.
 
-    @raise an CantOverrideLesson error if the same model/lesson were called twice.
+    @raise an CantOverrideddf_lesson error if the same model/ddf_lesson were called twice.
 
     Sometimes DDF can't create an model instance because the particularities of the model.
     The workaround for this is to teach DDF how to create it.
@@ -168,7 +168,7 @@ def _teach(model, lesson=None, **kwargs):
         model = apps.get_model(model)
     kwargs = look_up_alias(**kwargs)
     d = fixture(**kwargs)
-    return d.teach(model, lesson=lesson, **kwargs)
+    return d.teach(model, ddf_lesson=ddf_lesson, **kwargs)
 
 
 # Shortcuts
@@ -190,14 +190,14 @@ if six.PY3:
         INSTANCE_TYPE = typing.TypeVar('INSTANCE')
 
         hack_to_avoid_py2_syntax_errors = '''
-def new(model: typing.Type[INSTANCE_TYPE], n=1, lesson=None, persist_dependencies=True, **kwargs) -> INSTANCE_TYPE:
-    return _new(model, n=n, lesson=lesson, persist_dependencies=persist_dependencies, **kwargs)
+def new(model: typing.Type[INSTANCE_TYPE], n=1, ddf_lesson=None, persist_dependencies=True, **kwargs) -> INSTANCE_TYPE:
+    return _new(model, n=n, ddf_lesson=ddf_lesson, persist_dependencies=persist_dependencies, **kwargs)
 
-def get(model: typing.Type[INSTANCE_TYPE], n=1, lesson=None, **kwargs) -> INSTANCE_TYPE:
-    return _get(model, n=n, lesson=lesson, **kwargs)
+def get(model: typing.Type[INSTANCE_TYPE], n=1, ddf_lesson=None, **kwargs) -> INSTANCE_TYPE:
+    return _get(model, n=n, ddf_lesson=ddf_lesson, **kwargs)
 
-def teach(model: typing.Type[INSTANCE_TYPE], lesson=None, **kwargs):
-    return _teach(model, lesson=lesson, **kwargs)
+def teach(model: typing.Type[INSTANCE_TYPE], ddf_lesson=None, **kwargs):
+    return _teach(model, ddf_lesson=ddf_lesson, **kwargs)
 
 N = new
 G = get

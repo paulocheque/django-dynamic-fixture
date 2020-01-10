@@ -427,7 +427,7 @@ class DynamicFixture(object):
             if not model_has_the_field(model_class, field_name):
                 raise InvalidConfigurationError('Field "%s" does not exist.' % field_name)
 
-    def _configure_params(self, model_class, lesson, **kwargs):
+    def _configure_params(self, model_class, ddf_lesson, **kwargs):
         """
         1) validate kwargs
         2) load default fixture from DDF library. Store default fixture in DDF library.
@@ -453,8 +453,8 @@ class DynamicFixture(object):
         configuration_default = library.get_configuration(model_class, name=DDFLibrary.DEFAULT_KEY)
         configuration.update(configuration_default) # always use default configuration
         # 2. Load a custom lesson for the model.
-        if lesson:
-            configuration_custom = library.get_configuration(model_class, name=lesson)
+        if ddf_lesson:
+            configuration_custom = library.get_configuration(model_class, name=ddf_lesson)
             configuration.update(configuration_custom) # override default configuration
         # 3. Load the custom `kwargs` attributes.
         configuration.update(kwargs) # override the configuration with current configuration
@@ -462,19 +462,19 @@ class DynamicFixture(object):
 
         return configuration
 
-    def new(self, model_class, lesson=None, persist_dependencies=True, **kwargs):
+    def new(self, model_class, ddf_lesson=None, persist_dependencies=True, **kwargs):
         """
         Create an instance filled with data without persist it.
         1) validate all kwargs match Model.fields.
         2) validate model is a model.Model class.
         3) Iterate model fields: for each field, fill it with data.
 
-        :lesson: the lesson that will be used to create the model instance, if exists.
+        :ddf_lesson: the lesson that will be used to create the model instance, if exists.
         :persist_dependencies: tell if internal dependencies will be saved in the database or not.
         """
         if self.debug_mode:
             LOGGER.debug('>>> [%s] Generating instance.' % get_unique_model_name(model_class))
-        configuration = self._configure_params(model_class, lesson, **kwargs)
+        configuration = self._configure_params(model_class, ddf_lesson, **kwargs)
         instance = model_class()
         if not is_model_class(instance):
             raise InvalidModelError(get_unique_model_name(model_class))
@@ -576,13 +576,13 @@ class DynamicFixture(object):
         for field in self.fields_to_disable_auto_now_add:
             enable_auto_now_add(field)
 
-    def get(self, model_class, lesson=None, **kwargs):
+    def get(self, model_class, ddf_lesson=None, **kwargs):
         """
         Create an instance with data and persist it.
 
-        :lesson: a custom lesson that will be used to create the model object.
+        :ddf_lesson: a custom lesson that will be used to create the model object.
         """
-        instance = self.new(model_class, lesson=lesson, **kwargs)
+        instance = self.new(model_class, ddf_lesson=ddf_lesson, **kwargs)
         if is_model_abstract(model_class):
             raise InvalidModelError(get_unique_model_name(model_class))
         try:
@@ -617,7 +617,7 @@ class DynamicFixture(object):
                     six.reraise(InvalidManyToManyConfigurationError, InvalidManyToManyConfigurationError(get_unique_field_name(field), e), sys.exc_info()[2])
         return instance
 
-    def teach(self, model_class, lesson=None, **kwargs):
+    def teach(self, model_class, ddf_lesson=None, **kwargs):
         """
         @raise an CantOverrideLesson error if the same model/lesson were called twice.
         """
@@ -629,4 +629,4 @@ class DynamicFixture(object):
             fixture = kwargs[field_name]
             if field.unique and not (isinstance(fixture, (DynamicFixture, Copier, DataFixture)) or callable(fixture)):
                 raise InvalidConfigurationError('It is not possible to store static values for fields with unique=True (%s). Try using a lambda function instead.' % get_unique_field_name(field))
-        library.add_configuration(model_class, kwargs, name=lesson)
+        library.add_configuration(model_class, kwargs, name=ddf_lesson)

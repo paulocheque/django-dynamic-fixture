@@ -78,65 +78,65 @@ class TeachAndLessonsTest(DDFTestCase):
 
 class TeachingAndCustomLessonsTest(DDFTestCase):
     def test_a_model_can_have_custom_lessons(self):
-        self.ddf.teach(ModelForLibrary, integer=1000, lesson=None)
-        self.ddf.teach(ModelForLibrary, integer=1001, lesson='a name')
+        self.ddf.teach(ModelForLibrary, integer=1000, ddf_lesson=None)
+        self.ddf.teach(ModelForLibrary, integer=1001, ddf_lesson='a name')
         instance = self.ddf.get(ModelForLibrary)
         assert instance.integer == 1000
-        instance = self.ddf.get(ModelForLibrary, lesson='a name')
+        instance = self.ddf.get(ModelForLibrary, ddf_lesson='a name')
         assert instance.integer == 1001
 
     def test_custom_lessons_must_not_be_used_if_not_explicity_specified(self):
-        self.ddf.teach(ModelForLibrary, integer=1000, lesson='a name')
+        self.ddf.teach(ModelForLibrary, integer=1000, ddf_lesson='a name')
         instance = self.ddf.get(ModelForLibrary)
         assert instance.integer != 1000
 
     def test_a_model_can_have_many_custom_lessons(self):
-        self.ddf.teach(ModelForLibrary, integer=1000, lesson='a name')
-        self.ddf.teach(ModelForLibrary, integer=1001, lesson='a name 2')
+        self.ddf.teach(ModelForLibrary, integer=1000, ddf_lesson='a name')
+        self.ddf.teach(ModelForLibrary, integer=1001, ddf_lesson='a name 2')
 
-        instance = self.ddf.get(ModelForLibrary, lesson='a name')
+        instance = self.ddf.get(ModelForLibrary, ddf_lesson='a name')
         assert instance.integer == 1000
 
-        instance = self.ddf.get(ModelForLibrary, lesson='a name 2')
+        instance = self.ddf.get(ModelForLibrary, ddf_lesson='a name 2')
         assert instance.integer == 1001
 
     def test_it_must_raise_an_error_if_user_try_to_use_a_not_saved_configuration(self):
         with pytest.raises(InvalidConfigurationError):
-            self.ddf.get(ModelForLibrary, lesson='a not teached lesson')
+            self.ddf.get(ModelForLibrary, ddf_lesson='a not teached lesson')
 
     def test_default_lesson_and_custom_lesson_must_work_together(self):
         # regression test
-        self.ddf.teach(ModelForLibrary, integer=1000, lesson='a name')
-        self.ddf.teach(ModelForLibrary, integer=1001, lesson=True)
-        self.ddf.teach(ModelForLibrary, integer=1002, lesson='a name2')
-        instance = self.ddf.get(ModelForLibrary, lesson='a name')
+        self.ddf.teach(ModelForLibrary, integer=1000, ddf_lesson='a name')
+        self.ddf.teach(ModelForLibrary, integer=1001, ddf_lesson=True)
+        self.ddf.teach(ModelForLibrary, integer=1002, ddf_lesson='a name2')
+        instance = self.ddf.get(ModelForLibrary, ddf_lesson='a name')
         assert instance.integer == 1000
         instance = self.ddf.get(ModelForLibrary)
         assert instance.integer == 1001
-        instance = self.ddf.get(ModelForLibrary, lesson='a name2')
+        instance = self.ddf.get(ModelForLibrary, ddf_lesson='a name2')
         assert instance.integer == 1002
 
     def test_default_lesson_and_custom_lesson_must_work_together_for_different_models(self):
         # regression test
-        self.ddf.teach(ModelForLibrary, integer=1000, lesson='a name')
-        self.ddf.teach(ModelForLibrary, integer=1001, lesson=True)
-        self.ddf.teach(ModelForLibrary, integer=1002, lesson='a name2')
-        self.ddf.teach(ModelForLibrary2, integer=2000, lesson='a name')
-        self.ddf.teach(ModelForLibrary2, integer=2001, lesson=True)
-        self.ddf.teach(ModelForLibrary2, integer=2002, lesson='a name2')
+        self.ddf.teach(ModelForLibrary, integer=1000, ddf_lesson='a name')
+        self.ddf.teach(ModelForLibrary, integer=1001, ddf_lesson=True)
+        self.ddf.teach(ModelForLibrary, integer=1002, ddf_lesson='a name2')
+        self.ddf.teach(ModelForLibrary2, integer=2000, ddf_lesson='a name')
+        self.ddf.teach(ModelForLibrary2, integer=2001, ddf_lesson=True)
+        self.ddf.teach(ModelForLibrary2, integer=2002, ddf_lesson='a name2')
 
-        instance = self.ddf.get(ModelForLibrary, lesson='a name')
+        instance = self.ddf.get(ModelForLibrary, ddf_lesson='a name')
         assert instance.integer == 1000
         instance = self.ddf.get(ModelForLibrary)
         assert instance.integer == 1001
-        instance = self.ddf.get(ModelForLibrary, lesson='a name2')
+        instance = self.ddf.get(ModelForLibrary, ddf_lesson='a name2')
         assert instance.integer == 1002
 
-        instance = self.ddf.get(ModelForLibrary2, lesson='a name')
+        instance = self.ddf.get(ModelForLibrary2, ddf_lesson='a name')
         assert instance.integer == 2000
         instance = self.ddf.get(ModelForLibrary2)
         assert instance.integer == 2001
-        instance = self.ddf.get(ModelForLibrary2, lesson='a name2')
+        instance = self.ddf.get(ModelForLibrary2, ddf_lesson='a name2')
         assert instance.integer == 2002
 
 

@@ -56,6 +56,15 @@ In the test file::
     G(MyModel, debug_mode=True)
 
 
+DDF Version (New in 3.0.2)
+-------------------------------------------------------------------------------
+
+Type::
+
+    import ddf
+    ddf.__version__
+
+
 List of Exceptions
 -------------------------------------------------------------------------------
 
