@@ -258,3 +258,8 @@ class OverrideDataFixture(TestCase):
         instance = G('django_dynamic_fixture.ModelWithNumbers', data_fixture=SequentialDataFixture())
         assert instance is not None
 
+
+class Version(TestCase):
+    def test_version(self):
+        from django_dynamic_fixture import __version__
+        from ddf import __version__
