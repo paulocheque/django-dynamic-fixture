@@ -8,6 +8,12 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 3.0.2 - 2020/01/10
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/3.0.2>
+  * Changed ``VERSION`` to ``__version__``: ``from ddf import __version``
+  * Changed ``lesson`` to ``ddf_lesson``:  ``G(Model, ddf_lesson='...')``
+
 Version 3.0.1 - 2020/01/07
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/3.0.1>
