@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# https://docs.djangoproject.com/en/3.0/ref/models/fields
 import django
 from django.conf import settings
 from django.db import models
