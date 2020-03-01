@@ -239,7 +239,7 @@ class DynamicFixture(object):
     _DDF_CONFIGS = ['fill_nullable_fields', 'ignore_fields', 'data_fixture', 'number_of_laps',
                     'validate_models', 'print_errors']
 
-    def __init__(self, data_fixture, fill_nullable_fields=True, ignore_fields=[], number_of_laps=1,
+    def __init__(self, data_fixture, fill_nullable_fields=False, ignore_fields=[], number_of_laps=0,
                  validate_models=False, print_errors=True, model_path=[], debug_mode=False, **kwargs):
         '''
         :data_fixture: algorithm to fill field data.
@@ -337,17 +337,20 @@ class DynamicFixture(object):
             return None
         next_model = get_related_model(field)
         occurrences = self.model_path.count(next_model)
-        if occurrences >= self.number_of_laps:
+
+        # Skip occurrences=0 for the first lap/cycle.
+        # This should work for FK and Self-FKs
+        if occurrences and occurrences >= self.number_of_laps:
             data = None
         else:
             next_model_path = self.model_path[:]
             next_model_path.append(model_class)
+            # 1. Propagate ignored_fields only for self references
             if model_class == next_model: # self reference
-                # propagate ignored_fields only for self references
                 ignore_fields = self.ignore_fields
             else:
                 ignore_fields = []
-            # need a new DynamicFixture to control the cycles and ignored fields.
+            # 2. It needs a new DynamicFixture to control the cycles and ignored fields.
             fixture = DynamicFixture(data_fixture=self.data_fixture,
                                      fill_nullable_fields=self.fill_nullable_fields,
                                      ignore_fields=ignore_fields,
@@ -355,6 +358,7 @@ class DynamicFixture(object):
                                      validate_models=self.validate_models,
                                      print_errors=self.print_errors,
                                      model_path=next_model_path)
+            # 3. Persist it
             if persist_dependencies:
                 data = fixture.get(next_model)
             else:
@@ -362,20 +366,50 @@ class DynamicFixture(object):
         return data
 
     def _process_field_with_default_fixture(self, field, model_class, persist_dependencies):
-        "The field has no custom value, so the default behavior of the tool is applied."
-        if field.null and not self.fill_nullable_fields:
-            return None
-        if field_has_default_value(field):
-            if callable(field.default):
-                data = field.default() # datetime default can receive a function: datetime.now
+        '''
+        The field has no custom value (F, C, static, Lessons...), so the default behavior of the tool is applied.
+        - DDF behavior priority for common fields:
+        1. Use `null` if possible (considering the `fill_nullable_fields` settings)
+        2. Use the `default` value
+        3. Use the first option of `choices`
+        - DDF behavior priority for relationship fields:
+        1. Use the `default` value
+        2. Use `null` if possible (considering the `fill_nullable_fields` settings)
+        3. Create a new FK model
+        - DDF behavior priority for self relationship fields:
+        1. Use the `default` value
+        2. Use the `number_of_laps` instead of fill_nullable_fields
+        3. Use `null`
+        '''
+        next_model = get_related_model(field) if is_relationship_field(field) else None
+
+        if not is_relationship_field(field):
+            if field.null and not self.fill_nullable_fields:
+                data = None
+            elif field_has_default_value(field):
+                # datetime default can receive a function: datetime.now
+                data = field.default() if callable(field.default) else field.default
+            elif field_has_choices(field):
+                data = field.flatchoices[0][0] # key of the first choice
             else:
-                data = field.default
-        elif field_has_choices(field):
-            data = field.flatchoices[0][0] # key of the first choice
-        elif is_relationship_field(field):
-            data = self._process_foreign_key(model_class, field, persist_dependencies)
+                data = self.data_fixture.generate_data(field)
         else:
-            data = self.data_fixture.generate_data(field)
+            if field_has_default_value(field):
+                # datetime default can receive a function: datetime.now
+                data = field.default() if callable(field.default) else field.default
+            else:
+                # `number_of_laps` overrides the `fill_nullable_fields` for self FKs
+                next_model = get_related_model(field)
+                if model_class == next_model: # self reference
+                    if self.number_of_laps > 0:
+                        data = self._process_foreign_key(model_class, field, persist_dependencies)
+                    else:
+                        data = None
+                else:
+                    if field.null and not self.fill_nullable_fields:
+                        data = None
+                    else:
+                        data = self._process_foreign_key(model_class, field, persist_dependencies)
         return data
 
     def set_data_for_a_field(self, model_class, __instance, __field, persist_dependencies=True, **kwargs):
