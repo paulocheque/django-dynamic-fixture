@@ -171,15 +171,17 @@ class NewIgnoreFieldsInIgnoreListTest(DDFTestCase):
             self.ddf.get(ModelForIgnoreList)
 
     def test_ignore_fields_are_propagated_to_self_references(self):
-        self.ddf = DynamicFixture(data_fixture, ignore_fields=['not_required', 'nullable'])
+        self.ddf = DynamicFixture(data_fixture, ignore_fields=['not_required'], fk_min_depth=1, not_required=10)
         instance = self.ddf.new(ModelForIgnoreList)
-        assert instance.not_required is None
+        assert instance.not_required == 10
+        assert instance.self_reference is not None
         assert instance.self_reference.not_required is None
 
     def test_ignore_fields_are_not_propagated_to_different_references(self):
-        self.ddf = DynamicFixture(data_fixture, ignore_fields=['not_required', 'nullable'])
+        self.ddf = DynamicFixture(data_fixture, ignore_fields=['non_nullable'], different_reference=DynamicFixture(data_fixture))
         instance = self.ddf.new(ModelForIgnoreList)
-        assert instance.different_reference.nullable is not None
+        assert instance.different_reference is not None
+        assert instance.different_reference.non_nullable is not None
 
     def test_ignore_fields_are_not_ignored_if_explicitely_given(self):
         self.ddf = DynamicFixture(data_fixture, not_required=3, ignore_fields=['not_required', 'nullable'])
@@ -212,23 +214,35 @@ class NewAlsoCreatesRelatedObjectsTest(DDFTestCase):
 
 class NewCanCreatesCustomizedRelatedObjectsTest(DDFTestCase):
     def test_customizing_nullable_fields_for_related_objects(self):
-        instance = self.ddf.new(ModelWithRelationships, selfforeignkey=DynamicFixture(data_fixture, fill_nullable_fields=False))
-        assert isinstance(instance.integer, int)
-        assert instance.selfforeignkey.integer is None
+        instance = self.ddf.new(ModelWithRelationships, selfforeignkey=DynamicFixture(data_fixture, fill_nullable_fields=True))
+        assert instance.integer is None
+        assert isinstance(instance.selfforeignkey.integer, int)
 
 
 class NewDealWithSelfReferencesTest(DDFTestCase):
-    def test_new_create_by_default_only_1_lap_in_cycle(self):
+    def test_new_create_by_default_no_self_fks(self):
+        instance = self.ddf.new(ModelWithRelationships, fill_nullable_fields=False)
+        assert instance.selfforeignkey is None # no cycle
+        instance = self.ddf.new(ModelWithRelationships, fill_nullable_fields=True)
+        assert instance.selfforeignkey is None # no cycle
+
+    def test_new_create_only_1_lap_in_cycle(self):
+        self.ddf = DynamicFixture(data_fixture, fk_min_depth=1)
         instance = self.ddf.new(ModelWithRelationships)
         assert instance.selfforeignkey is not None # 1 cycle
         assert instance.selfforeignkey.selfforeignkey is None # 2 cycles
 
-    def test_new_create_n_laps_in_cycle(self):
-        self.ddf = DynamicFixture(data_fixture, number_of_laps=2)
+    def test_new_create_with_min_depth_2(self):
+        self.ddf = DynamicFixture(data_fixture, fk_min_depth=2)
         instance = self.ddf.new(ModelWithRelationships)
         assert instance.selfforeignkey is not None # 1 cycle
         assert instance.selfforeignkey.selfforeignkey is not None # 2 cycles
-        instance.selfforeignkey.selfforeignkey.selfforeignkey is None # 3 cycles
+        assert instance.selfforeignkey.selfforeignkey.selfforeignkey is None # 3 cycles
+
+    def test_number_of_fk_cycles_does_not_break_default_non_null_fk(self):
+        self.ddf = DynamicFixture(data_fixture, fk_min_depth=0)
+        instance = self.ddf.new(ModelWithRefToParent)
+        assert instance.parent is not None
 
 
 class GetFullFilledModelInstanceAndPersistTest(DDFTestCase):
@@ -243,9 +257,12 @@ class GetFullFilledModelInstanceAndPersistTest(DDFTestCase):
 
     def test_get_create_and_save_related_fields(self):
         instance = self.ddf.get(ModelWithRelationships)
-        assert instance.selfforeignkey is not None
+        assert instance.selfforeignkey is None
         assert instance.foreignkey is not None
         assert instance.onetoone is not None
+        self.ddf = DynamicFixture(data_fixture, fk_min_depth=1)
+        instance = self.ddf.get(ModelWithRelationships)
+        assert instance.selfforeignkey is not None
 
 
 class ManyToManyRelationshipTest(DDFTestCase):
@@ -288,18 +305,19 @@ class ManyToManyRelationshipTest(DDFTestCase):
 
 
 class NewDealWithCyclicDependenciesTest(DDFTestCase):
-    def test_new_create_by_default_only_1_lap_in_cycle(self):
-        c = self.ddf.new(ModelWithCyclicDependency)
-        assert c.d is not None # 1 cycle
-        assert c.d.c is None # 2 cycles
+    def test_new_create_by_default_no_cycles(self):
+        a = self.ddf.new(ModelWithCyclicDependency)
+        assert a.model_b is None
 
-    def test_new_create_n_laps_in_cycle(self):
-        self.ddf = DynamicFixture(data_fixture, number_of_laps=2)
-        c = self.ddf.new(ModelWithCyclicDependency)
-        assert c.d is not None
-        assert c.d.c is not None # 1 cycle
-        assert c.d.c.d is not None # 2 cycles
-        assert c.d.c.d.c is None # 3 cycles
+    def test_new_create_only_1_lap_in_fk_cycle(self):
+        self.ddf = DynamicFixture(data_fixture, fk_min_depth=1)
+        a = self.ddf.get(ModelWithCyclicDependency)
+        assert a.model_b.model_a is None
+
+    def test_new_create_with_min_depth_2(self):
+        self.ddf = DynamicFixture(data_fixture, fk_min_depth=2)
+        a = self.ddf.get(ModelWithCyclicDependency)
+        assert a.model_b.model_a.model_b is None
 
 
 class NewDealWithInheritanceTest(DDFTestCase):

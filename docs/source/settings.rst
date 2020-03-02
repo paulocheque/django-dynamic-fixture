@@ -38,10 +38,12 @@ You can configure DDF in ``settings.py`` file. You can also override the global 
     DDF_FIELD_FIXTURES = {'path.to.your.Field': lambda: random.randint(0, 10) }
 
 
-* **DDF_NUMBER_OF_LAPS** (Default = 0):  For models with foreign keys to itself (``ForeignKey('self')``), DDF will avoid infinite loops because it stops creating objects after it create **n** **laps** for the cycle::
+* **DDF_FK_MIN_DEPTH** (Default = 0):  For models with non required foreign keys (FKs with `null=True`), like FKs to itself (``ForeignKey('self')``), cyclic dependencies or even optional FKs, DDF will avoid infinite loops because it stops creating objects indefinetely, because it will stop after the min depth was achieved.::
 
     # You can override the global config for one case:
-    G(Model, number_of_laps=5)
+    G(Model, fk_min_depth=5)
+
+> Incompatibility warning: Before DDF 3.0.3, DDF handled FK cycles instead of FK depth, through the removed properties `DDF_NUMBER_OF_LAPS` and `number_of_laps`.
 
 
 * **DDF_DEBUG_MODE** (Default = False): To show some DDF logs::

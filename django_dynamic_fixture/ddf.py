@@ -87,27 +87,27 @@ def _validate_function(model_class, callback_function):
 
 
 def set_pre_save_receiver(model_class, callback_function):
-    """
+    '''
     :model_class: a model_class can have only one receiver. Do not complicate yourself.
     :callback_function must be a function that receive the instance as unique parameter.
-    """
+    '''
     _validate_model(model_class)
     _validate_function(model_class, callback_function)
     _PRE_SAVE[model_class] = callback_function
 
 
 def set_post_save_receiver(model_class, callback_function):
-    """
+    '''
     :model_class: a model_class can have only one receiver. Do not complicate yourself.
     :callback_function must be a function that receive the instance as unique parameter.
-    """
+    '''
     _validate_model(model_class)
     _validate_function(model_class, callback_function)
     _POST_SAVE[model_class] = callback_function
 
 
 class DataFixture(object):
-    """
+    '''
     Responsibility: return a valid data for a Django Field, according to its type, model class, constraints etc.
 
     You must create a separated method to generate data for an specific field. For a field called 'MyField',
@@ -117,7 +117,7 @@ class DataFixture(object):
 
     :field: Field object.
     :key: string that represents a unique name for a Field, considering app, model and field names.
-    """
+    '''
     def __init__(self):
         self.plugins = {}
 
@@ -139,7 +139,7 @@ class DataFixture(object):
                 return None
 
     def generate_data(self, field):
-        "Get a unique and valid data for the field."
+        '''Get a unique and valid data for the field.'''
         field_fullname = field.__module__ + "." + field.__class__.__name__
         fixture = self.plugins.get(field_fullname, {})
         if type(fixture) == dict:
@@ -160,11 +160,11 @@ class DataFixture(object):
 
 
 class Copier(object):
-    """
+    '''
     Wrapper of an expression in the format 'field' or 'field.field' or 'field.field.field' etc
     This expression will be interpreted to copy the value of the specified field to the current field.
     Example of usage: G(MyModel, x=C('y.z')) => the value 'z' of field 'y' will be copied to field 'x'.
-    """
+    '''
     def __init__(self, expression):
         self.expression = expression
 
@@ -222,34 +222,33 @@ class DDFLibrary(object):
         return config.get(name, {}).copy() # default configuration never raises an error
 
     def clear(self):
-        "Remove all lessons of the library. Util for the DDF tests."
+        '''Remove all lessons of the library. Util for the DDF tests.'''
         self.configs = {}
 
     def clear_configuration(self, model_class):
-        "Remove from the library an specific configuration of a model."
+        '''Remove from the library an specific configuration of a model.'''
         if model_class in self.configs.keys():
             del self.configs[model_class]
 
 
 class DynamicFixture(object):
-    """
+    '''
     Responsibility: create a valid model instance according to the given configuration.
-    """
+    '''
 
-    _DDF_CONFIGS = ['fill_nullable_fields', 'ignore_fields', 'data_fixture', 'number_of_laps',
+    _DDF_CONFIGS = ['fill_nullable_fields', 'ignore_fields', 'data_fixture', 'fk_min_depth',
                     'validate_models', 'print_errors']
 
-    def __init__(self, data_fixture, fill_nullable_fields=True, ignore_fields=[], number_of_laps=1,
-                 validate_models=False, print_errors=True, model_path=[], debug_mode=False, **kwargs):
-        """
+    def __init__(self, data_fixture, fill_nullable_fields=False, ignore_fields=[], fk_min_depth=0,
+                 validate_models=False, print_errors=True, debug_mode=False, **kwargs):
+        '''
         :data_fixture: algorithm to fill field data.
         :fill_nullable_fields: flag to decide if nullable fields must be filled with data.
         :ignore_fields: list of field names that must not be filled with data.
-        :number_of_laps: number of laps for each cyclic dependency.
+        :fk_min_depth: how deep DDF should go to create non-required FKs fields from the main model.
         :validate_models: flag to decide if the model_instance.full_clean() must be called before saving the object.
         :print_errors: flag to determine if the model data must be printed to console on errors. For some scripts is interesting to disable it.
-        :model_path: internal variable used to control the cycles of dependencies.
-        """
+        '''
         from django_dynamic_fixture.global_settings import DDF_IGNORE_FIELDS
         from django_dynamic_fixture.fixture_algorithms import FixtureFactory
         # custom config of fixtures
@@ -259,12 +258,11 @@ class DynamicFixture(object):
         self.ignore_fields = ignore_fields
         # extend ignore_fields with globally declared ignore_fields
         self.ignore_fields.extend(DDF_IGNORE_FIELDS)
-        self.number_of_laps = number_of_laps
+        self.fk_min_depth = fk_min_depth
         # other ddfs configs
         self.validate_models = validate_models
         self.print_errors = print_errors
         # internal logic
-        self.model_path = model_path
         self.pending_fields = []
         self.fields_processed = []
         self.debug_mode = debug_mode
@@ -279,7 +277,7 @@ class DynamicFixture(object):
         return isinstance(that, self.__class__) and self.kwargs == that.kwargs
 
     def _get_data_from_custom_dynamic_fixture(self, field, fixture, persist_dependencies):
-        "return data of a Dynamic Fixture: field=F(...)"
+        '''return data of a Dynamic Fixture: field=F(...)'''
         next_model = get_related_model(field)
         if persist_dependencies:
             data = fixture.get(next_model)
@@ -288,7 +286,7 @@ class DynamicFixture(object):
         return data
 
     def _get_data_from_custom_copier(self, instance, field, fixture):
-        "return data of a Copier: field=C(...)"
+        '''return data of a Copier: field=C(...)'''
         field_name = fixture.immediate_field_name(instance)
         if field_name in self.fields_processed:
             data = fixture.eval_expression(instance)
@@ -298,17 +296,17 @@ class DynamicFixture(object):
         return data
 
     def _get_data_from_data_fixture(self, field, fixture):
-        "return data of a Data Fixture: field=DataFixture()"
+        '''return data of a Data Fixture: field=DataFixture()'''
         next_model = get_related_model(field)
         return fixture.generate_data(next_model)
 
     def _get_data_from_a_custom_function(self, field, fixture):
-        "return data of a custom function: field=lambda field: field.name"
+        '''Returns data of a custom function: field=lambda field: field.name'''
         data = fixture(field)
         return data
 
     def _get_data_from_static_data(self, field, fixture):
-        "return date from a static value: field=3"
+        '''return date from a static value: field=3'''
         if hasattr(field, 'auto_now_add') and field.auto_now_add:
             self.fields_to_disable_auto_now_add.append(field)
         if hasattr(field, 'auto_now') and field.auto_now:
@@ -316,7 +314,7 @@ class DynamicFixture(object):
         return fixture
 
     def _process_field_with_customized_fixture(self, instance, field, fixture, persist_dependencies):
-        "Set a custom value to a field."
+        '''Set a custom value to a field.'''
         if isinstance(fixture, DynamicFixture): # DynamicFixture (F)
             data = self._get_data_from_custom_dynamic_fixture(field, fixture, persist_dependencies)
         elif isinstance(fixture, Copier): # Copier (C)
@@ -330,50 +328,63 @@ class DynamicFixture(object):
         return data
 
     def _process_foreign_key(self, model_class, field, persist_dependencies):
-        "Returns auto-generated value for a field ForeignKey or OneToOneField."
+        '''
+        Returns auto-generated value for a field ForeignKey or OneToOneField.
+        '''
         if field_is_a_parent_link(field):
             return None
         next_model = get_related_model(field)
-        occurrences = self.model_path.count(next_model)
-        if occurrences >= self.number_of_laps:
-            data = None
+
+        # 1. Propagate ignored_fields only for self references
+        if model_class == next_model: # self reference
+            ignore_fields = self.ignore_fields
         else:
-            next_model_path = self.model_path[:]
-            next_model_path.append(model_class)
-            if model_class == next_model: # self reference
-                # propagate ignored_fields only for self references
-                ignore_fields = self.ignore_fields
-            else:
-                ignore_fields = []
-            # need a new DynamicFixture to control the cycles and ignored fields.
-            fixture = DynamicFixture(data_fixture=self.data_fixture,
-                                     fill_nullable_fields=self.fill_nullable_fields,
-                                     ignore_fields=ignore_fields,
-                                     number_of_laps=self.number_of_laps,
-                                     validate_models=self.validate_models,
-                                     print_errors=self.print_errors,
-                                     model_path=next_model_path)
-            if persist_dependencies:
-                data = fixture.get(next_model)
-            else:
-                data = fixture.new(next_model, persist_dependencies=persist_dependencies)
+            ignore_fields = []
+        # 2. It needs a new DynamicFixture to control the cycles and ignored fields.
+        fixture = DynamicFixture(data_fixture=self.data_fixture,
+                                 fill_nullable_fields=self.fill_nullable_fields,
+                                 ignore_fields=ignore_fields,
+                                 fk_min_depth=self.fk_min_depth - 1, # Depth decreased
+                                 validate_models=self.validate_models,
+                                 print_errors=self.print_errors)
+        # 3. Persist it
+        if persist_dependencies:
+            data = fixture.get(next_model)
+        else:
+            data = fixture.new(next_model, persist_dependencies=persist_dependencies)
         return data
 
     def _process_field_with_default_fixture(self, field, model_class, persist_dependencies):
-        "The field has no custom value, so the default behavior of the tool is applied."
-        if field.null and not self.fill_nullable_fields:
-            return None
-        if field_has_default_value(field):
-            if callable(field.default):
-                data = field.default() # datetime default can receive a function: datetime.now
+        '''
+        The field has no custom value (F, C, static, Lessons...), so the default behavior of the tool is applied.
+        - DDF behavior priority for common fields:
+        1. Use `null` if possible (considering the `fill_nullable_fields` settings)
+        2. Use the `default` value
+        3. Use the first option of `choices`
+        - DDF behavior priority for relationship fields:
+        1. Use the `default` value
+        2. Use `null` if possible, or consider the `fk_min_depth` value
+        3. Create a new FK model
+        '''
+        if is_relationship_field(field):
+            if field_has_default_value(field):
+                # datetime default can receive a function: datetime.now
+                data = field.default() if callable(field.default) else field.default
             else:
-                data = field.default
-        elif field_has_choices(field):
-            data = field.flatchoices[0][0] # key of the first choice
-        elif is_relationship_field(field):
-            data = self._process_foreign_key(model_class, field, persist_dependencies)
+                if (not field.null) or self.fk_min_depth > 0:
+                    data = self._process_foreign_key(model_class, field, persist_dependencies)
+                else:
+                    data = None
         else:
-            data = self.data_fixture.generate_data(field)
+            if field_has_default_value(field):
+                # datetime default can receive a function: datetime.now
+                data = field.default() if callable(field.default) else field.default
+            elif field.null and not self.fill_nullable_fields:
+                data = None
+            elif field_has_choices(field):
+                data = field.flatchoices[0][0] # key of the first choice
+            else:
+                data = self.data_fixture.generate_data(field)
         return data
 
     def set_data_for_a_field(self, model_class, __instance, __field, persist_dependencies=True, **kwargs):
@@ -420,7 +431,7 @@ class DynamicFixture(object):
         self.fields_processed.append(__field.name)
 
     def _validate_kwargs(self, model_class, kwargs):
-        "validate all kwargs match Model.fields."
+        '''validate all kwargs match Model.fields.'''
         for field_name in kwargs.keys():
             if field_name in self._DDF_CONFIGS:
                 continue
@@ -428,11 +439,11 @@ class DynamicFixture(object):
                 raise InvalidConfigurationError('Field "%s" does not exist.' % field_name)
 
     def _configure_params(self, model_class, ddf_lesson, **kwargs):
-        """
+        '''
         1) validate kwargs
         2) load default fixture from DDF library. Store default fixture in DDF library.
         3) Load fixtures defined in F attributes.
-        """
+        '''
         self._validate_kwargs(model_class, kwargs)
 
         # load ddf_setup.py of the model application
@@ -463,7 +474,7 @@ class DynamicFixture(object):
         return configuration
 
     def new(self, model_class, ddf_lesson=None, persist_dependencies=True, **kwargs):
-        """
+        '''
         Create an instance filled with data without persist it.
         1) validate all kwargs match Model.fields.
         2) validate model is a model.Model class.
@@ -471,13 +482,14 @@ class DynamicFixture(object):
 
         :ddf_lesson: the lesson that will be used to create the model instance, if exists.
         :persist_dependencies: tell if internal dependencies will be saved in the database or not.
-        """
+        '''
         if self.debug_mode:
             LOGGER.debug('>>> [%s] Generating instance.' % get_unique_model_name(model_class))
         configuration = self._configure_params(model_class, ddf_lesson, **kwargs)
         instance = model_class()
         if not is_model_class(instance):
             raise InvalidModelError(get_unique_model_name(model_class))
+
         try:
             # https://github.com/paulocheque/django-dynamic-fixture/pull/112
             from polymorphic import PolymorphicModel
@@ -505,11 +517,11 @@ class DynamicFixture(object):
         return instance
 
     def _is_ignored_field(self, field_name):
-        """
+        '''
         Return `True` if the given field name should be ignored according to
         this class's `self.ignored_fields`. Both literal field names and
         names with wildcard '*' and '?' characters are supported.
-        """
+        '''
         # Do fast check for literal field name first
         if field_name in self.ignore_fields:
             return True
@@ -526,13 +538,13 @@ class DynamicFixture(object):
         return False
 
     def _process_many_to_many_field(self, field, manytomany_field, fixture, instance):
-        """
+        '''
         Set ManyToManyField fields with or without 'trough' option.
 
         :field: model field.
         :manytomany_field: ManyRelatedManager of the field.
         :fixture: value passed by user.
-        """
+        '''
         next_model = get_related_model(field)
         if isinstance(fixture, int):
             amount = fixture
@@ -577,11 +589,11 @@ class DynamicFixture(object):
             enable_auto_now_add(field)
 
     def get(self, model_class, ddf_lesson=None, **kwargs):
-        """
+        '''
         Create an instance with data and persist it.
 
         :ddf_lesson: a custom lesson that will be used to create the model object.
-        """
+        '''
         instance = self.new(model_class, ddf_lesson=ddf_lesson, **kwargs)
         if is_model_abstract(model_class):
             raise InvalidModelError(get_unique_model_name(model_class))
@@ -618,9 +630,9 @@ class DynamicFixture(object):
         return instance
 
     def teach(self, model_class, ddf_lesson=None, **kwargs):
-        """
+        '''
         @raise an CantOverrideLesson error if the same model/lesson were called twice.
-        """
+        '''
         library = DDFLibrary.get_instance()
         for field_name in kwargs.keys():
             if field_name in self._DDF_CONFIGS:
