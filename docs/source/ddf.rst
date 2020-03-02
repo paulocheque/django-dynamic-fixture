@@ -57,7 +57,7 @@ ps: Since the instance does not have an ID, it can NOT insert instances in ``Man
 Fixture: F
 ===============================================================================
 
-DDF also allows you **customise recursively through relationship fields** ``ForeingKey``, ``OneToOneField`` and ``ManyToManyField``) using the ``F`` function (shortcut for ``fixture``).
+DDF also allows you **customise recursively through relationship fields** ``ForeignKey``, ``OneToOneField`` and ``ManyToManyField``) using the ``F`` function (shortcut for ``fixture``).
 
 ForeignKey and OneToOneField
 -------------------------------------------------------------------------------
