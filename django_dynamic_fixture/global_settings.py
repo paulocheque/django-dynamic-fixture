@@ -5,6 +5,7 @@ Module that contains wrappers and shortcuts.
 This is the facade of all features of DDF.
 """
 import sys
+import warnings
 
 from django.conf import settings
 try:
@@ -66,12 +67,17 @@ except Exception as e:
     six.reraise(DDFImproperlyConfigured, DDFImproperlyConfigured("DDF_IGNORE_FIELDS (%s) must be a list of strings" % settings.DDF_IGNORE_FIELDS), sys.exc_info()[2])
 
 
-# DDF_NUMBER_OF_LAPS default = 1
+# DDF_FK_MIN_DEPTH default = 0
 try:
-    DDF_NUMBER_OF_LAPS = int(settings.DDF_NUMBER_OF_LAPS) if hasattr(settings, 'DDF_NUMBER_OF_LAPS') else 0
+    DDF_FK_MIN_DEPTH = int(settings.DDF_FK_MIN_DEPTH) if hasattr(settings, 'DDF_FK_MIN_DEPTH') else 0
 except Exception as e:
-    six.reraise(DDFImproperlyConfigured, DDFImproperlyConfigured("DDF_NUMBER_OF_LAPS (%s) must be a integer number." % settings.DDF_NUMBER_OF_LAPS), sys.exc_info()[2])
+    six.reraise(DDFImproperlyConfigured, DDFImproperlyConfigured("DDF_FK_MIN_DEPTH (%s) must be a integer number." % settings.DDF_FK_MIN_DEPTH), sys.exc_info()[2])
 
+if hasattr(settings, 'DDF_NUMBER_OF_LAPS'):
+    warnings.warn(
+        "The old DDF_NUMBER_OF_LAPS settings was replaced by the new DDF_FK_MIN_DEPTH.",
+        DeprecationWarning
+    )
 
 # DDF_FIELD_FIXTURES default = {}
 try:

@@ -85,18 +85,18 @@ class DDF_IGNORE_FIELDS_TestCase(AbstractGlobalSettingsTestCase):
             reload_module(global_settings)
 
 
-class DDF_NUMBER_OF_LAPS_TestCase(AbstractGlobalSettingsTestCase):
+class DDF_FK_MIN_DEPTH_TestCase(AbstractGlobalSettingsTestCase):
     def test_not_configured_must_load_default_value(self):
         reload_module(global_settings)
-        assert global_settings.DDF_NUMBER_OF_LAPS == 0
+        assert global_settings.DDF_FK_MIN_DEPTH == 0
 
     def test_must_be_an_integer(self):
-        conf.settings.DDF_NUMBER_OF_LAPS = 2
+        conf.settings.DDF_FK_MIN_DEPTH = 2
         reload_module(global_settings)
-        assert global_settings.DDF_NUMBER_OF_LAPS == 2
+        assert global_settings.DDF_FK_MIN_DEPTH == 2
 
     def test_must_raise_an_exception_if_it_is_not_an_integer(self):
-        conf.settings.DDF_NUMBER_OF_LAPS = None
+        conf.settings.DDF_FK_MIN_DEPTH = None
         with pytest.raises(Exception):
             reload_module(global_settings)
 

@@ -15,7 +15,7 @@ Patterns
   * Use custom values for unsupported fields.
   * Use default lesson for unsupported fields with a custom function that generated data.
   * Use *fill_nullable_fields* for unsupported nullable fields.
-  * Use *number_of_laps* option to test trees.
+  * Use *fk_min_depth* option to test trees.
   * [Automated Test Patterns](http://www.teses.usp.br/teses/disponiveis/45/45134/tde-02042012-120707/pt-br.php) (in Portuguese)
 
 Anti-Patterns

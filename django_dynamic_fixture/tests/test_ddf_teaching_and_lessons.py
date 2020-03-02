@@ -47,7 +47,7 @@ class TeachAndLessonsTest(DDFTestCase):
         # ModelForLibrary.foreignkey is a `ModelForLibrary2`
         self.ddf.teach(ModelForLibrary, integer=1000)
         self.ddf.teach(ModelForLibrary2, integer=1001)
-        instance = self.ddf.get(ModelForLibrary)
+        instance = self.ddf.get(ModelForLibrary, foreignkey=DynamicFixture(data_fixture))
         assert instance.integer == 1000
         assert instance.foreignkey.integer == 1001
 

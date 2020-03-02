@@ -14,7 +14,7 @@ from django_dynamic_fixture.ddf import DynamicFixture, Copier, DDFLibrary, \
 from django_dynamic_fixture.django_helper import print_field_values, django_greater_than
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture, \
     StaticSequentialDataFixture
-from django_dynamic_fixture.global_settings import DDF_DEFAULT_DATA_FIXTURE, DDF_FILL_NULLABLE_FIELDS, DDF_NUMBER_OF_LAPS, \
+from django_dynamic_fixture.global_settings import DDF_DEFAULT_DATA_FIXTURE, DDF_FILL_NULLABLE_FIELDS, DDF_FK_MIN_DEPTH, \
                                                     DDF_IGNORE_FIELDS, DDF_VALIDATE_MODELS, \
                                                     DDF_DEBUG_MODE, DDF_FIELD_FIXTURES
 from django_dynamic_fixture.script_ddf_checkings import ddf_check_models
@@ -75,7 +75,7 @@ def fixture(**kwargs):
     f = DynamicFixture(data_fixture=kwargs.pop('data_fixture', DDF_DEFAULT_DATA_FIXTURE),
                        fill_nullable_fields=kwargs.pop('fill_nullable_fields', DDF_FILL_NULLABLE_FIELDS),
                        ignore_fields=kwargs.pop('ignore_fields', []),
-                       number_of_laps=kwargs.pop('number_of_laps', DDF_NUMBER_OF_LAPS),
+                       fk_min_depth=kwargs.pop('fk_min_depth', DDF_FK_MIN_DEPTH),
                        validate_models=kwargs.pop('validate_models', DDF_VALIDATE_MODELS),
                        print_errors=kwargs.pop('print_errors', True),
                        debug_mode=kwargs.pop('debug_mode', DDF_DEBUG_MODE),
@@ -98,7 +98,7 @@ def _new(model, n=1, ddf_lesson=None, persist_dependencies=False, **kwargs):
     @data_fixture: override DDF_DEFAULT_DATA_FIXTURE configuration. Default is SequentialDataFixture().
     @fill_nullable_fields: override DDF_FILL_NULLABLE_FIELDS global configuration. Default is True.
     @ignore_fields: List of fields that will be ignored by DDF. It will be concatenated with the global list DDF_IGNORE_FIELDS. Default is [].
-    @number_of_laps: override DDF_NUMBER_OF_LAPS global configuration. Default 1.
+    @fk_min_depth: override DDF_FK_MIN_DEPTH global configuration. Default 0.
     @validate_models: override DDF_VALIDATE_MODELS global configuration. Default is False.
     @print_errors: print on console all instance values if DDF can not generate a valid object with the given configuration.
 
@@ -128,7 +128,7 @@ def _get(model, n=1, ddf_lesson=None, **kwargs):
     @data_fixture: override DDF_DEFAULT_DATA_FIXTURE configuration. Default is SequentialDataFixture().
     @fill_nullable_fields: override DDF_FILL_NULLABLE_FIELDS global configuration. Default is True.
     @ignore_fields: List of fields that will be ignored by DDF. It will be concatenated with the global list DDF_IGNORE_FIELDS. Default is [].
-    @number_of_laps: override DDF_NUMBER_OF_LAPS global configuration. Default 1.
+    @fk_min_depth: override DDF_FK_MIN_DEPTH global configuration. Default 0.
     @validate_models: override DDF_VALIDATE_MODELS global configuration. Default is False.
     @print_errors: print on console all instance values if DDF can not generate a valid object with the given configuration.
 
