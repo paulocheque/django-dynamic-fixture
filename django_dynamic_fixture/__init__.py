@@ -35,15 +35,21 @@ def look_up_alias(ddf_as_f=True, **kwargs):
     a__b__c=1 => {a: {b: {c: 1}}}
     """
     field_dict = {}
+    params_to_be_skipped = []
     for alias, value in kwargs.items():
         parts = alias.split(LOOKUP_SEP)
+        if len(parts) == 1:
+            params_to_be_skipped.append(alias)
         level_dict = field_dict
         for part in parts[:-1]:
             level_dict = level_dict.setdefault(part, {})
         level_dict[parts[-1]] = value
     if ddf_as_f:
         for root, value in field_dict.items():
-            field_dict[root] = dict_to_f(value)
+            if root in params_to_be_skipped:
+                field_dict[root] = value
+            else:
+                field_dict[root] = dict_to_f(value)
     return field_dict
 
 
@@ -51,7 +57,7 @@ def dict_to_f(value):
     """
     Example:
     1 => 1
-    {b: 1 => F(b=1)
+    {b: 1} => F(b=1)
     {b: {c: 1}} => F(b=F(c=1))
     """
     if not isinstance(value, dict):

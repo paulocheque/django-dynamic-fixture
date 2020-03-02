@@ -276,7 +276,7 @@ class DynamicFixture(object):
         return 'F(%s)' % (', '.join(six.text_type('%s=%s') % (key, value) for key, value in self.kwargs.items()))
 
     def __eq__(self, that):
-        return self.kwargs == that.kwargs
+        return isinstance(that, self.__class__) and self.kwargs == that.kwargs
 
     def _get_data_from_custom_dynamic_fixture(self, field, fixture, persist_dependencies):
         "return data of a Dynamic Fixture: field=F(...)"
