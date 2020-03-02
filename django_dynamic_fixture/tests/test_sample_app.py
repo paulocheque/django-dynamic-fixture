@@ -38,6 +38,8 @@ class SampleAppTestCase(TestCase):
         o = G('django_dynamic_fixture.Book', authors=2, categories=5)
         assert o.authors.all().count() == 2
         assert o.categories.all().count() == 5
+        o = G('django_dynamic_fixture.Book', metadata={'a': 1})
+        assert o.metadata == {'a': 1}
 
     def test_book_edition(self):
         o = G('django_dynamic_fixture.BookEdition')

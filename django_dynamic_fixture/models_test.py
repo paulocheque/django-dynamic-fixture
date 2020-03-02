@@ -493,6 +493,8 @@ class Book(models.Model):
     main_author = models.ForeignKey(Author, related_name='books', on_delete=models.DO_NOTHING)
     authors = models.ManyToManyField('Author', related_name='m2m')
     categories = models.ManyToManyField('Category', related_name='m2m')
+    from .fields import JSONField
+    metadata = JSONField(null=True)
 
 class BookPublisher(models.Model):
     book_edition = models.ForeignKey('BookEdition', on_delete=models.DO_NOTHING)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.test import TestCase
+from django.test import TransactionTestCase as TestCase
 
 from django_dynamic_fixture.models_test import EmptyModel, ModelWithRelationships, ModelForLibrary
 from django_dynamic_fixture import N, G, F, C, P, teach, look_up_alias, PRE_SAVE, POST_SAVE
@@ -202,6 +202,11 @@ class LookUpSeparatorTest(TestCase):
         assert {'a': 1, 'b_c': 2} == look_up_alias(a=1, b_c=2)
         assert {'a': 1, 'b': F(c=2)} == look_up_alias(a=1, b__c=2)
         assert {'a': F(b=1), 'c': F(d=2)} == look_up_alias(a__b=1, c__d=2)
+
+    def test_dont_format_default_dict_values(self):
+        kwargs = dict(metadata=dict(a=1))
+        assert {'metadata': {'a': 1}} == look_up_alias(**kwargs)
+        assert {'metadata': {'a': 1}} == look_up_alias(metadata={'a': 1})
 
 
 class PreAndPostSaveTest(TestCase):
