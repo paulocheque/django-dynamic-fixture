@@ -15,6 +15,6 @@ nose-progressive>=1.5
 geopy
 
 # 3rd party libraries
-jsonfield
+# jsonfield>=2.1.1
 django-json-field
 django-polymorphic
