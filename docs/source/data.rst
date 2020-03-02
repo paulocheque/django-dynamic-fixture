@@ -67,7 +67,7 @@ About Custom Fields
 Fill Nullable Fields
 ===============================================================================
 
-This option define if nullable fields (fields with ``null=True``) will receive a generated data or not (``data=None``). It is possible to override the global option for an specific instance. But be careful because this option will be propagate to all internal dependencies.
+This option define if nullable fields (fields with ``null=True``) will receive a generated data or not (``data=None``). This property is exclusive for non-FK fields. It is possible to override the global option for an specific instance. But be careful because this option will be propagate to all internal dependencies.
 
 In settings.py::
 

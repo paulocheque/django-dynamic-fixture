@@ -376,11 +376,11 @@ class DynamicFixture(object):
                 else:
                     data = None
         else:
-            if field.null and not self.fill_nullable_fields:
-                data = None
-            elif field_has_default_value(field):
+            if field_has_default_value(field):
                 # datetime default can receive a function: datetime.now
                 data = field.default() if callable(field.default) else field.default
+            elif field.null and not self.fill_nullable_fields:
+                data = None
             elif field_has_choices(field):
                 data = field.flatchoices[0][0] # key of the first choice
             else:
