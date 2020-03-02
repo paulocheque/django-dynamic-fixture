@@ -116,6 +116,7 @@ class ModelForNullable(models.Model):
 
 class ModelForIgnoreList2(models.Model):
     nullable = models.IntegerField(null=True)
+    non_nullable = models.IntegerField()
 
     class Meta:
         verbose_name = 'Ignore list 2'

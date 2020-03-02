@@ -240,7 +240,7 @@ class DynamicFixture(object):
                     'validate_models', 'print_errors']
 
     def __init__(self, data_fixture, fill_nullable_fields=False, ignore_fields=[], number_of_laps=0,
-                 validate_models=False, print_errors=True, model_path=[], debug_mode=False, **kwargs):
+                 validate_models=False, print_errors=True, debug_mode=False, **kwargs):
         '''
         :data_fixture: algorithm to fill field data.
         :fill_nullable_fields: flag to decide if nullable fields must be filled with data.
@@ -248,7 +248,6 @@ class DynamicFixture(object):
         :number_of_laps: number of laps for each cyclic dependency.
         :validate_models: flag to decide if the model_instance.full_clean() must be called before saving the object.
         :print_errors: flag to determine if the model data must be printed to console on errors. For some scripts is interesting to disable it.
-        :model_path: internal variable used to control the cycles of dependencies.
         '''
         from django_dynamic_fixture.global_settings import DDF_IGNORE_FIELDS
         from django_dynamic_fixture.fixture_algorithms import FixtureFactory
@@ -264,7 +263,6 @@ class DynamicFixture(object):
         self.validate_models = validate_models
         self.print_errors = print_errors
         # internal logic
-        self.model_path = model_path
         self.pending_fields = []
         self.fields_processed = []
         self.debug_mode = debug_mode
@@ -336,33 +334,24 @@ class DynamicFixture(object):
         if field_is_a_parent_link(field):
             return None
         next_model = get_related_model(field)
-        occurrences = self.model_path.count(next_model)
 
-        # Skip occurrences=0 for the first lap/cycle.
-        # This should work for FK and Self-FKs
-        if occurrences and occurrences >= self.number_of_laps:
-            data = None
+        # 1. Propagate ignored_fields only for self references
+        if model_class == next_model: # self reference
+            ignore_fields = self.ignore_fields
         else:
-            next_model_path = self.model_path[:]
-            next_model_path.append(model_class)
-            # 1. Propagate ignored_fields only for self references
-            if model_class == next_model: # self reference
-                ignore_fields = self.ignore_fields
-            else:
-                ignore_fields = []
-            # 2. It needs a new DynamicFixture to control the cycles and ignored fields.
-            fixture = DynamicFixture(data_fixture=self.data_fixture,
-                                     fill_nullable_fields=self.fill_nullable_fields,
-                                     ignore_fields=ignore_fields,
-                                     number_of_laps=self.number_of_laps,
-                                     validate_models=self.validate_models,
-                                     print_errors=self.print_errors,
-                                     model_path=next_model_path)
-            # 3. Persist it
-            if persist_dependencies:
-                data = fixture.get(next_model)
-            else:
-                data = fixture.new(next_model, persist_dependencies=persist_dependencies)
+            ignore_fields = []
+        # 2. It needs a new DynamicFixture to control the cycles and ignored fields.
+        fixture = DynamicFixture(data_fixture=self.data_fixture,
+                                 fill_nullable_fields=self.fill_nullable_fields,
+                                 ignore_fields=ignore_fields,
+                                 number_of_laps=self.number_of_laps - 1, # Depth decreased
+                                 validate_models=self.validate_models,
+                                 print_errors=self.print_errors)
+        # 3. Persist it
+        if persist_dependencies:
+            data = fixture.get(next_model)
+        else:
+            data = fixture.new(next_model, persist_dependencies=persist_dependencies)
         return data
 
     def _process_field_with_default_fixture(self, field, model_class, persist_dependencies):
@@ -374,16 +363,19 @@ class DynamicFixture(object):
         3. Use the first option of `choices`
         - DDF behavior priority for relationship fields:
         1. Use the `default` value
-        2. Use `null` if possible (considering the `fill_nullable_fields` settings)
+        2. Use `null` if possible, or consider the `number_of_laps` value
         3. Create a new FK model
-        - DDF behavior priority for self relationship fields:
-        1. Use the `default` value
-        2. Use the `number_of_laps` instead of fill_nullable_fields
-        3. Use `null`
         '''
-        next_model = get_related_model(field) if is_relationship_field(field) else None
-
-        if not is_relationship_field(field):
+        if is_relationship_field(field):
+            if field_has_default_value(field):
+                # datetime default can receive a function: datetime.now
+                data = field.default() if callable(field.default) else field.default
+            else:
+                if (not field.null) or self.number_of_laps > 0:
+                    data = self._process_foreign_key(model_class, field, persist_dependencies)
+                else:
+                    data = None
+        else:
             if field.null and not self.fill_nullable_fields:
                 data = None
             elif field_has_default_value(field):
@@ -393,23 +385,6 @@ class DynamicFixture(object):
                 data = field.flatchoices[0][0] # key of the first choice
             else:
                 data = self.data_fixture.generate_data(field)
-        else:
-            if field_has_default_value(field):
-                # datetime default can receive a function: datetime.now
-                data = field.default() if callable(field.default) else field.default
-            else:
-                # `number_of_laps` overrides the `fill_nullable_fields` for self FKs
-                next_model = get_related_model(field)
-                if model_class == next_model: # self reference
-                    if self.number_of_laps > 0:
-                        data = self._process_foreign_key(model_class, field, persist_dependencies)
-                    else:
-                        data = None
-                else:
-                    if field.null and not self.fill_nullable_fields:
-                        data = None
-                    else:
-                        data = self._process_foreign_key(model_class, field, persist_dependencies)
         return data
 
     def set_data_for_a_field(self, model_class, __instance, __field, persist_dependencies=True, **kwargs):
@@ -514,6 +489,7 @@ class DynamicFixture(object):
         instance = model_class()
         if not is_model_class(instance):
             raise InvalidModelError(get_unique_model_name(model_class))
+
         try:
             # https://github.com/paulocheque/django-dynamic-fixture/pull/112
             from polymorphic import PolymorphicModel
