@@ -105,22 +105,24 @@ It is not possible to override the global configuration, just extend the list. S
     assert instance.another_field_name is None
 
 
-Number of Laps/Cycles
+Minimum Foreign Key Depth
 ===============================================================================
 
-This option is used by DDF to control cyclic dependencies (``ForeignKey`` by ``self``, denormalizations, bad design etc). DDF does not enter infinite loop of instances generation. This option defines how many laps DDF will create for each cyclic dependency. This option can also be used to create trees with different lengths.
+This option is used by DDF to control dependencies and cyclic dependencies (``ForeignKey`` by ``self``, denormalizations, bad design etc). DDF does not enter infinite loop of instances generation. This option defines how depth DDF should go to create instances of foreign key fields. This option can also be used to create trees with different lengths.
 
 In settings.py::
 
-    DDF_NUMBER_OF_LAPS = 1
+    DDF_FK_MIN_DEPTH = 0
 
 In the test file::
 
-    instance = G(MyModel, number_of_laps=1)
+    instance = G(MyModel, fk_min_depth=1)
     assert instance.self_fk.id is not None
     assert instance.self_fk.self_fk.id is None
 
-    instance = G(MyModel, number_of_laps=2)
+    instance = G(MyModel, fk_min_depth=2)
     assert instance.self_fk.id is not None
     assert instance.self_fk.self_fk.id is not None
     assert instance.self_fk.self_fk.self_fk.id is None
+
+> Incompatibility warning: Before DDF 3.0.3, DDF handled FK cycles instead of FK depth, through the removed properties `DDF_NUMBER_OF_LAPS` and `number_of_laps`.

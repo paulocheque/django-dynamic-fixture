@@ -236,16 +236,16 @@ class DynamicFixture(object):
     Responsibility: create a valid model instance according to the given configuration.
     '''
 
-    _DDF_CONFIGS = ['fill_nullable_fields', 'ignore_fields', 'data_fixture', 'number_of_laps',
+    _DDF_CONFIGS = ['fill_nullable_fields', 'ignore_fields', 'data_fixture', 'fk_min_depth',
                     'validate_models', 'print_errors']
 
-    def __init__(self, data_fixture, fill_nullable_fields=False, ignore_fields=[], number_of_laps=0,
+    def __init__(self, data_fixture, fill_nullable_fields=False, ignore_fields=[], fk_min_depth=0,
                  validate_models=False, print_errors=True, debug_mode=False, **kwargs):
         '''
         :data_fixture: algorithm to fill field data.
         :fill_nullable_fields: flag to decide if nullable fields must be filled with data.
         :ignore_fields: list of field names that must not be filled with data.
-        :number_of_laps: number of laps for each cyclic dependency.
+        :fk_min_depth: how deep DDF should go to create non-required FKs fields from the main model.
         :validate_models: flag to decide if the model_instance.full_clean() must be called before saving the object.
         :print_errors: flag to determine if the model data must be printed to console on errors. For some scripts is interesting to disable it.
         '''
@@ -258,7 +258,7 @@ class DynamicFixture(object):
         self.ignore_fields = ignore_fields
         # extend ignore_fields with globally declared ignore_fields
         self.ignore_fields.extend(DDF_IGNORE_FIELDS)
-        self.number_of_laps = number_of_laps
+        self.fk_min_depth = fk_min_depth
         # other ddfs configs
         self.validate_models = validate_models
         self.print_errors = print_errors
@@ -344,7 +344,7 @@ class DynamicFixture(object):
         fixture = DynamicFixture(data_fixture=self.data_fixture,
                                  fill_nullable_fields=self.fill_nullable_fields,
                                  ignore_fields=ignore_fields,
-                                 number_of_laps=self.number_of_laps - 1, # Depth decreased
+                                 fk_min_depth=self.fk_min_depth - 1, # Depth decreased
                                  validate_models=self.validate_models,
                                  print_errors=self.print_errors)
         # 3. Persist it
@@ -363,7 +363,7 @@ class DynamicFixture(object):
         3. Use the first option of `choices`
         - DDF behavior priority for relationship fields:
         1. Use the `default` value
-        2. Use `null` if possible, or consider the `number_of_laps` value
+        2. Use `null` if possible, or consider the `fk_min_depth` value
         3. Create a new FK model
         '''
         if is_relationship_field(field):
@@ -371,7 +371,7 @@ class DynamicFixture(object):
                 # datetime default can receive a function: datetime.now
                 data = field.default() if callable(field.default) else field.default
             else:
-                if (not field.null) or self.number_of_laps > 0:
+                if (not field.null) or self.fk_min_depth > 0:
                     data = self._process_foreign_key(model_class, field, persist_dependencies)
                 else:
                     data = None
