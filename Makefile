@@ -39,10 +39,13 @@ compile:
 
 test:
 	# Run specific test:
-	# TESTS=pytest django_dynamic_fixture.tests.FILE::CLASS::METHOD make test
+	# TESTS=django_dynamic_fixture.tests.FILE::CLASS::METHOD make test
 	clear ; env/bin/pytest --create-db --reuse-db --no-migrations ${TESTS}
 	# clear ; time env/bin/tox --parallel all -e django111-py27
 	# clear ; time env/bin/tox --parallel all -e django20-py37
+
+testfailed:
+	clear ; env/bin/pytest --create-db --reuse-db --no-migrations ${TESTS} --last-failed
 
 config_postgres:
 	psql -U postgres -c "create extension postgis"
