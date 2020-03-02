@@ -8,6 +8,15 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 3.0.3 - 2020/01/11
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/3.0.3>
+  * Setting ``DDF_NUMBER_OF_LAPS`` was removed in favor of the new ``DDF_FK_MIN_DEPTH``
+  * Parameter ``number_of_laps`` was removed in favor of new ``fk_min_depth``
+  * Important bugfix for the FK field management: Issue #120
+  * Give priority to default values instead of null values: Issue #121
+  * Fixed lookup fields that was breaking JSONFields: Issue #122
+
 Version 3.0.2 - 2020/01/10
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/3.0.2>
