@@ -5,12 +5,12 @@ from django.core.exceptions import ImproperlyConfigured
 try:
     from django.contrib.gis.geos import *
 except ImproperlyConfigured:
-    pass  # enviroment without geo libs
+    pass  # environment without geo libs
 
 try:
     from django.contrib.gis.db import models as geomodel
 except ImproperlyConfigured:
-    pass  # enviroment without geo libs
+    pass  # environment without geo libs
 
 from django.test import TestCase
 import pytest
