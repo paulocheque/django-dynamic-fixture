@@ -12,7 +12,7 @@ from django.contrib.gis.geos import *
 try:
     from django.contrib.gis.db import models as geomodels
 except ImproperlyConfigured:
-    pass  # enviroment without geo libs
+    pass  # environment without geo libs
 
 
 from django.test import TestCase
