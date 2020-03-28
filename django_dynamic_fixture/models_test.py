@@ -8,6 +8,9 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
+from django_dynamic_fixture.models_sample_app import *
+from django_dynamic_fixture.models_third_party import *
+
 
 class EmptyModel(models.Model):
     class Meta:
@@ -419,89 +422,3 @@ class ModelForUUID(models.Model):
     class Meta:
         app_label = 'django_dynamic_fixture'
 
-
-try:
-    from django.contrib.postgres.fields import JSONField
-    class ModelForPostgresFields(models.Model):
-        nullable_json_field = JSONField(null=True)
-        json_field = JSONField(null=False)
-        class Meta:
-            app_label = 'django_dynamic_fixture'
-except ImportError:
-    pass
-
-try:
-    from jsonfield import JSONField
-    from jsonfield import JSONCharField
-    class ModelForPlugins1(models.Model):
-        json_field1 = JSONCharField(max_length=10)
-        json_field2 = JSONField()
-        class Meta:
-            app_label = 'django_dynamic_fixture'
-except ImportError:
-    print('Library `jsonfield` not installed. Skipping.')
-
-
-try:
-    from json_field import JSONField as JSONField2
-    class ModelForPlugins2(models.Model):
-        json_field1 = JSONField2()
-        class Meta:
-            app_label = 'django_dynamic_fixture'
-except ImportError:
-    print('Library `django-json-field` not installed. Skipping.')
-
-
-try:
-    from polymorphic.models import PolymorphicModel
-    class ModelPolymorphic(PolymorphicModel):
-        class Meta:
-            verbose_name = 'Polymorphic Model'
-
-
-    class ModelPolymorphic2(ModelPolymorphic):
-        class Meta:
-            verbose_name = 'Polymorphic Model 2'
-
-
-    class ModelPolymorphic3(ModelPolymorphic):
-        class CannotSave(Exception):
-            pass
-
-        def save(self):
-            raise self.CannotSave
-except ImportError:
-    print('Library `django_polymorphic` not installed. Skipping.')
-
-
-# Sample App
-
-class Publisher(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-
-class Author(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField(null=True)
-
-class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    parent = models.ForeignKey('self', on_delete=models.DO_NOTHING, null=True, blank=True)
-
-class Book(models.Model):
-    isb = models.CharField(max_length=100, unique=True)
-    name = models.CharField(max_length=100)
-    main_author = models.ForeignKey(Author, related_name='books', on_delete=models.DO_NOTHING)
-    authors = models.ManyToManyField('Author', related_name='m2m')
-    categories = models.ManyToManyField('Category', related_name='m2m')
-    from .fields import JSONField
-    metadata = JSONField(null=True)
-
-class BookPublisher(models.Model):
-    book_edition = models.ForeignKey('BookEdition', on_delete=models.DO_NOTHING)
-    publisher = models.ForeignKey('Publisher', on_delete=models.DO_NOTHING)
-    comments = models.TextField(max_length=100)
-
-class BookEdition(models.Model):
-    book = models.ForeignKey(Book, related_name='editions', on_delete=models.DO_NOTHING)
-    publishers = models.ManyToManyField('Publisher', related_name='edition_publishers', through=BookPublisher)
-    year = models.IntegerField()
