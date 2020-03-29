@@ -36,3 +36,5 @@ env3.4
 .tox
 test_:memory:
 .eggs/
+
+ddf_compatibility_report.*

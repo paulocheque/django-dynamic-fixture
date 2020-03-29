@@ -8,7 +8,15 @@ Change Log
 
 Date format: yyyy/mm/dd
 
-Version 3.0.3 - 2020/01/11
+Version 3.1.0 - 2020/03/29
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/3.1.0>
+  * Compatibility check report improvements: PR #131
+  * DDF now accepts to override a DDF lesson: PR #130
+  * New feature: DDF Mask: ``M``: PR #129
+  * Option to configure DDF via Environment variables
+
+Version 3.0.3 - 2020/03/01
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/3.0.3>
   * Setting ``DDF_NUMBER_OF_LAPS`` was removed in favor of the new ``DDF_FK_MIN_DEPTH``
