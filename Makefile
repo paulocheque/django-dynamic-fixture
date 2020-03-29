@@ -61,16 +61,16 @@ config_postgres:
 	psql -c "ALTER USER ddf_user WITH SUPERUSER;" -U postgres
 
 test_postgres:
-	# TESTS=pytest django_dynamic_fixture.tests.FILE::CLASS::METHOD make test_postgres
+	# TESTS=django_dynamic_fixture.tests.FILE::CLASS::METHOD make test_postgres
 	clear ; env/bin/pytest --reuse-db --no-migrations --ds=settings_postgres ${TESTS}
 
 test_mysql:
-	# TESTS=pytest django_dynamic_fixture.tests.FILE::CLASS::METHOD make test_mysql
+	# TESTS=django_dynamic_fixture.tests.FILE::CLASS::METHOD make test_mysql
 	clear ; env/bin/pytest --reuse-db --no-migrations --ds=settings_mysql ${TESTS}
 
 cov:
-	# TESTS=pytest django_dynamic_fixture.tests.FILE::CLASS::METHOD make cov
-	clear ; env/bin/pytest --create-db --reuse-db --no-migrations --cov=django_dynamic_fixture ${TESTS}
+	clear ; env/bin/pytest --create-db --reuse-db --no-migrations -v --cov=django_dynamic_fixture --cov-report html
+	open htmlcov/index.html
 
 coveralls:
 	clear ; env/bin/coveralls

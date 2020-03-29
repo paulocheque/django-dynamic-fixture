@@ -38,3 +38,4 @@ test_:memory:
 .eggs/
 
 ddf_compatibility_report.*
+htmlcov/*
