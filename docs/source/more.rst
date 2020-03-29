@@ -75,7 +75,6 @@ List of Exceptions
 * *InvalidCopierExpressionError*: The specified expression used in a Copier is invalid.
 * *InvalidModelError*: Invalid Model: The class is not a model or it is abstract.
 * *InvalidDDFSetupError*: ddf_setup.py has execution errors
-* *CantOverrideLesson*: Override a lesson is an anti-pattern and will turn your test suite very hard to understand.
 
 
 Decorators (New in 1.4.0)
