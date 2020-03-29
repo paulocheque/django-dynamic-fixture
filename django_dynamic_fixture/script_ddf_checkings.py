@@ -17,8 +17,11 @@ def red(string):
 def green(string):
     return color('92', string)
 
+def yellow(string):
+    return color('93', string)
 
-def ddf_check_models(application_labels=[], exclude_application_labels=[], csv_filename='ddf_compatibility_report.csv'):
+
+def ddf_check_models(application_labels=[], exclude_application_labels=[], print_csv=False, csv_filename=None):
     from django_dynamic_fixture import get
 
     succeeded = {}
@@ -35,8 +38,14 @@ def ddf_check_models(application_labels=[], exclude_application_labels=[], csv_f
                 errors[ref] = '[{}] {}'.format(type(e), str(e))
 
     console_report(succeeded, errors)
-    if csv_filename:
-        csv_report(succeeded, errors, filename=csv_filename)
+    if print_csv or csv_filename:
+        content = csv_report(succeeded, errors)
+        if print_csv:
+            print(yellow('\nCSV Report.\n'))
+            print(content)
+        if csv_filename:
+            print(yellow('\nCSV Report file created: {}.\n'.format(csv_filename)))
+            save_csv(content, filename=csv_filename)
     return succeeded, errors
 
 
@@ -52,12 +61,20 @@ def console_report(succeeded, errors):
         print(white('{}. {}: '.format(i, ref)) + red(error))
 
 
-def csv_report(succeeded, errors, filename):
-    with open(filename, 'w') as f:
-        f.write(','.join(['#', 'Model', 'Succeeded', '\n']))
-        for i, (ref, _) in enumerate(succeeded.items(), start=1):
-            f.write(','.join([str(i), ref, 'succeeded', '\n']))
+def csv_report(succeeded, errors):
+    SEP = '\t'
+    LN = '\n'
+    lines = []
+    lines.append(SEP.join(['#', 'Model', 'Succeeded']))
+    for i, (ref, _) in enumerate(succeeded.items(), start=1):
+        lines.append(SEP.join([str(i), ref, 'succeeded']))
 
-        f.write(','.join(['#', 'Model', 'Error', '\n']))
-        for i, (ref, error) in enumerate(errors.items(), start=1):
-            f.write(','.join([str(i), ref, error, '\n']))
+    lines.append(SEP.join(['#', 'Model', 'Error']))
+    for i, (ref, error) in enumerate(errors.items(), start=1):
+        lines.append(SEP.join([str(i), ref, error]))
+    return LN.join(lines)
+
+
+def save_csv(content, filename):
+    with open(filename, 'w') as f:
+        f.write(content)
