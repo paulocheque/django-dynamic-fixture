@@ -14,13 +14,12 @@ Django Dynamic Fixture (DDF) is a complete and simple library to create dynamic 
 
 It lets you focus on your tests, instead of focusing on generating some dummy data which is boring and polutes the test source code.
 
-Documentation
--------------
+* [Basic Examples](#basic-examples)
+* [Cheat Sheet](#cheat-sheet)
+* <a href="http://django-dynamic-fixture.readthedocs.org/en/latest/index.html" target="_blank">Full Documentation</a>
 
-http://django-dynamic-fixture.readthedocs.org/en/latest/index.html
 
-
-Basic examples
+Basic Examples
 --------------
 
 > Customize only the important details of the test:
@@ -65,4 +64,55 @@ Basic examples
         assert book1 in books
         assert book2 not in books
         assert book1.main_author.name == 'Eistein'
+```
+
+Cheat Sheet
+--------------
+
+```python
+# Import the main DDF features
+from ddf import N, G, F, M, C, P, teach
+```
+
+```python
+# `N` creates an instance of model without saving it to DB
+instance = N(Book)
+```
+
+```python
+# `G` creates an instance of model and save it into the DB
+instance = G(Book)
+```
+
+```python
+# `F` customize relationship objects
+instance = G(Book, author=F(name='Eistein'))
+# Same as `F`
+instance = G(Book, author__name='Eistein')
+```
+
+```python
+# `M` receives a data mask and create a random string using it
+# Known symbols: `_`, `#` or `-`
+# To escape known symbols: `!`
+instance = N(Book, address=M('Street ___, ### !- --'))
+assert instance.address == 'Street TPA, 632 - BR'
+```
+
+```python
+# `C` copies data from one field to another
+instance = N(Book, address_formatted=C('address'), address=D('Street ___, ### \- --'))
+assert instance.address_formatted == 'Street TPA, 632 - BR'
+```
+
+```python
+# `teach` teaches DDF in how to build an instance
+teach(Book, address=M'Street ___, ### !- --'))
+instance = G(Book)
+assert instance.address == 'Street TPA, 632 - BR'
+```
+
+```python
+# `P` print instance values for debugging
+P(instance)
 ```
