@@ -188,6 +188,50 @@ class Copier(object):
             six.reraise(InvalidCopierExpressionError, InvalidCopierExpressionError(self.expression, e), sys.exc_info()[2])
 
 
+class Mask(object):
+    '''
+    Wrapper for an expression mask that will be used to generate a random string with a custom format.
+
+    The expression mask supports 4 special characters:
+    - `#` for random numbers;
+    - `-` for random uppercase chars;
+    - `_` for random lowercase chars;
+    - `!` to escape special chars;
+
+    Other characters will not be interpreted and it will be considered part of the final string.
+
+    Example of usage: D('###.___!----') => '510.kap-NGK'
+    '''
+    def __init__(self, expression):
+        self.expression = expression
+
+    def __str__(self):
+        return "D('%s')" % self.expression
+
+    def evaluate(self):
+        import random
+        import string
+        chars = []
+        escaped = False
+        for char in self.expression:
+            if escaped:
+                c = char
+                escaped = False
+            elif char == '#':
+                c = random.choice(string.digits)
+            elif char == '-':
+                c = random.choice(string.ascii_uppercase)
+            elif char == '_':
+               c = random.choice(string.ascii_lowercase)
+            elif char == '!':
+                escaped = True
+                continue
+            else:
+                c = char
+            chars.append(c)
+        return ''.join(chars)
+
+
 class DDFLibrary(object):
     instance = None
     DEFAULT_KEY = 'ddf_default'
@@ -319,6 +363,8 @@ class DynamicFixture(object):
             data = self._get_data_from_custom_dynamic_fixture(field, fixture, persist_dependencies)
         elif isinstance(fixture, Copier): # Copier (C)
             data = self._get_data_from_custom_copier(instance, field, fixture)
+        elif isinstance(fixture, Mask): # Mask (M)
+            data = fixture.evaluate()
         elif isinstance(fixture, DataFixture): # DataFixture
             data = self._get_data_from_data_fixture(field, fixture)
         elif callable(fixture): # callable with the field as parameters

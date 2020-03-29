@@ -129,6 +129,25 @@ Or even mixed them up::
     assert book.authors.all().count() == 4
 
 
+Mask: M (New in 3.1.0)
+===============================================================================
+
+``M`` (shortcut for ``Mask``) is a feature that tell DDF to generate a random string using a custom mask.
+
+The mask symbols are:
+
+- ``#``: represents a number: 0-9
+- ``-``: represents a upper case char: A-Z
+- ``#``: represents a lower case char: a-z
+- ``!``: escape mask symbols, inclusive itself
+
+Examples::
+
+    from ddf import G, M
+    instance = G(Publisher, address=M(r'St. -______, ### !- -- --'))
+    assert instance.address == 'St. Imaiden, 164 - SP BR'
+
+
 Copier: C (New in 1.6.0)
 ===============================================================================
 

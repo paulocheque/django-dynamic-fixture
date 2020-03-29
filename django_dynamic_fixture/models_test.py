@@ -33,7 +33,8 @@ class ModelWithNumbers(models.Model):
 
 
 class ModelWithStrings(models.Model):
-    string = models.CharField(max_length=1, unique=True)
+    char = models.CharField(max_length=1, unique=True)
+    string = models.CharField(max_length=50, unique=True)
     text = models.TextField(unique=True)
     slug = models.SlugField(unique=True)
     commaseparated = models.CommaSeparatedIntegerField(max_length=100, unique=True)
