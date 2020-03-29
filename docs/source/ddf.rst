@@ -138,7 +138,7 @@ The mask symbols are:
 
 - ``#``: represents a number: 0-9
 - ``-``: represents a upper case char: A-Z
-- ``#``: represents a lower case char: a-z
+- ``_``: represents a lower case char: a-z
 - ``!``: escape mask symbols, inclusive itself
 
 Examples::
