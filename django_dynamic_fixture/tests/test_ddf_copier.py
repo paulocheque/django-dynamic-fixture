@@ -63,3 +63,9 @@ class CopyTest(DDFTestCase):
     def test_it_should_raise_a_invalid_configuration_error_if_copier_has_cyclic_dependency(self):
         with pytest.raises(InvalidConfigurationError):
             self.ddf.get(ModelForCopy, int_a=Copier('int_b'), int_b=Copier('int_a'))
+
+    def test_it_must_copy_generated_data_mask_too(self):
+        import re
+        instance = self.ddf.get(ModelWithStrings, string=DataFormat('- _ #'), text=Copier('string'))
+        assert re.match(r'[A-Z]{1} [a-z]{1} [0-9]{1}', instance.string)
+        assert re.match(r'[A-Z]{1} [a-z]{1} [0-9]{1}', instance.text)

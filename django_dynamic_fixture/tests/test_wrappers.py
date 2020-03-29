@@ -2,8 +2,8 @@
 
 from django.test import TransactionTestCase as TestCase
 
-from django_dynamic_fixture.models_test import EmptyModel, ModelWithRelationships, ModelForLibrary
-from django_dynamic_fixture import N, G, F, C, P, teach, look_up_alias, PRE_SAVE, POST_SAVE
+from django_dynamic_fixture.models_test import EmptyModel, ModelWithRelationships, ModelForLibrary, ModelWithStrings
+from django_dynamic_fixture import N, G, F, C, D, P, teach, look_up_alias, PRE_SAVE, POST_SAVE
 
 
 class NShortcutTest(TestCase):
@@ -136,6 +136,13 @@ class CShortcutTest(TestCase):
         instance = G(ModelWithRelationships, manytomany=[F(integer=C('integer_b'))])
         instance1 = instance.manytomany.all()[0]
         assert instance1.integer == instance1.integer_b
+
+
+class DShortcutTest(TestCase):
+    def test_full_data_mask_sample(self):
+        import re
+        instance = G(ModelWithStrings, string=D(r'St. -______, ### !- -- --'))
+        assert re.match(r'St\. [A-Z]{1}[a-z]{6}, \d{3} - [A-Z]{2} [A-Z]{2}', instance.string)
 
 
 class TeachingAndLessonsTest(TestCase):
