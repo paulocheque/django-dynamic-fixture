@@ -47,7 +47,7 @@ Or even save the report directly to a CSV file::
 
     succeeded, errors = ddf_check_models(csv_filename='ddf_compatibility_report.csv')
 
-    Check for a **ddf_compatibility_report.csv** file in the current directory, so you can use it better in a CSV editor.
+Check for a **ddf_compatibility_report.csv** file in the current directory, so you can use it better in a CSV editor.
 
 
 Debug Mode (New in 1.6.2)
