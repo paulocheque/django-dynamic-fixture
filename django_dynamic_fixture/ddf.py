@@ -65,10 +65,6 @@ class PendingField(Exception):
     "Internal exception to control pending fields when using Copier."
 
 
-class CantOverrideLesson(Exception):
-    "Override a lesson is an anti-pattern and will turn your test suite very hard to understand."
-
-
 def _validate_model(model_class):
     if not is_model_class(model_class):
         raise InvalidReceiverError(model_class, 'Invalid model')
@@ -249,10 +245,15 @@ class DDFLibrary(object):
         return cls.instance
 
     def add_configuration(self, model_class, kwargs, name=None):
+        import os
+        import warnings
         if name in [None, True]:
             name = self.DEFAULT_KEY
         if model_class in self.configs and name in self.configs[model_class]:
-            raise CantOverrideLesson('A lesson {} has already been saved for the model {}'.format(name, model_class))
+            if not os.getenv('DDF_SHELL_MODE'):
+                msg = "Override a lesson is an anti-pattern and will turn your test suite very hard to understand."
+                msg = 'A lesson {} has already been saved for the model {}. {}'.format(name, model_class, msg)
+                warnings.warn(msg, RuntimeWarning)
         model_class_config = self.configs.setdefault(model_class, {})
         model_class_config[name] = kwargs
 
@@ -676,9 +677,6 @@ class DynamicFixture(object):
         return instance
 
     def teach(self, model_class, ddf_lesson=None, **kwargs):
-        '''
-        @raise an CantOverrideLesson error if the same model/lesson were called twice.
-        '''
         library = DDFLibrary.get_instance()
         for field_name in kwargs.keys():
             if field_name in self._DDF_CONFIGS:

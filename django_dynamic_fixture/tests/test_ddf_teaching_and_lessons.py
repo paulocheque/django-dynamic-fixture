@@ -22,10 +22,13 @@ class TeachAndLessonsTest(DDFTestCase):
         instance = self.ddf.get(ModelForLibrary)
         assert instance.integer == 1000
 
-    def test_default_lesson_must_NOT_be_overrided(self):
+    def test_default_lesson_may_be_overrided_although_it_is_an_anti_pattern(self):
         self.ddf.teach(ModelForLibrary, integer=1000)
-        with pytest.raises(CantOverrideLesson):
-            self.ddf.teach(ModelForLibrary, integer=1001)
+        instance = self.ddf.get(ModelForLibrary)
+        assert instance.integer == 1000
+        self.ddf.teach(ModelForLibrary, integer=1001)
+        instance = self.ddf.get(ModelForLibrary)
+        assert instance.integer == 1001
 
     def test_it_must_NOT_raise_an_error_if_user_try_to_use_a_not_saved_default_configuration(self):
         self.ddf.get(ModelForLibrary)

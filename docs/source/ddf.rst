@@ -223,4 +223,4 @@ You can have **many custom lessons** too, giving names to them::
     instance = G(Model, ddf_lesson='my custom lesson 2')
     assert instance.field_x == 99
 
-ps: Just be aware that lessons can not be overriden, since this is an anti-pattern and may let your test suite very hard to understand.
+ps: Just be aware that overriding lessons is an anti-pattern and may let your test suite very hard to understand.
