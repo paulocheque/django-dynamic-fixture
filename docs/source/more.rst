@@ -39,7 +39,15 @@ DDF has a simple script that will look for all Django models of all installed Dj
     from ddf import ddf_check_models
     succeeded, errors = ddf_check_models()
 
-It will also generate a **ddf_compatibility_report.csv** file so you can use it better in a CSV editor.
+You can also print in CSV format (using Tabs for separators)::
+
+    succeeded, errors = ddf_check_models(print_csv=True)
+
+Or even save the report directly to a CSV file::
+
+    succeeded, errors = ddf_check_models(csv_filename='ddf_compatibility_report.csv')
+
+    Check for a **ddf_compatibility_report.csv** file in the current directory, so you can use it better in a CSV editor.
 
 
 Debug Mode (New in 1.6.2)
