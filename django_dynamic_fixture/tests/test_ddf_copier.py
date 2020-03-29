@@ -66,6 +66,6 @@ class CopyTest(DDFTestCase):
 
     def test_it_must_copy_generated_data_mask_too(self):
         import re
-        instance = self.ddf.get(ModelWithStrings, string=DataFormat('- _ #'), text=Copier('string'))
+        instance = self.ddf.get(ModelWithStrings, string=Mask('- _ #'), text=Copier('string'))
         assert re.match(r'[A-Z]{1} [a-z]{1} [0-9]{1}', instance.string)
         assert re.match(r'[A-Z]{1} [a-z]{1} [0-9]{1}', instance.text)

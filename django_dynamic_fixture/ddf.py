@@ -188,7 +188,7 @@ class Copier(object):
             six.reraise(InvalidCopierExpressionError, InvalidCopierExpressionError(self.expression, e), sys.exc_info()[2])
 
 
-class DataFormat(object):
+class Mask(object):
     '''
     Wrapper for an expression mask that will be used to generate a random string with a custom format.
 
@@ -363,7 +363,7 @@ class DynamicFixture(object):
             data = self._get_data_from_custom_dynamic_fixture(field, fixture, persist_dependencies)
         elif isinstance(fixture, Copier): # Copier (C)
             data = self._get_data_from_custom_copier(instance, field, fixture)
-        elif isinstance(fixture, DataFormat): # DataFormat (D)
+        elif isinstance(fixture, Mask): # Mask (M)
             data = fixture.evaluate()
         elif isinstance(fixture, DataFixture): # DataFixture
             data = self._get_data_from_data_fixture(field, fixture)

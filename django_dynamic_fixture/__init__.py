@@ -9,7 +9,7 @@ import six
 
 from django.apps import apps
 
-from django_dynamic_fixture.ddf import DynamicFixture, Copier, DataFormat, DDFLibrary, \
+from django_dynamic_fixture.ddf import DynamicFixture, Copier, Mask, DDFLibrary, \
     set_pre_save_receiver, set_post_save_receiver
 from django_dynamic_fixture.django_helper import print_field_values, django_greater_than
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture, \
@@ -183,7 +183,7 @@ G = get = _get
 T = teach = _teach
 F = fixture
 C = Copier
-D = DataFormat
+M = Mask
 P = print_field_values
 DDFLibrary = DDFLibrary
 PRE_SAVE = set_pre_save_receiver
