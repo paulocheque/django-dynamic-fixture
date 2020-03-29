@@ -51,3 +51,6 @@ You can configure DDF in ``settings.py`` file. You can also override the global 
     # You can override the global config for one case:
     G(Model, debug_mode=True)
     G(Model, debug_mode=False)
+
+
+* **DDF_SHELL_MODE** (Default = False): To disable some DDF warnings so DDF can be used better in Python shell: to populate the DB, for exampel.
