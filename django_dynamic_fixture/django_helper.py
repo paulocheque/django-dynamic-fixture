@@ -7,11 +7,15 @@ from distutils.version import StrictVersion
 
 import django
 from django.apps import apps
-from django.db import models
+from django.db import models  # noqa
 from django.db.models import *
-from django.db.models.fields import NOT_PROVIDED, AutoField, FieldDoesNotExist
+from django.db.models.fields import NOT_PROVIDED, AutoField
 from django.db.models.base import ModelBase
 from django.db.models.query import QuerySet
+try:
+    from django.db.models.fields import FieldDoesNotExist
+except ImportError:
+    from django.core.exceptions import FieldDoesNotExist
 
 
 
