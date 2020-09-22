@@ -116,3 +116,15 @@ assert instance.address == 'Street TPA, 632 - BR'
 # `P` print instance values for debugging
 P(instance)
 ```
+
+```python
+import ddf
+ddf.__version__
+```
+
+```python
+from ddf import ddf_check_models
+succeeded, errors = ddf_check_models()
+succeeded, errors = ddf_check_models(print_csv=True)
+succeeded, errors = ddf_check_models(csv_filename='ddf_compatibility_report.csv')
+```
