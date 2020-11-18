@@ -8,6 +8,11 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 3.1.1 - 2020/11/17
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/3.1.1>
+  * Fixed importing FieldDoesNotExist exception class for Django==3.1: PR #134
+
 Version 3.1.0 - 2020/03/29
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/3.1.0>
