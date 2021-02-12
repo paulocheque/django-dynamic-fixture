@@ -118,7 +118,7 @@ class SequentialDataFixture(BaseDataFixture, GeoDjangoFixtureMixin, PostgresFixt
 
     def timefield_config(self, field, key):
         data = self.get_value(field, key)
-        return now() - timedelta(seconds=data)
+        return (now() - timedelta(seconds=data)).time()
 
     def datetimefield_config(self, field, key):
         data = self.get_value(field, key)

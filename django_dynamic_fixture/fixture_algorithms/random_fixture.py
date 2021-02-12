@@ -85,7 +85,7 @@ class RandomDataFixture(BaseDataFixture, GeoDjangoFixtureMixin, PostgresFixtureM
         return date.today() - timedelta(days=random.randint(1, 36500))
 
     def timefield_config(self, field, key):
-        return now() - timedelta(seconds=random.randint(1, 36500))
+        return (now() - timedelta(seconds=random.randint(1, 36500))).time()
 
     def datetimefield_config(self, field, key):
         return now() - timedelta(seconds=random.randint(1, 36500))
