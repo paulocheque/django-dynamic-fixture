@@ -141,7 +141,7 @@ class UniqueRandomDataFixture(BaseDataFixture, GeoDjangoFixtureMixin, PostgresFi
 
     def timefield_config(self, field, key):
         integer = self.random_integer(field, key, signed=False)
-        return now() - timedelta(seconds=integer)
+        return (now() - timedelta(seconds=integer)).time()
 
     def datetimefield_config(self, field, key):
         integer = self.random_integer(field, key, signed=False)

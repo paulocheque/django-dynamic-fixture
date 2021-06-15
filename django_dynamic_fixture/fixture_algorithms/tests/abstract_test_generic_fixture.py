@@ -2,7 +2,7 @@
 
 from django.db import models
 
-from datetime import datetime, date
+from datetime import datetime, date, time
 from decimal import Decimal
 import six
 
@@ -43,7 +43,7 @@ class DataFixtureTestCase(object):
 
     def test_date_time_related(self):
         assert isinstance(self.fixture.generate_data(models.DateField()), date)
-        assert isinstance(self.fixture.generate_data(models.TimeField()), datetime)
+        assert isinstance(self.fixture.generate_data(models.TimeField()), time)
         assert isinstance(self.fixture.generate_data(models.DateTimeField()), datetime)
 
     def test_formatted_strings(self):

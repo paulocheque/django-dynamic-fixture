@@ -68,7 +68,7 @@ class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
     def test_new_fill_time_related_fields_with_current_values(self):
         instance = self.ddf.new(ModelWithDateTimes)
         assert date.today() >= instance.date
-        assert datetime.now() >= instance.time
+        assert datetime.now().time() >= instance.time
         assert datetime.now() >= instance.datetime
 
     def test_new_fill_formatted_strings_fields_with_basic_values(self):
