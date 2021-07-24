@@ -533,7 +533,10 @@ class DynamicFixture(object):
         if self.debug_mode:
             LOGGER.debug('>>> [%s] Generating instance.' % get_unique_model_name(model_class))
         configuration = self._configure_params(model_class, ddf_lesson, **kwargs)
-        instance = model_class()
+        try:
+            instance = model_class()
+        except TypeError:
+            raise InvalidModelError(get_unique_model_name(model_class))
         if not is_model_class(instance):
             raise InvalidModelError(get_unique_model_name(model_class))
 
