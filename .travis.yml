@@ -68,6 +68,18 @@ matrix:
       - DATABASE=postgres
       - JSONFIELD=3.1.0
       - POLYMORPHIC=3.0.0
+  - python: 3.8
+    env:
+      - DJANGO=3.1
+      - DATABASE=postgres
+      - JSONFIELD=3.1.0
+      - POLYMORPHIC=3.0.0
+  - python: 3.8
+    env:
+      - DJANGO=3.2
+      - DATABASE=postgres
+      - JSONFIELD=3.1.0
+      - POLYMORPHIC=3.0.0
 
 before_script:
   - export PYTHONPATH=$PYTHONPATH:$(pwd)
