@@ -14,7 +14,7 @@ from setuptools import setup, find_packages
 # Update version and save
 # Go to 'files' link and upload the file
 
-VERSION = '3.1.1'
+VERSION = '3.1.2'
 
 tests_require = [
 ]

@@ -8,6 +8,13 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 3.1.2 - 2021/10/01
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/3.1.2>
+  * Correct type for TimeField: PR #139
+  * Catch Django 3.2 TypeError instantiating abstracts: PR #142
+  * ci: update tox.ini and travis.yml to test Django3.1/3.2: PR #143
+
 Version 3.1.1 - 2020/11/17
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/3.1.1>

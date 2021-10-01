@@ -20,7 +20,7 @@ from django_dynamic_fixture.global_settings import DDF_DEFAULT_DATA_FIXTURE, DDF
 from django_dynamic_fixture.script_ddf_checkings import ddf_check_models
 
 
-__version__ = '3.1.1'
+__version__ = '3.1.2'
 
 
 if not django_greater_than('1.10'):
