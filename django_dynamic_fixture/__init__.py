@@ -23,8 +23,8 @@ from django_dynamic_fixture.script_ddf_checkings import ddf_check_models
 __version__ = '3.1.2'
 
 
-if not django_greater_than('1.10'):
-    warnings.warn("DDF supports oficially only Django 1.11 or higher.", DeprecationWarning)
+if not django_greater_than(1, 10):
+    warnings.warn("DDF officially supports only Django 1.11 or higher.", DeprecationWarning)
 
 
 LOOKUP_SEP = '__'
@@ -213,4 +213,3 @@ T = teach
         exec(hack_to_avoid_py2_syntax_errors)
     except (ImportError, SyntaxError) as e:
         pass
-

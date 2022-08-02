@@ -2,9 +2,6 @@
 """
 Module to wrap dirty stuff of django core.
 """
-import re
-from distutils.version import StrictVersion
-
 import django
 from django.apps import apps
 from django.db import models  # noqa
@@ -18,11 +15,9 @@ except ImportError:
     from django.core.exceptions import FieldDoesNotExist
 
 
+def django_greater_than(major, minor=0):
+    return django.VERSION[:2] > (major, minor)
 
-def django_greater_than(version):
-    # Avoid StrictVersion errors with versions like 1.8c1
-    DJANGO_VERSION = re.match(r"\d\.\d\d?", django.get_version()).group(0)
-    return StrictVersion(DJANGO_VERSION) >= StrictVersion(version)
 
 # Apps
 def get_apps(application_labels=[], exclude_application_labels=[]):
