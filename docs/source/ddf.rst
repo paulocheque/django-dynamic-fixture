@@ -21,7 +21,7 @@ It receives a model class and it will return a **valid and persisted instance** 
     assert len(author.name) > 0
 
 
-This facilitates writing tests and it hides all dummy data that polutes the source code. But all **important data of the test may be explicitily defined**. This is even a good practice, because it let the test very clear and cohesive::
+This facilitates writing tests and it hides all dummy data that pollutes the source code. But all **important data of the test may be explicitly defined**. This is even a good practice, because it let the test very clear and cohesive::
 
 
     book = G(Book, name='The Lord of the Rings', publish_date=date(1954, 07, 29))

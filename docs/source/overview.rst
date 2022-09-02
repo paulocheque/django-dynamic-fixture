@@ -136,7 +136,7 @@ Motivation
 ===============================================================================
 
   * It is a terrible practice to use **static data** in tests (yml/json/sql files).
-  * It is very hard to mantain lots of **Factory objects**.
+  * It is very hard to maintain lots of **Factory objects**.
   * Creating fixtures for each model is boring and it produces a lot of **replicated code**.
   * It is a bad idea to use uncontrolled data in tests, like bizarre random data.
 
@@ -150,7 +150,7 @@ Another thing, the DDF was planned to have a **lean and clean syntax**. We belie
 Also, DDF is flexible, since it is possible to customize the entire data generation or by field.
 
   * Either they are incomplete, or bugged or it produces erratic tests, because they use random and uncontrolled data.
-  * The syntax of others tools is too verbose, which polutes the tests.
+  * The syntax of others tools is too verbose, which pollutes the tests.
   * Complete, lean and practice documentation.
   * It is hard to debug tests with another tools.
   * List of other tools: <https://www.djangopackages.com/grids/g/testing/> or <http://djangopackages.com/grids/g/fixtures>

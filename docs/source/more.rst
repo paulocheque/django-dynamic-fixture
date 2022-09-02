@@ -123,7 +123,7 @@ In the test file::
 Signals PRE_SAVE and POST_SAVE:
 ===============================================================================
 
-In very special cases a signal may facilitate implementing tests with DDF, but Django signals may not be satisfatory for testing pourposes because the developer does not have control of the execution order of the receivers. For this reason, DDF provides its own signals. It is possible to have only one receiver for each model, to avoid anti-patterns::
+In very special cases a signal may facilitate implementing tests with DDF, but Django signals may not be satisfactory for testing purposes because the developer does not have control of the execution order of the receivers. For this reason, DDF provides its own signals. It is possible to have only one receiver for each model, to avoid anti-patterns::
 
     from django_dynamic_fixture import PRE_SAVE, POST_SAVE
     def callback_function(instance):

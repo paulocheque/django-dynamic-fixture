@@ -45,7 +45,7 @@ TODO list
 Tests and Bugfixes
 -------------------------------------------------------------------------------
 * with_queries bugfixes (always print 0 queries)
-* Deal with relatioships with dynamic related_name
+* Deal with relationships with dynamic related_name
 * bugfix in fdf or ddf: some files/directories are not deleted
 * tests with files in ddf
 * tests with proxy models
