@@ -38,7 +38,7 @@ You can configure DDF in ``settings.py`` file. You can also override the global 
     DDF_FIELD_FIXTURES = {'path.to.your.Field': lambda: random.randint(0, 10) }
 
 
-* **DDF_FK_MIN_DEPTH** (Default = 0):  For models with non required foreign keys (FKs with `null=True`), like FKs to itself (``ForeignKey('self')``), cyclic dependencies or even optional FKs, DDF will avoid infinite loops because it stops creating objects indefinetely, because it will stop after the min depth was achieved.::
+* **DDF_FK_MIN_DEPTH** (Default = 0):  For models with non required foreign keys (FKs with `null=True`), like FKs to itself (``ForeignKey('self')``), cyclic dependencies or even optional FKs, DDF will avoid infinite loops because it stops creating objects indefinitely, because it will stop after the min depth was achieved.::
 
     # You can override the global config for one case:
     G(Model, fk_min_depth=5)
@@ -53,4 +53,4 @@ You can configure DDF in ``settings.py`` file. You can also override the global 
     G(Model, debug_mode=False)
 
 
-* **DDF_SHELL_MODE** (Default = False): To disable some DDF warnings so DDF can be used better in Python shell: to populate the DB, for exampel.
+* **DDF_SHELL_MODE** (Default = False): To disable some DDF warnings so DDF can be used better in Python shell: to populate the DB, for example.
