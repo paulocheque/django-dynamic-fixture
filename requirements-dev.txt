@@ -1,3 +1,6 @@
+build
+twine
+
 pytest
 pytest-django
 pytest-xdist # Run tests in parallel

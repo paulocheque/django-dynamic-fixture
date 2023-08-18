@@ -4,7 +4,6 @@ six
 # For the Nose plugin
 nose>=1.3
 django-nose>=1.4.5
-nose-progressive>=1.5
 
 # Database Drivers
 #mysql-python

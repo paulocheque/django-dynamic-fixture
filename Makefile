@@ -12,20 +12,22 @@ clean:
 	rm -rf ~*
 	rm -rf data/
 	rm -rf dist/
+	rm -rf build/
 	rm -rf .eggs/
+
+os_deps:
+	brew install gdal
 
 prepare:
 	clear ; python3 -m venv env
 
-os_deps:
-	brew install gdal
-	env/bin/pip install --upgrade pip
-
 deps:
 	clear
-	env/bin/pip install --upgrade pip
+	env/bin/python -m pip install --upgrade pip
+	env/bin/python -m pip install --upgrade setuptools wheel
 	env/bin/pip install -r requirements.txt
 	env/bin/pip install -r requirements-dev.txt
+	env/bin/pip list
 
 shell:
 	#clear ; env/bin/python -i -c "from ddf import *"
@@ -99,38 +101,25 @@ doc:
 tox:
 	clear ; time env/bin/tox --parallel all
 
-build: clean prepare os_deps deps test
+build: clean os_deps prepare deps test
 
 # Python package tasks
 
-setup_clean:
-	clear ; env/bin/python setup.py clean --all
+lib: clean test doc
+	# 	clear ; env/bin/python setup.py build
+	# 	clear ; env/bin/python setup.py sdist
+	clear ; env/bin/python -m build
+	clear ; env/bin/twine check dist/*
 
-setup_test:
-	clear ; time env/bin/python setup.py test
-
-lib: setup_clean setup_test
-	clear ; env/bin/python setup.py build
-
-register: setup_clean setup_test
-	clear ; env/bin/python setup.py sdist
-	clear ; env/bin/python setup.py register
-
-publish: setup_clean setup_test
+publish: lib
 	# Fixing Python 3 Certificates
 	# /Applications/Python\ 3.7/Install\ Certificates.command
-	#
-	# http://guide.python-distribute.org/quickstart.html
-	# python setup.py sdist
-	# python setup.py register
-	# Create a .pypirc file in ~ dir (cp .pypirc ~)
-	# python setup.py sdist upload
 	# Manual upload to PypI
 	# http://pypi.python.org/pypi/THE-PROJECT
 	# Go to 'edit' link
 	# Update version and save
 	# Go to 'files' link and upload the file
-	clear ; env/bin/python setup.py clean sdist upload
+	clear ; env/bin/twine upload dist/* --username=UPDATE_ME --password=UPDATE_ME
 
 # Git tasks
 
