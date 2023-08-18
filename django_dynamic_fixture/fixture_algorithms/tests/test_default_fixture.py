@@ -8,8 +8,8 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
 
-from django.contrib.gis.geos import *
 try:
+    from django.contrib.gis.geos import *
     from django.contrib.gis.db import models as geomodels
 except ImproperlyConfigured:
     pass  # environment without geo libs
