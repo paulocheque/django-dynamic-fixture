@@ -685,7 +685,10 @@ class DynamicFixture(object):
             if field_name in self._DDF_CONFIGS:
                 continue
             field = get_field_by_name_or_raise(model_class, field_name)
-            fixture = kwargs[field_name]
-            if field.unique and not (isinstance(fixture, (DynamicFixture, Copier, DataFixture)) or callable(fixture)):
+            if field.unique and not _is_dynamic_value(kwargs[field_name]):
                 raise InvalidConfigurationError('It is not possible to store static values for fields with unique=True (%s). Try using a lambda function instead.' % get_unique_field_name(field))
         library.add_configuration(model_class, kwargs, name=ddf_lesson)
+
+
+def _is_dynamic_value(fixture):
+    return isinstance(fixture, (DynamicFixture, Copier, DataFixture, Mask)) or callable(fixture)
