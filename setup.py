@@ -1,19 +1,6 @@
 from pathlib import Path
 from setuptools import setup, find_packages
 
-# http://guide.python-distribute.org/quickstart.html
-# python setup.py sdist
-# Create a .pypirc file in ~ dir (cp .pypirc ~)
-# python setup.py register
-# python setup.py sdist upload
-# pip install django-dynamic-fixture
-# pip install django-dynamic-fixture --upgrade --no-deps
-# Manual upload to PypI
-# http://pypi.python.org/pypi/django-dynamic-fixture
-# Go to 'edit' link
-# Update version and save
-# Go to 'files' link and upload the file
-
 VERSION = '3.1.3'
 
 tests_require = [
