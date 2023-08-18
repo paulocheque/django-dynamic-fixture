@@ -8,6 +8,13 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 3.1.3 - 2023/08/18
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/3.1.3>
+  * Removed deprecation warnings: PR #150
+  * Fixed doc typos: PR #151
+  * Allow Mask objects as lessons for unique fields: PR #153
+
 Version 3.1.2 - 2021/10/01
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/3.1.2>
