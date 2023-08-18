@@ -101,11 +101,11 @@ doc:
 tox:
 	clear ; time env/bin/tox --parallel all
 
-build: clean os_deps prepare deps test
+build: clean os_deps prepare deps test cov
 
 # Python package tasks
 
-lib: clean test doc
+lib: clean test cov doc
 	# 	clear ; env/bin/python setup.py build
 	# 	clear ; env/bin/python setup.py sdist
 	clear ; env/bin/python -m build
