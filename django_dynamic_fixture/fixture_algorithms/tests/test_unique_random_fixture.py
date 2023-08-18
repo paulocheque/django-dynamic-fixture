@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from warnings import catch_warnings
 
 from django.db import models

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from unittest import TestCase
 
 from django.conf import settings
@@ -21,7 +20,7 @@ class SkipForDatabaseTest(TestCase):
     def test_annotated_method_only_for_postgres(self):
         decorators.DATABASE_ENGINE = decorators.SQLITE3
         self.method_postgres()
-        assert self.it_was_executed == False
+        assert self.it_was_executed is False
 
         decorators.DATABASE_ENGINE = decorators.POSTGRES
         self.method_postgres()
@@ -43,7 +42,7 @@ class OnlyForDatabaseTest(TestCase):
     def test_annotated_method_skip_for_sqlite3(self):
         decorators.DATABASE_ENGINE = decorators.SQLITE3
         self.method_sqlite3()
-        assert self.it_was_executed == False
+        assert self.it_was_executed is False
 
         decorators.DATABASE_ENGINE = decorators.POSTGRES
         self.method_sqlite3()

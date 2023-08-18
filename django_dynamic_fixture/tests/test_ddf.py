@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from datetime import datetime, date
 from decimal import Decimal
 import uuid
@@ -55,14 +54,14 @@ class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
 
     def test_new_fill_string_fields_with_text_type_strings(self):
         instance = self.ddf.new(ModelWithStrings)
-        assert isinstance(instance.string, six.text_type)
-        assert isinstance(instance.text, six.text_type)
-        assert isinstance(instance.slug, six.text_type)
-        assert isinstance(instance.commaseparated, six.text_type)
+        assert isinstance(instance.string, str)
+        assert isinstance(instance.text, str)
+        assert isinstance(instance.slug, str)
+        assert isinstance(instance.commaseparated, str)
 
     def test_new_fill_boolean_fields_with_False_and_None(self):
         instance = self.ddf.new(ModelWithBooleans)
-        assert instance.boolean == False
+        assert instance.boolean is False
         assert instance.nullboolean is None
 
     def test_new_fill_time_related_fields_with_current_values(self):
@@ -73,15 +72,15 @@ class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
 
     def test_new_fill_formatted_strings_fields_with_basic_values(self):
         instance = self.ddf.new(ModelWithFieldsWithCustomValidation)
-        assert isinstance(instance.email, six.text_type)
-        assert isinstance(instance.url, six.text_type)
-        assert isinstance(instance.ip, six.text_type)
-        assert isinstance(instance.ipv6, six.text_type)
+        assert isinstance(instance.email, str)
+        assert isinstance(instance.url, str)
+        assert isinstance(instance.ip, str)
+        assert isinstance(instance.ipv6, str)
 
     def test_new_fill_file_fields_with_basic_strings(self):
         instance = self.ddf.new(ModelWithFileFields)
-        assert isinstance(instance.filepath, six.text_type)
-        assert isinstance(instance.file.path, six.text_type)
+        assert isinstance(instance.filepath, str)
+        assert isinstance(instance.file.path, str)
         try:
             import pil
             # just test it if the PIL package is installed
@@ -95,10 +94,7 @@ class NewFullFillAttributesWithAutoDataTest(DDFTestCase):
         assert bytes(instance.binary) == bytes(value)
 
         instance = self.ddf.get(ModelWithBinary)
-        if six.PY3:
-            assert isinstance(instance.binary, six.binary_type), type(instance.binary)
-        else:
-            assert isinstance(instance.binary, (six.binary_type, str, unicode)), type(instance.binary)
+        assert isinstance(instance.binary, bytes), type(instance.binary)
 
 
 class NewFullFillAttributesWithDefaultDataTest(DDFTestCase):
@@ -472,7 +468,7 @@ class ExceptionsLayoutMessagesTest(DDFTestCase):
             assert """django_dynamic_fixture.models_test.ModelAbstract""" == str(e)
 
     def test_InvalidModelError_for_common_object(self):
-        class MyClass(object): pass
+        class MyClass: pass
         try:
             self.ddf.new(MyClass)
             self.fail()
@@ -490,13 +486,13 @@ class AvoidNameCollisionTest(DDFTestCase):
     def test_avoid_common_name_instance(self):
         self.ddf = DynamicFixture(data_fixture, fill_nullable_fields=False)
         instance = self.ddf.new(ModelWithCommonNames)
-        assert instance.instance != None
+        assert instance.instance is not None
 
         instance = self.ddf.new(ModelWithCommonNames, instance=3)
         assert instance.instance == 3
 
         instance = self.ddf.get(ModelWithCommonNames)
-        assert instance.instance != None
+        assert instance.instance is not None
 
         instance = self.ddf.get(ModelWithCommonNames, instance=4)
         assert instance.instance == 4
@@ -504,13 +500,13 @@ class AvoidNameCollisionTest(DDFTestCase):
     def test_avoid_common_name_field(self):
         self.ddf = DynamicFixture(data_fixture, fill_nullable_fields=False)
         instance = self.ddf.new(ModelWithCommonNames)
-        assert instance.field != None
+        assert instance.field is not None
 
         instance = self.ddf.new(ModelWithCommonNames, field=5)
         assert instance.field == 5
 
         instance = self.ddf.get(ModelWithCommonNames)
-        assert instance.field != None
+        assert instance.field is not None
 
         instance = self.ddf.get(ModelWithCommonNames, field=6)
         assert instance.field == 6

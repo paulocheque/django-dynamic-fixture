@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 # https://docs.djangoproject.com/en/3.0/ref/models/fields
 import django
@@ -250,7 +249,7 @@ class CustomDjangoField2(models.IntegerField):
     pass
 
 
-class CustomDjangoFieldMixin(object):
+class CustomDjangoFieldMixin:
     pass
 
 

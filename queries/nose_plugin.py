@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 from nose.plugins import Plugin
 
@@ -15,7 +14,7 @@ class Queries(Plugin):
         Here, implement any config storage or changes to state or operation that are set by command line options.
         DO NOT return a value from this method unless you want to stop all other plugins from being configured.
         """
-        super(Queries, self).configure(options, conf)
+        super().configure(options, conf)
         if self.enabled:
             from django.db import connection
             connection.use_debug_cursor = True
@@ -43,5 +42,5 @@ class Queries(Plugin):
         for x in self._queries_by_test_methods:
             testcase = x[0]
             queries = x[1]
-            stream.write('\n%s: %s' % (testcase, queries))
+            stream.write(f'\n{testcase}: {queries}')
         stream.write('\n')

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 try:
     from ddf import N, G, F, C, P, PRE_SAVE, POST_SAVE

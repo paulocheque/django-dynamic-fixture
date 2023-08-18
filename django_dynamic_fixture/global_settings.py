@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """
 Module that contains wrappers and shortcuts.
@@ -19,7 +18,6 @@ try:
     from importlib import import_module
 except ImportError:
     from django.utils.importlib import import_module
-import six
 
 from django_dynamic_fixture.fixture_algorithms.sequential_fixture import SequentialDataFixture, StaticSequentialDataFixture, GlobalSequentialDataFixture
 from django_dynamic_fixture.fixture_algorithms.random_fixture import RandomDataFixture
@@ -40,11 +38,7 @@ def get_ddf_config(name, default, cast=None, options=None, msg=''):
             raise DDFImproperlyConfigured()
         return value
     except Exception as e:
-        six.reraise(
-            DDFImproperlyConfigured,
-            DDFImproperlyConfigured('{}="{}": {} ({})'.format(name, value, msg, e),
-            sys.exc_info()[2])
-        )
+        raise DDFImproperlyConfigured(f'{name}="{value}": {msg} ({e})')
 
 
 def get_boolean_config(config_name, default=False):
@@ -70,7 +64,10 @@ def get_data_fixture(default='sequential'):
         else:
             return INTERNAL_DATA_FIXTURES[default]
     except:
-        six.reraise(DDFImproperlyConfigured, DDFImproperlyConfigured("DDF_DEFAULT_DATA_FIXTURE (%s) must be 'sequential', 'static_sequential', 'global_sequential', 'random' or 'path.to.CustomDataFixtureClass'." % settings.DDF_DEFAULT_DATA_FIXTURE), sys.exc_info()[2])
+        raise DDFImproperlyConfigured(
+            f"DDF_DEFAULT_DATA_FIXTURE ({settings.DDF_DEFAULT_DATA_FIXTURE}) must be "
+            "'sequential', 'static_sequential', 'global_sequential', 'random' or 'path.to.CustomDataFixtureClass'."
+        )
 
 
 DDF_DEFAULT_DATA_FIXTURE = get_data_fixture(default='sequential')

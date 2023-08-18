@@ -1,6 +1,3 @@
-# Python2/3 compatibility
-six
-
 # For the Nose plugin
 nose>=1.3
 django-nose>=1.4.5

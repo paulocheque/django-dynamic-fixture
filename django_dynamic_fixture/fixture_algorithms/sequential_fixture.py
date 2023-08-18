@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
 from datetime import datetime, date, timedelta
 from decimal import Decimal
 import threading
-
-import six
 
 from django.core.exceptions import ImproperlyConfigured
 
@@ -23,7 +20,7 @@ from django_dynamic_fixture.fixture_algorithms.default_fixture import BaseDataFi
 from django_dynamic_fixture.django_helper import field_is_unique
 
 
-class AutoDataFiller(object):
+class AutoDataFiller:
     """
     Responsibility: generate a unique and sequential value for each key.
     """
@@ -52,7 +49,7 @@ class AutoDataFiller(object):
 class SequentialDataFixture(BaseDataFixture, GeoDjangoFixtureMixin, PostgresFixtureMixin):
 
     def __init__(self):
-        super(SequentialDataFixture, self).__init__()
+        super().__init__()
         self.filler = AutoDataFiller()
 
     def get_value(self, field, key):
@@ -89,10 +86,10 @@ class SequentialDataFixture(BaseDataFixture, GeoDjangoFixtureMixin, PostgresFixt
         data = self.get_value(field, key)
         if field.max_length:
             max_value = (10 ** field.max_length) - 1
-            data = six.text_type(data % max_value)
+            data = str(data % max_value)
             data = data[:field.max_length]
         else:
-            data = six.text_type(data)
+            data = str(data)
         return data
 
     def textfield_config(self, field, key):
@@ -126,10 +123,10 @@ class SequentialDataFixture(BaseDataFixture, GeoDjangoFixtureMixin, PostgresFixt
 
     # FORMATTED STRINGS
     def emailfield_config(self, field, key):
-        return six.text_type('a%s@dynamicfixture.com') % self.get_value(field, key)
+        return f'a{self.get_value(field, key)}@dynamicfixture.com'
 
     def urlfield_config(self, field, key):
-        return six.text_type('http://dynamicfixture%s.com') % self.get_value(field, key)
+        return f'http://dynamicfixture{self.get_value(field, key)}.com'
 
     # Deprecated in Django >= 1.7
     def ipaddressfield_config(self, field, key):
@@ -139,20 +136,20 @@ class SequentialDataFixture(BaseDataFixture, GeoDjangoFixtureMixin, PostgresFixt
         b = '1'
         c = '1'
         d = data % 256
-        return six.text_type('%s.%s.%s.%s') % (a, b, c, str(d))
+        return f'{a}.{b}.{c}.{d}'
 
     def xmlfield_config(self, field, key):
-        return six.text_type('<a>%s</a>') % self.get_value(field, key)
+        return f'<a>{self.get_value(field, key)}</a>'
 
     # FILES
     def filepathfield_config(self, field, key):
-        return six.text_type(self.get_value(field, key))
+        return str(self.get_value(field, key))
 
     def filefield_config(self, field, key):
-        return six.text_type(self.get_value(field, key))
+        return str(self.get_value(field, key))
 
     def imagefield_config(self, field, key):
-        return six.text_type(self.get_value(field, key))
+        return str(self.get_value(field, key))
 
 
 class GlobalSequentialDataFixture(SequentialDataFixture):

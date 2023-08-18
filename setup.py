@@ -1,14 +1,11 @@
 from pathlib import Path
 from setuptools import setup, find_packages
 
-VERSION = '3.1.3'
+VERSION = '4.0.0'
 
-tests_require = [
-]
+tests_require = []
 
-install_requires = [
-    'six'
-]
+install_requires = []
 
 this_directory = Path(__file__).parent
 long_description = (this_directory / 'README.md').read_text()
@@ -26,11 +23,11 @@ setup(name='django-dynamic-fixture',
           'Framework :: Django',
           'Operating System :: OS Independent',
           'Topic :: Software Development',
-          'Programming Language :: Python :: 2.7',
           'Programming Language :: Python :: 3.5',
           'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
+          'Programming Language :: Python :: 3.11',
           'Programming Language :: Python :: Implementation :: PyPy',
       ],
 

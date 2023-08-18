@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 
 """
 This is the facade of all features of DDF.
 Module that contains wrappers and shortcuts (aliases).
 """
 import warnings
-import six
 
 from django.apps import apps
 
@@ -189,18 +187,14 @@ DDFLibrary = DDFLibrary
 PRE_SAVE = set_pre_save_receiver
 POST_SAVE = set_post_save_receiver
 
-if six.PY3:
-    # Add type hints for Python >= 3.5
-    try:
-        import typing
+import typing
 
-        INSTANCE_TYPE = typing.TypeVar('INSTANCE')
+INSTANCE_TYPE = typing.TypeVar('INSTANCE')
 
-        hack_to_avoid_py2_syntax_errors = '''
-def new(model: typing.Type[INSTANCE_TYPE], n=1, ddf_lesson=None, persist_dependencies=True, **kwargs) -> INSTANCE_TYPE:
+def new(model: typing.Type[INSTANCE_TYPE], n: int = 1, ddf_lesson = None, persist_dependencies: bool = True, **kwargs) -> INSTANCE_TYPE:
     return _new(model, n=n, ddf_lesson=ddf_lesson, persist_dependencies=persist_dependencies, **kwargs)
 
-def get(model: typing.Type[INSTANCE_TYPE], n=1, ddf_lesson=None, **kwargs) -> INSTANCE_TYPE:
+def get(model: typing.Type[INSTANCE_TYPE], n: int=1, ddf_lesson=None, **kwargs) -> INSTANCE_TYPE:
     return _get(model, n=n, ddf_lesson=ddf_lesson, **kwargs)
 
 def teach(model: typing.Type[INSTANCE_TYPE], ddf_lesson=None, **kwargs):
@@ -209,7 +203,3 @@ def teach(model: typing.Type[INSTANCE_TYPE], ddf_lesson=None, **kwargs):
 N = new
 G = get
 T = teach
-        '''
-        exec(hack_to_avoid_py2_syntax_errors)
-    except (ImportError, SyntaxError) as e:
-        pass
