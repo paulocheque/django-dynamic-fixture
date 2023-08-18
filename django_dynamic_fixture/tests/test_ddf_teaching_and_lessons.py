@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import re
+
 from django.test import TestCase
 import pytest
 
@@ -36,6 +38,16 @@ class TeachAndLessonsTest(DDFTestCase):
     def test_it_must_raise_an_error_if_try_to_set_a_static_value_to_a_field_with_unicity(self):
         with pytest.raises(InvalidConfigurationError):
             self.ddf.teach(ModelForLibrary, integer_unique=1000)
+
+    def test_it_allows_to_use_masks_as_lessons_for_unique_integer_fields(self):
+        self.ddf.teach(ModelForLibrary, integer_unique=Mask('1###'))
+        instance = self.ddf.get(ModelForLibrary)
+        assert 1000 <= int(instance.integer_unique) <= 1999
+
+    def test_it_allows_to_use_masks_as_lessons_for_unique_char_fields(self):
+        self.ddf.teach(ModelWithUniqueCharField, text_unique=Mask('---- ### __'))
+        instance = self.ddf.get(ModelWithUniqueCharField)
+        assert re.match(r'[A-Z]{4} [0-9]{3} [a-z]{2}', instance.text_unique)
 
     def test_it_must_accept_dynamic_values_for_fields_with_unicity(self):
         self.ddf.teach(ModelForLibrary, integer_unique=lambda field: 1000)

@@ -353,6 +353,14 @@ class ModelForLibrary(models.Model):
         app_label = 'django_dynamic_fixture'
 
 
+class ModelWithUniqueCharField(models.Model):
+    text_unique = models.CharField(max_length=20, unique=True)
+
+    class Meta:
+        verbose_name = 'Unique char field'
+        app_label = 'django_dynamic_fixture'
+
+
 class ModelForDDFSetup(models.Model):
     integer = models.IntegerField(null=True)
 
