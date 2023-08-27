@@ -22,61 +22,75 @@ addons:
 
 matrix:
   include:
-  # https://docs.djangoproject.com/en/1.11/ref/contrib/gis/install/
-  - python: 2.7
+  - python: 3.8
     env:
-      - DJANGO=1.11
-      - DATABASE=sqlite
-      - JSONFIELD=2.1.1
-      - POLYMORPHIC=1.3
-  - python: 2.7
-    env:
-      - DJANGO=1.11
-      - DATABASE=postgres
-      - JSONFIELD=2.1.1
-      - POLYMORPHIC=1.3
-  # https://docs.djangoproject.com/en/2.2/ref/contrib/gis/install/
-  - python: 3.6
-    env:
-      - DJANGO=2.2
-      - DATABASE=sqlite
-      - JSONFIELD=3.1.0
-      - POLYMORPHIC=3.0.0
-  - python: 3.6
-    env:
-      - DJANGO=2.2
-      - DATABASE=postgres
-      - JSONFIELD=3.1.0
-      - POLYMORPHIC=3.0.0
-  # https://docs.djangoproject.com/en/3.0/ref/contrib/gis/install/
-  # https://docs.djangoproject.com/en/3.0/releases/3.0/#id2
-  - python: 3.7
-    env:
-      - DJANGO=3.0
+      - DJANGO=4.0
       - DATABASE=sqlite
       - JSONFIELD=3.1.0
       - POLYMORPHIC=3.0.0
   - python: 3.8
     env:
-      - DJANGO=3.0
+      - DJANGO=4.1
+      - DATABASE=postgres
+      - JSONFIELD=3.1.0
+      - POLYMORPHIC=3.0.0
+  - python: 3.8
+    env:
+      - DJANGO=4.2
+      - DATABASE=postgres
+      - JSONFIELD=3.1.0
+      - POLYMORPHIC=3.0.0
+  - python: 3.9
+    env:
+      - DJANGO=4.0
       - DATABASE=sqlite
       - JSONFIELD=3.1.0
       - POLYMORPHIC=3.0.0
-  - python: 3.8
+  - python: 3.9
     env:
-      - DJANGO=3.0
+      - DJANGO=4.1
       - DATABASE=postgres
       - JSONFIELD=3.1.0
       - POLYMORPHIC=3.0.0
-  - python: 3.8
+  - python: 3.9
     env:
-      - DJANGO=3.1
+      - DJANGO=4.2
       - DATABASE=postgres
       - JSONFIELD=3.1.0
       - POLYMORPHIC=3.0.0
-  - python: 3.8
+  - python: 3.10
     env:
-      - DJANGO=3.2
+      - DJANGO=4.0
+      - DATABASE=sqlite
+      - JSONFIELD=3.1.0
+      - POLYMORPHIC=3.0.0
+  - python: 3.10
+    env:
+      - DJANGO=4.1
+      - DATABASE=postgres
+      - JSONFIELD=3.1.0
+      - POLYMORPHIC=3.0.0
+  - python: 3.10
+    env:
+      - DJANGO=4.2
+      - DATABASE=postgres
+      - JSONFIELD=3.1.0
+      - POLYMORPHIC=3.0.0
+  - python: 3.11
+    env:
+      - DJANGO=4.0
+      - DATABASE=sqlite
+      - JSONFIELD=3.1.0
+      - POLYMORPHIC=3.0.0
+  - python: 3.11
+    env:
+      - DJANGO=4.1
+      - DATABASE=postgres
+      - JSONFIELD=3.1.0
+      - POLYMORPHIC=3.0.0
+  - python: 3.11
+    env:
+      - DJANGO=4.2
       - DATABASE=postgres
       - JSONFIELD=3.1.0
       - POLYMORPHIC=3.0.0
@@ -100,14 +114,10 @@ before_script:
 
 install:
   - pip install -r requirements.txt
-  - pip install psycopg2 pytest pytest-django coveralls
+  - pip install psycopg2 pytest pytest-django
   - pip install Django~=${DJANGO}.0
   - pip install jsonfield~=${JSONFIELD}
   - pip install django-polymorphic~=${POLYMORPHIC}
 
-
 script:
   - pytest --create-db --reuse-db --no-migrations --ds=settings_${DATABASE}
-
-after_success:
-  - coveralls
