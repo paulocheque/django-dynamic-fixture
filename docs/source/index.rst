@@ -23,7 +23,6 @@ It exists to solve the **anti-pattern** of Static Fixtures and Factory objects. 
    data_fixtures
    more
    patterns
-   nose_plugins
    fdf
    about
    change_log

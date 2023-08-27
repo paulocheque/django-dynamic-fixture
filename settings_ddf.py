@@ -15,7 +15,6 @@ INSTALLED_APPS = ()
 
 INSTALLED_APPS += (
     'queries',
-    'django_nose',
     'django_dynamic_fixture',
     'django.contrib.contenttypes',
 )
@@ -25,20 +24,6 @@ try:
 except ImportError:
     pass
 
-
-
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-NOSE_PLUGINS = ['queries.Queries', 'ddf_setup.DDFSetup']
-
-# Tell nose to measure coverage on the 'foo' and 'bar' apps
-NOSE_ARGS = [
-    '--with-coverage',
-    '--cover-html',
-    '--cover-package=django_dynamic_fixture',
-    '--cover-tests',
-    '--cover-erase',
-    '--verbosity=1'
-    ]
 
 # EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 # EMAIL_FILE_PATH = '/tmp/invest-messages'  # change this to a proper location

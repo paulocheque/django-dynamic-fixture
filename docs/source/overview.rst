@@ -169,7 +169,5 @@ Also, DDF is flexible, since it is possible to customize the entire data generat
 Plus:
 
   * **PyTest** compatible
-  * **Nose plugin** that enables a setup for the entire suite (unittest2 includes only setups for class and module)
-  * **Nose plugin** to count how many queries are executed by test
   * **Command** to count how many queries are executed to save any kind of model instance
   * **FileSystemDjangoTestCase** that facilitates to create tests for features that use filesystem.

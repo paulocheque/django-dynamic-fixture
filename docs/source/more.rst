@@ -82,7 +82,6 @@ List of Exceptions
 * *BadDataError*: The data passed to a field has some problem (not unique or invalid) or a required attribute is in ignore list.
 * *InvalidCopierExpressionError*: The specified expression used in a Copier is invalid.
 * *InvalidModelError*: Invalid Model: The class is not a model or it is abstract.
-* *InvalidDDFSetupError*: ddf_setup.py has execution errors
 
 
 Decorators (New in 1.4.0)

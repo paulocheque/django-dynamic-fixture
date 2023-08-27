@@ -36,7 +36,6 @@ setup(name='django-dynamic-fixture',
       test_suite='pytest',
       extras_require={'test': tests_require},
 
-      entry_points={ 'nose.plugins': ['queries = queries:Queries', 'ddf_setup = ddf_setup:DDFSetup'] },
       packages=find_packages(),
 )
 

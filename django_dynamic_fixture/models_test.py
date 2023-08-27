@@ -360,14 +360,6 @@ class ModelWithUniqueCharField(models.Model):
         app_label = 'django_dynamic_fixture'
 
 
-class ModelForDDFSetup(models.Model):
-    integer = models.IntegerField(null=True)
-
-    class Meta:
-        verbose_name = 'DDF setup'
-        app_label = 'django_dynamic_fixture'
-
-
 class ModelWithClean(models.Model):
     integer = models.IntegerField()
 

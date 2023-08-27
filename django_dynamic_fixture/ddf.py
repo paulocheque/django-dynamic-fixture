@@ -22,7 +22,6 @@ from django_dynamic_fixture.django_helper import get_related_model, \
 
 
 LOGGER = logging.getLogger('DDFLog')
-_LOADED_DDF_SETUP_MODULES = [] # control to avoid a ddf_setup module be loaded more than one time.
 _PRE_SAVE = {} # receivers to be executed before saving a instance;
 _POST_SAVE = {} # receivers to be executed after saving a instance;
 
@@ -49,10 +48,6 @@ class BadDataError(Exception):
 
 class InvalidModelError(Exception):
     "Invalid Model: The class is not a model or it is abstract."
-
-
-class InvalidDDFSetupError(Exception):
-    "ddf_setup.py has execution errors"
 
 
 class InvalidReceiverError(Exception):
@@ -487,18 +482,6 @@ class DynamicFixture:
         3) Load fixtures defined in F attributes.
         '''
         self._validate_kwargs(model_class, kwargs)
-
-        # load ddf_setup.py of the model application
-        app_name = get_app_name_of_model(model_class)
-        if app_name not in _LOADED_DDF_SETUP_MODULES:
-            full_module_name = '%s.tests.ddf_setup' % app_name
-            try:
-                _LOADED_DDF_SETUP_MODULES.append(app_name)
-                import_module(full_module_name)
-            except ImportError:
-                pass # ignoring if module does not exist
-            except Exception as e:
-                raise InvalidDDFSetupError(e)
 
         library = DDFLibrary.get_instance()
         configuration = {}
