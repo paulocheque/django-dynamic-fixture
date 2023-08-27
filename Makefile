@@ -15,7 +15,7 @@ clean:
 	rm -rf build/
 	rm -rf .eggs/
 	rm -rf .tox/
-	rm -rf env/
+	#rm -rf env/
 
 os_deps:
 	brew install gdal
@@ -72,16 +72,8 @@ test_mysql:
 
 cov:
 	clear ; env/bin/pytest --create-db --reuse-db --no-migrations -v --cov=django_dynamic_fixture --cov-report html
+	cp htmlcov/index.html docs/source/_static/coverage.html
 	open htmlcov/index.html
-
-coveralls:
-	clear ; env/bin/coveralls debug --verbose
-
-coveralls_publish:
-	clear ; env/bin/coveralls --verbose
-
-clear_github_img_cache:
-	curl -X PURGE https://camo.githubusercontent.com/95b7e3529338697ecffdf67add40931d066a35e1/68747470733a2f2f636f766572616c6c732e696f2f7265706f732f7061756c6f6368657175652f646a616e676f2d64796e616d69632d666978747572652f62616467652e7376673f6272616e63683d6d6173746572
 
 code_style:
 	# Code Style
