@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django_dynamic_fixture.fdf import *
 from django.core.files import File
 
@@ -183,7 +182,7 @@ class FileSystemDjangoTestCaseTearDownTest(FileSystemDjangoTestCase):
 class FileSystemDjangoTestCaseTearDownFrameworkConfigurationTest(FileSystemDjangoTestCase):
 
     def tearDown(self):
-        super(FileSystemDjangoTestCaseTearDownFrameworkConfigurationTest, self).tearDown()
+        super().tearDown()
 
         self.assertFileDoesNotExists(self.filepath1)
         self.assertFileDoesNotExists(self.filepath2)

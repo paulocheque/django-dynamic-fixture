@@ -100,6 +100,20 @@ Support and Compatibility
 +---------------------------------------------------------+
 | DDF current support                                     |
 +================+=================+======================+
+| Python 3.11    | Django 4.x.x    | DDF 4.*.* - Aug 2023 |
++----------------+-----------------+----------------------+
+| Python 3.10    | Django 4.x.x    | DDF 4.*.* - Aug 2023 |
++----------------+-----------------+----------------------+
+| Python 3.9     | Django 4.x.x    | DDF 4.*.* - Aug 2023 |
++----------------+-----------------+----------------------+
+| Python 3.8     | Django 4.x.x    | DDF 4.*.* - Aug 2023 |
++----------------+-----------------+----------------------+
+
+For old versions of Python or Django, use old versions of DDF too:
+
++---------------------------------------------------------+
+| DDF old support                                         |
++================+=================+======================+
 | Python 3.8     | Django 3.x.x    | DDF 3.*.* - Jan 2020 |
 +----------------+-----------------+----------------------+
 | Python 3.7     | Django 3.x.x    | DDF 3.*.* - Jan 2020 |
@@ -108,13 +122,9 @@ Support and Compatibility
 +----------------+-----------------+----------------------+
 | Python > 3.5   | Django 2.x.x    | DDF 3.*.* - Jan 2020 |
 +----------------+-----------------+----------------------+
-| Python 2.7     | Django 1.11.x   | DDF 3.*.* - Jan 2020 |
-+----------------+-----------------+----------------------+
-
-+---------------------------------------------------------+
-| DDF old support                                         |
-+================+=================+======================+
 | Python 3.3     | Django < 1.11.x | DDF 2.0.* - Dec 2017 |
++----------------+-----------------+----------------------+
+| Python 2.7     | Django 1.11.x   | DDF 3.*.* - Jan 2020 |
 +----------------+-----------------+----------------------+
 | Python <= 2.7  | Django < 1.11.x | DDF 2.0.* - Dec 2017 |
 +----------------+-----------------+----------------------+
@@ -159,7 +169,5 @@ Also, DDF is flexible, since it is possible to customize the entire data generat
 Plus:
 
   * **PyTest** compatible
-  * **Nose plugin** that enables a setup for the entire suite (unittest2 includes only setups for class and module)
-  * **Nose plugin** to count how many queries are executed by test
   * **Command** to count how many queries are executed to save any kind of model instance
   * **FileSystemDjangoTestCase** that facilitates to create tests for features that use filesystem.

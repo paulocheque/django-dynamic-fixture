@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 import os
 import tempfile
@@ -17,7 +16,7 @@ TEMP_PATH_DDF = os.path.join(TEMP_PATH, 'DDF_TEMP')
 
 class CustomFileSystemStorage(FileSystemStorage):
     def __init__(self, *args, **kwargs):
-        super(CustomFileSystemStorage, self).\
+        super().\
         __init__(location=TEMP_PATH_DDF, *args, **kwargs)
 
 
@@ -31,12 +30,12 @@ class FileSystemDjangoTestCase(TestCase):
         self.fdf_teardown()
 
     def _pre_setup(self):
-        super(FileSystemDjangoTestCase, self)._pre_setup()
+        super()._pre_setup()
         self.fdf_setup()
 
     def _post_teardown(self):
         "Try to remove all files and directories created by the test."
-        super(FileSystemDjangoTestCase, self)._post_teardown()
+        super()._post_teardown()
         self.fdf_teardown()
 
     def fdf_setup(self):

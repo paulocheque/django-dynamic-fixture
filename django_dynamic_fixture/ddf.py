@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 
 import inspect
 import logging
 import re
 import sys
-import six
 
 from django.core.files import File
 from django.db.models import Field
@@ -24,7 +22,6 @@ from django_dynamic_fixture.django_helper import get_related_model, \
 
 
 LOGGER = logging.getLogger('DDFLog')
-_LOADED_DDF_SETUP_MODULES = [] # control to avoid a ddf_setup module be loaded more than one time.
 _PRE_SAVE = {} # receivers to be executed before saving a instance;
 _POST_SAVE = {} # receivers to be executed after saving a instance;
 
@@ -53,10 +50,6 @@ class InvalidModelError(Exception):
     "Invalid Model: The class is not a model or it is abstract."
 
 
-class InvalidDDFSetupError(Exception):
-    "ddf_setup.py has execution errors"
-
-
 class InvalidReceiverError(Exception):
     "Receiver is not a function that receive only the instance as parameter."
 
@@ -74,10 +67,7 @@ def _validate_function(model_class, callback_function):
     if not inspect.isfunction(callback_function) or not callback_function:
         raise InvalidReceiverError(model_class, 'Invalid function')
     if callback_function:
-        if six.PY3:
-            args = len(inspect.getfullargspec(callback_function).args)
-        else:
-            args = len(inspect.getargspec(callback_function).args)
+        args = len(inspect.getfullargspec(callback_function).args)
     if args != 1:
         raise InvalidReceiverError(model_class, 'Invalid number of function arguments')
 
@@ -102,7 +92,7 @@ def set_post_save_receiver(model_class, callback_function):
     _POST_SAVE[model_class] = callback_function
 
 
-class DataFixture(object):
+class DataFixture:
     '''
     Responsibility: return a valid data for a Django Field, according to its type, model class, constraints etc.
 
@@ -118,7 +108,7 @@ class DataFixture(object):
         self.plugins = {}
 
     def _field_fixture_template(self, field_class):
-        return '%s_config' % (field_class.__name__.lower(),)
+        return f'{field_class.__name__.lower()}_config'
 
     def _field_fixture_factory(self, field_class):
         try:
@@ -146,7 +136,7 @@ class DataFixture(object):
         is_supported_field = config != None
         if is_supported_field:
             key = get_unique_field_name(field)
-            data = eval('self.%s(field, "%s")' % (config, key,))
+            data = eval(f'self.{config}(field, "{key}")')
         else:
             if field.null:
                 data = None # a workaround for versatility
@@ -155,7 +145,7 @@ class DataFixture(object):
         return data
 
 
-class Copier(object):
+class Copier:
     '''
     Wrapper of an expression in the format 'field' or 'field.field' or 'field.field.field' etc
     This expression will be interpreted to copy the value of the specified field to the current field.
@@ -181,10 +171,10 @@ class Copier(object):
                 current_instance = getattr(current_instance, field)
             return current_instance
         except Exception as e:
-            six.reraise(InvalidCopierExpressionError, InvalidCopierExpressionError(self.expression, e), sys.exc_info()[2])
+            raise InvalidCopierExpressionError(self.expression, e)
 
 
-class Mask(object):
+class Mask:
     '''
     Wrapper for an expression mask that will be used to generate a random string with a custom format.
 
@@ -228,7 +218,7 @@ class Mask(object):
         return ''.join(chars)
 
 
-class DDFLibrary(object):
+class DDFLibrary:
     instance = None
     DEFAULT_KEY = 'ddf_default'
 
@@ -236,7 +226,7 @@ class DDFLibrary(object):
         self.configs = {} # {Model: {name: config}}"
 
     def __str__(self):
-        return '\n'.join(['%s = %s' % (key, value) for key, value in self.configs.items()])
+        return '\n'.join([f'{key} = {value}' for key, value in self.configs.items()])
 
     @classmethod
     def get_instance(cls):
@@ -252,7 +242,7 @@ class DDFLibrary(object):
         if model_class in self.configs and name in self.configs[model_class]:
             if not os.getenv('DDF_SHELL_MODE'):
                 msg = "Override a lesson is an anti-pattern and will turn your test suite very hard to understand."
-                msg = 'A lesson {} has already been saved for the model {}. {}'.format(name, model_class, msg)
+                msg = f'A lesson {name} has already been saved for the model {model_class}. {msg}'
                 warnings.warn(msg, RuntimeWarning)
         model_class_config = self.configs.setdefault(model_class, {})
         model_class_config[name] = kwargs
@@ -263,7 +253,7 @@ class DDFLibrary(object):
         # copy is important because this dict will be updated every time in the algorithm.
         config = self.configs.get(model_class, {})
         if name != self.DEFAULT_KEY and name not in config.keys():
-            raise InvalidConfigurationError('There is no lesson for model %s with the name "%s"' % (get_unique_model_name(model_class), name))
+            raise InvalidConfigurationError('There is no lesson for model {} with the name "{}"'.format(get_unique_model_name(model_class), name))
         return config.get(name, {}).copy() # default configuration never raises an error
 
     def clear(self):
@@ -276,7 +266,7 @@ class DDFLibrary(object):
             del self.configs[model_class]
 
 
-class DynamicFixture(object):
+class DynamicFixture:
     '''
     Responsibility: create a valid model instance according to the given configuration.
     '''
@@ -316,7 +306,7 @@ class DynamicFixture(object):
         self.fields_to_disable_auto_now_add = []
 
     def __str__(self):
-        return 'F(%s)' % (', '.join(six.text_type('%s=%s') % (key, value) for key, value in self.kwargs.items()))
+        return 'F(%s)' % (', '.join(f'{key}={value}' for key, value in self.kwargs.items()))
 
     def __eq__(self, that):
         return isinstance(that, self.__class__) and self.kwargs == that.kwargs
@@ -442,7 +432,7 @@ class DynamicFixture(object):
             except PendingField:
                 return # ignore this field for a while.
             except Exception as e:
-                six.reraise(InvalidConfigurationError, InvalidConfigurationError(get_unique_field_name(__field), e), sys.exc_info()[2])
+                raise InvalidConfigurationError(get_unique_field_name(__field), e)
         else:
             data = self._process_field_with_default_fixture(__field, model_class, persist_dependencies)
 
@@ -464,7 +454,7 @@ class DynamicFixture(object):
                 setattr(__instance, __field.name, data) # Model.field = data
         else:
             if self.debug_mode:
-                LOGGER.debug('%s.%s = %s' % (get_unique_model_name(model_class), __field.name, data))
+                LOGGER.debug(f'{get_unique_model_name(model_class)}.{__field.name} = {data}')
             try:
                 setattr(__instance, __field.name, data) # Model.field = data
             except (ValueError, AttributeError) as e:
@@ -474,7 +464,7 @@ class DynamicFixture(object):
                     field_value = data.id if data and isinstance(e, AttributeError) else data
                     setattr(__instance, "%s_id" % __field.name, field_value) # Model.field = data
                 else:
-                    six.reraise(*sys.exc_info())
+                    raise e
         self.fields_processed.append(__field.name)
 
     def _validate_kwargs(self, model_class, kwargs):
@@ -492,18 +482,6 @@ class DynamicFixture(object):
         3) Load fixtures defined in F attributes.
         '''
         self._validate_kwargs(model_class, kwargs)
-
-        # load ddf_setup.py of the model application
-        app_name = get_app_name_of_model(model_class)
-        if app_name not in _LOADED_DDF_SETUP_MODULES:
-            full_module_name = '%s.tests.ddf_setup' % app_name
-            try:
-                _LOADED_DDF_SETUP_MODULES.append(app_name)
-                import_module(full_module_name)
-            except ImportError:
-                pass # ignoring if module does not exist
-            except Exception as e:
-                six.reraise(InvalidDDFSetupError, InvalidDDFSetupError(e), sys.exc_info()[2])
 
         library = DDFLibrary.get_instance()
         configuration = {}
@@ -654,17 +632,17 @@ class DynamicFixture(object):
                 try:
                     _PRE_SAVE[model_class](instance)
                 except Exception as e:
-                    six.reraise(InvalidReceiverError, InvalidReceiverError(e), sys.exc_info()[2])
+                    raise InvalidReceiverError(e)
             self._save_the_instance(instance)
             if model_class in _POST_SAVE:
                 try:
                     _POST_SAVE[model_class](instance)
                 except Exception as e:
-                    six.reraise(InvalidReceiverError, InvalidReceiverError(e), sys.exc_info()[2])
+                    raise InvalidReceiverError(e)
         except Exception as e:
             if self.print_errors:
                 print_field_values(instance)
-            six.reraise(BadDataError, BadDataError(get_unique_model_name(model_class), e), sys.exc_info()[2])
+            raise BadDataError(get_unique_model_name(model_class), e)
         self.fields_processed = [] # TODO: need more tests for M2M and Copier
         self.pending_fields = []
         for field in get_many_to_many_fields_from_model(model_class):
@@ -674,9 +652,9 @@ class DynamicFixture(object):
                 try:
                     self._process_many_to_many_field(field, manytomany_field, fixture, instance)
                 except InvalidManyToManyConfigurationError as e:
-                    six.reraise(InvalidManyToManyConfigurationError, e, sys.exc_info()[2])
+                    raise e
                 except Exception as e:
-                    six.reraise(InvalidManyToManyConfigurationError, InvalidManyToManyConfigurationError(get_unique_field_name(field), e), sys.exc_info()[2])
+                    raise InvalidManyToManyConfigurationError(get_unique_field_name(field), e)
         return instance
 
     def teach(self, model_class, ddf_lesson=None, **kwargs):

@@ -1,6 +1,8 @@
+# Build/Package/Publish
 build
 twine
 
+# Tests and Coverage
 pytest
 pytest-django
 pytest-xdist # Run tests in parallel
@@ -11,12 +13,13 @@ psycopg2-binary
 #psycopg2==2.8.4 # For tests with Postgres fields
 #or psycopg2cffi==2.7.5 # For pypy
 
-coveralls
-python-coveralls
-
+# Code
 flake8
 pyflakes
 pylint
+ruff
+pre-commit
 
+# Docs
 sphinx
 sphinx_rtd_theme

@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from datetime import datetime
-import six
 import uuid
 
 from django.db import models

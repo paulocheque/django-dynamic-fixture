@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 from django_dynamic_fixture import new
 
@@ -8,7 +7,7 @@ from django import db
 from django_dynamic_fixture.django_helper import get_models_of_an_app, is_model_managed, get_unique_model_name, get_apps
 
 
-class Report(object):
+class Report:
     def __init__(self):
         self.data = []
         self.errors = []
@@ -30,7 +29,7 @@ class Report(object):
             print(err)
 
 
-class CountQueriesOnSave(object):
+class CountQueriesOnSave:
     def __init__(self):
         self.report = Report()
 

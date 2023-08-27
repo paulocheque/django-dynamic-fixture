@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 from django.test import TransactionTestCase as TestCase
 

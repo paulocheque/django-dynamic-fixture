@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Module to wrap dirty stuff of django core.
 """
@@ -44,8 +43,8 @@ def get_apps(application_labels=[], exclude_application_labels=[]):
                     applications.remove(app_label)
                 else:
                     raise ValueError(
-                        "Excluded application with label '{0}' "
-                        "is not installed.".format(app_label))
+                        f"Excluded application with label '{app_label}' "
+                        "is not installed.")
     return applications
 
 

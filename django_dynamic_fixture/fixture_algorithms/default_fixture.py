@@ -5,8 +5,6 @@ import random
 import string
 import uuid
 
-import six
-
 from django.core.exceptions import ImproperlyConfigured
 
 
@@ -29,7 +27,7 @@ from django_dynamic_fixture.ddf import DataFixture
 class BaseDataFixture(DataFixture):
     # Django >= 1.6
     def binaryfield_config(self, field, key):
-        return six.b('\x00\x46\xFE')
+        return b'\x00\x46\xFE'
 
     # Django >= 1.8
     def uuidfield_config(self, field, key):
@@ -45,7 +43,7 @@ class BaseDataFixture(DataFixture):
 
 
 # GIS/GeoDjango
-class GeoDjangoFixtureMixin(object):
+class GeoDjangoFixtureMixin:
     def create_point(self, x=None, y=None):
         # latitude: [-90,90], longitude: [-180,180]
         latitude = x or random.randint(-90, 90)
@@ -88,7 +86,7 @@ class GeoDjangoFixtureMixin(object):
 
 # Postgres fields
 # https://docs.djangoproject.com/en/1.8/ref/contrib/postgres/fields/
-class PostgresFixtureMixin(object):
+class PostgresFixtureMixin:
     def arrayfield_config(self, field, key, n=1):
         data = [self.generate_data(field.base_field) for i in range(n)]
         return data

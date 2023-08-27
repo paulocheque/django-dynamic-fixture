@@ -14,12 +14,14 @@ clean:
 	rm -rf dist/
 	rm -rf build/
 	rm -rf .eggs/
+	rm -rf .tox/
+	#rm -rf env/
 
 os_deps:
 	brew install gdal
 
 prepare:
-	clear ; python3 -m venv env
+	clear ; python3.11 -m venv env
 
 deps:
 	clear
@@ -42,9 +44,7 @@ compile:
 test:
 	# Run specific test:
 	# TESTS=django_dynamic_fixture.tests.FILE::CLASS::METHOD make test
-	clear ; env/bin/pytest --create-db --reuse-db --no-migrations ${TESTS}
-	# clear ; time env/bin/tox --parallel all -e django111-py27
-	# clear ; time env/bin/tox --parallel all -e django20-py37
+	clear ; time env/bin/pytest --create-db --reuse-db --no-migrations ${TESTS}
 
 testfailed:
 	clear ; env/bin/pytest --create-db --reuse-db --no-migrations ${TESTS} --last-failed
@@ -72,33 +72,39 @@ test_mysql:
 
 cov:
 	clear ; env/bin/pytest --create-db --reuse-db --no-migrations -v --cov=django_dynamic_fixture --cov-report html
+	cp htmlcov/index.html docs/source/_static/coverage.html
 	open htmlcov/index.html
-
-coveralls:
-	clear ; env/bin/coveralls debug --verbose
-
-coveralls_publish:
-	clear ; env/bin/coveralls --verbose
-
-clear_github_img_cache:
-	curl -X PURGE https://camo.githubusercontent.com/95b7e3529338697ecffdf67add40931d066a35e1/68747470733a2f2f636f766572616c6c732e696f2f7265706f732f7061756c6f6368657175652f646a616e676f2d64796e616d69632d666978747572652f62616467652e7376673f6272616e63683d6d6173746572
 
 code_style:
 	# Code Style
-	clear ; env/bin/pylint ddf django_dynamic_fixture ddf_setup queries
+	clear ; env/bin/pylint ddf django_dynamic_fixture queries
 
 code_checking:
 	# Code error checking
-	clear ; env/bin/python -m pyflakes ddf django_dynamic_fixture ddf_setup queries
+	clear ; env/bin/python -m pyflakes ddf django_dynamic_fixture queries
 
 code_feedbacks:
 	# PEP8, code style and circular complexity
-	clear ; env/bin/flake8 ddf django_dynamic_fixture ddf_setup queries
+	clear ; env/bin/flake8 ddf django_dynamic_fixture queries
 
-doc:
+code_ruff:
+	clear ; env/bin/ruff check .
+	#clear ; env/bin/ruff check . --fix
+
+check: code_style code_checking code_feedbacks code_ruff
+
+install_precommit_hooks: code_ruff
+	clear ; env/bin/ruff check .
+	env/bin/pre-commit install
+
+doc: cov
 	clear ; cd docs ; make clean html ; open build/html/index.html
 
 tox:
+	#brew update ; brew install pyenv
+	#pyenv install 3.8 3.9 3.10 3.11
+	#pyenv versions
+	#pyenv local 3.7 3.8 3.9 3.10 3.11
 	clear ; time env/bin/tox --parallel all
 
 build: clean os_deps prepare deps test cov

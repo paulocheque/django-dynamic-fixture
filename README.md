@@ -3,7 +3,6 @@ Django Dynamic Fixture
 
 [![Build Status](https://travis-ci.org/paulocheque/django-dynamic-fixture.svg?branch=master)](https://travis-ci.org/paulocheque/django-dynamic-fixture)
 [![Docs Status](https://readthedocs.org/projects/django-dynamic-fixture/badge/?version=latest)](http://django-dynamic-fixture.readthedocs.org/en/latest/index.html)
-[![Coverage Status](https://coveralls.io/repos/paulocheque/django-dynamic-fixture/badge.svg?branch=master)](https://coveralls.io/r/paulocheque/django-dynamic-fixture?branch=master)
 [![PyPI version](https://badge.fury.io/py/django-dynamic-fixture.svg)](https://badge.fury.io/py/django-dynamic-fixture)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/django-dynamic-fixture)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/django-dynamic-fixture)

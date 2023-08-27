@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 from datetime import datetime
-import six
 
 from django.db import models
 from django.test import TestCase
@@ -14,7 +12,7 @@ try:
     import psycopg2
     from django.contrib.postgres.fields import ArrayField
 
-    class PostgresDataFixtureTestMixin(object):
+    class PostgresDataFixtureTestMixin:
         def test_arrayfield_integer_config(self):
             data = self.fixture.generate_data(ArrayField(models.IntegerField()))
             assert isinstance(data, list)
@@ -23,7 +21,7 @@ try:
         def test_arrayfield_char_config(self):
             data = self.fixture.generate_data(ArrayField(models.CharField()))
             assert isinstance(data, list)
-            assert isinstance(data[0], six.text_type)
+            assert isinstance(data[0], str)
 
         def test_arrayfield_datetime_config(self):
             data = self.fixture.generate_data(ArrayField(models.DateTimeField()))
@@ -33,7 +31,7 @@ try:
         def test_arrayfield_email_config(self):
             data = self.fixture.generate_data(ArrayField(models.EmailField(max_length=100)))
             assert isinstance(data, list)
-            assert isinstance(data[0], six.text_type)
+            assert isinstance(data[0], str)
 
 
     class PostgresSequentialDataFixtureTestCase(TestCase, PostgresDataFixtureTestMixin):

@@ -171,7 +171,7 @@ Teaching DDF with Lessons (shelve in 2.1.0) (New in 3.0.0)
 
 Sometimes DDF can not generate a valid and persisted instance because it contains custom fields or custom validations (field or model validation). In these cases, it is possible to **teach DDF how to build a valid instance**. It is necessary to create a valid configuration and save it in an internal and global DDF library of configurations. All future instances of that model will use the saved lesson as base.
 
-In the **PyTest** **conftest.py** file, the **DDF-Nose plugin** **your_app.tests.ddf_setup.py** file or another global module that will be loaded before the test suite::
+In the **PyTest** **conftest.py** file or another global module that will be loaded before the test suite::
 
     from ddf import teach
     teach(Author, name='Eistein')
