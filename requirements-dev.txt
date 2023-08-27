@@ -1,6 +1,8 @@
+# Build/Package/Publish
 build
 twine
 
+# Tests and Coverage
 pytest
 pytest-django
 pytest-xdist # Run tests in parallel
@@ -14,9 +16,11 @@ psycopg2-binary
 coveralls
 python-coveralls
 
+# Code
 flake8
 pyflakes
 pylint
 
+# Docs
 sphinx
 sphinx_rtd_theme

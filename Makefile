@@ -14,12 +14,14 @@ clean:
 	rm -rf dist/
 	rm -rf build/
 	rm -rf .eggs/
+	rm -rf .tox/
+	rm -rf env/
 
 os_deps:
 	brew install gdal
 
 prepare:
-	clear ; python3 -m venv env
+	clear ; python3.11 -m venv env
 
 deps:
 	clear
@@ -42,9 +44,7 @@ compile:
 test:
 	# Run specific test:
 	# TESTS=django_dynamic_fixture.tests.FILE::CLASS::METHOD make test
-	clear ; env/bin/pytest --create-db --reuse-db --no-migrations ${TESTS}
-	# clear ; time env/bin/tox --parallel all -e django111-py27
-	# clear ; time env/bin/tox --parallel all -e django20-py37
+	clear ; time env/bin/pytest --create-db --reuse-db --no-migrations ${TESTS}
 
 testfailed:
 	clear ; env/bin/pytest --create-db --reuse-db --no-migrations ${TESTS} --last-failed
@@ -99,6 +99,10 @@ doc:
 	clear ; cd docs ; make clean html ; open build/html/index.html
 
 tox:
+	#brew update ; brew install pyenv
+	#pyenv install 3.8 3.9 3.10 3.11
+	#pyenv versions
+	#pyenv local 3.7 3.8 3.9 3.10 3.11
 	clear ; time env/bin/tox --parallel all
 
 build: clean os_deps prepare deps test cov
