@@ -17,6 +17,8 @@ psycopg2-binary
 flake8
 pyflakes
 pylint
+ruff
+pre-commit
 
 # Docs
 sphinx

@@ -87,7 +87,17 @@ code_feedbacks:
 	# PEP8, code style and circular complexity
 	clear ; env/bin/flake8 ddf django_dynamic_fixture ddf_setup queries
 
-doc:
+code_ruff:
+	clear ; env/bin/ruff check .
+	#clear ; env/bin/ruff check . --fix
+
+check: code_style code_checking code_feedbacks code_ruff
+
+install_precommit_hooks: code_ruff
+	clear ; env/bin/ruff check .
+	env/bin/pre-commit install
+
+doc: cov
 	clear ; cd docs ; make clean html ; open build/html/index.html
 
 tox:
