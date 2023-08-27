@@ -8,6 +8,14 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 4.0.0 - 2023/08/26
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/4.0.0>
+  * Removed compatibilty of Python 2
+  * Removed compatibilty of Django 3 or lower
+  * Removed Nose plugins
+  * Removed Coveralls integration
+
 Version 3.1.3 - 2023/08/18
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/3.1.3>
