@@ -317,10 +317,6 @@ class NewDealWithCyclicDependenciesTest(DDFTestCase):
 
 
 class NewDealWithInheritanceTest(DDFTestCase):
-    @pytest.mark.skipif(django.VERSION > (3, 2), reason="Not supported on Django 3.2+")
-    def test_new_must_not_raise_an_error_if_model_is_abstract(self):
-        self.ddf.new(ModelAbstract) # it does not raise an exceptions
-
     def test_get_must_raise_an_error_if_model_is_abstract(self):
         with pytest.raises(InvalidModelError):
             self.ddf.get(ModelAbstract)
