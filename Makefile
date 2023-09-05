@@ -139,3 +139,13 @@ tag:
 reset_tag:
 	git tag -d ${VERSION}
 	git push origin :refs/tags/${VERSION}
+
+
+# GitHub Action
+
+act:
+	#brew install act
+	time act --container-architecture linux/amd64 --matrix python_version:3.11 --matrix django_version:4.2
+
+actall:
+	time act --container-architecture linux/amd64

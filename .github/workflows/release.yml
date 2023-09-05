@@ -1,0 +1,89 @@
+name: Building and Testing
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+    strategy:
+      matrix:
+        python_version:
+          - '3.8'
+          - '3.9'
+          - '3.10'
+          - '3.11'
+        django_version:
+          - '4.0'
+          - '4.1'
+          - '4.2'
+
+    services:
+      postgres:
+        # https://github.com/postgis/docker-postgis/blob/master/15-3.4/alpine/Dockerfile
+        image: postgis/postgis:15-3.4-alpine
+        env:
+          POSTGRES_DB: ddf
+          POSTGRES_USER: ddf_user
+          POSTGRES_PASSWORD: ddf_pass
+        ports:
+          # Random free port
+          - 5432/tcp
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: 'Install OS dependencies (Ubuntu)'
+        if: runner.os == 'Linux'
+        run: |
+            # https://docs.djangoproject.com/en/4.2/ref/contrib/gis/install/geolibs/
+            # GDAL_LIBRARY_PATH: /usr/lib/libgdal.so.*
+            # GEOS_LIBRARY_PATH: /usr/lib/libgeos_c.so.*
+            # ln -s /usr/lib/libgdal.so.32 /usr/lib/libgdal.so \
+            # ln -s /usr/lib/libgeos_c.so.1 /usr/lib/libgeos_c.so
+            # ln -s /usr/lib/libproj.so.25 /usr/lib/libproj.so \
+            sudo apt-get update \
+            && sudo apt-get install -y binutils libproj-dev gdal-bin
+
+      - name: 'Set up Python ${{ matrix.python_version }}'
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python_version }}
+
+      - name: 'Checkout DDF code'
+        uses: actions/checkout@v3
+
+      - name: 'Install Python dependencies'
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install pytest-django
+          pip install django~=${{ matrix.django_version }}
+          pip install jsonfield==3.1.0
+          pip install django-polymorphic==3.1.0
+
+      - name: 'Testing with SQLite'
+        run: pytest --create-db --reuse-db --no-migrations --ds=settings_sqlite --maxfail=2
+
+      - name: 'Coverage with SQLite'
+        run: pytest --create-db --reuse-db --no-migrations -v --cov=django_dynamic_fixture
+
+      - name: 'Testing with Postgres'
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
+          POSTGRES_DB: ddf
+          POSTGRES_USER: ddf_user
+          POSTGRES_PASSWORD: ddf_pass
+        run: |
+          pip install psycopg2
+          pytest --create-db --reuse-db --no-migrations --ds=settings_postgres --maxfail=2
