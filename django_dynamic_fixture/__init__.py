@@ -21,8 +21,8 @@ from django_dynamic_fixture.script_ddf_checkings import ddf_check_models
 __version__ = '4.0.0'
 
 
-if not django_greater_than(1, 10):
-    warnings.warn("DDF officially supports only Django 1.11 or higher.", DeprecationWarning)
+if not django_greater_than(4, 0):
+    warnings.warn("DDF 4.* officially supports only Django 4 or higher.", DeprecationWarning)
 
 
 LOOKUP_SEP = '__'
