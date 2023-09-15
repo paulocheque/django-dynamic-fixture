@@ -8,6 +8,12 @@ Change Log
 
 Date format: yyyy/mm/dd
 
+Version 4.0.1 - 2023/09/15
+-------------------------------------------------------------------------------
+  * <http://pypi.python.org/pypi/django-dynamic-fixture/4.0.1>
+  * Reuse lessons in Proxy models
+  * https://github.com/paulocheque/django-dynamic-fixture/pull/161
+
 Version 4.0.0 - 2023/08/26
 -------------------------------------------------------------------------------
   * <http://pypi.python.org/pypi/django-dynamic-fixture/4.0.0>

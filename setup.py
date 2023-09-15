@@ -1,7 +1,7 @@
 from pathlib import Path
 from setuptools import setup, find_packages
 
-VERSION = '4.0.0'
+VERSION = '4.0.1'
 
 tests_require = []
 
