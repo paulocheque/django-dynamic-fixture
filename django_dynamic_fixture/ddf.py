@@ -239,6 +239,7 @@ class DDFLibrary:
         import warnings
         if name in [None, True]:
             name = self.DEFAULT_KEY
+        model_class = self._get_concrete_model(model_class)
         if model_class in self.configs and name in self.configs[model_class]:
             if not os.getenv('DDF_SHELL_MODE'):
                 msg = "Override a lesson is an anti-pattern and will turn your test suite very hard to understand."
@@ -250,11 +251,18 @@ class DDFLibrary:
     def get_configuration(self, model_class, name=None):
         if name is None:
             name = self.DEFAULT_KEY
+        model_class = self._get_concrete_model(model_class)
         # copy is important because this dict will be updated every time in the algorithm.
         config = self.configs.get(model_class, {})
         if name != self.DEFAULT_KEY and name not in config.keys():
             raise InvalidConfigurationError('There is no lesson for model {} with the name "{}"'.format(get_unique_model_name(model_class), name))
         return config.get(name, {}).copy() # default configuration never raises an error
+
+    def _get_concrete_model(self, model_class):
+        if hasattr(model_class, '_meta') and model_class._meta.proxy:
+            return model_class._meta.concrete_model or model_class
+        else:
+            return model_class
 
     def clear(self):
         '''Remove all lessons of the library. Util for the DDF tests.'''

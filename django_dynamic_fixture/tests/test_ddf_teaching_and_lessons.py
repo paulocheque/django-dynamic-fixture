@@ -65,6 +65,24 @@ class TeachAndLessonsTest(DDFTestCase):
         assert instance.integer == 1000
         assert instance.foreignkey.integer == 1001
 
+    def test_it_uses_lessons_for_base_model_when_creating_a_proxy_model(self):
+        self.ddf.teach(ModelForLibrary, integer=123)
+        instance = self.ddf.get(ProxyModelForLibrary)
+        assert instance.__class__ is ProxyModelForLibrary
+        assert instance.integer == 123
+
+    def test_it_uses_lessons_for_proxy_models_when_creating_the_base_model(self):
+        self.ddf.teach(ProxyModelForLibrary, integer=456)
+        instance = self.ddf.get(ModelForLibrary)
+        assert instance.__class__ is ModelForLibrary
+        assert instance.integer == 456
+
+    def test_it_uses_lessons_for_proxy_models_when_creating_the_proxy_model(self):
+        self.ddf.teach(ProxyModelForLibrary, integer=789)
+        instance = self.ddf.get(ProxyModelForLibrary)
+        assert instance.__class__ is ProxyModelForLibrary
+        assert instance.integer == 789
+
     # Not implemented yet
     # def test_teaching_must_store_ddf_configs_too(self):
     #     self.ddf.teach(ModelForLibrary, fill_nullable_fields=False)
