@@ -1,0 +1,7 @@
+include *.mkd
+include LICENSE.txt
+include requirements.txt requirements-dev.txt
+include pytest.ini
+include settings*.py
+include tox.ini
+recursive-include docs *.rst
