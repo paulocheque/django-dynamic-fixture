@@ -194,7 +194,7 @@ INSTANCE_TYPE = typing.TypeVar('INSTANCE')
 def new(model: typing.Type[INSTANCE_TYPE], n: int = 1, ddf_lesson = None, persist_dependencies: bool = True, **kwargs) -> INSTANCE_TYPE:
     return _new(model, n=n, ddf_lesson=ddf_lesson, persist_dependencies=persist_dependencies, **kwargs)
 
-def get(model: typing.Type[INSTANCE_TYPE], n: int=1, ddf_lesson=None, **kwargs) -> INSTANCE_TYPE:
+def get(model: typing.Type[INSTANCE_TYPE], n: int=1, ddf_lesson=None, **kwargs) -> INSTANCE_TYPE | typing.List[INSTANCE_TYPE]:
     return _get(model, n=n, ddf_lesson=ddf_lesson, **kwargs)
 
 def teach(model: typing.Type[INSTANCE_TYPE], ddf_lesson=None, **kwargs):
