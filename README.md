@@ -14,6 +14,7 @@ It lets you focus on your tests, instead of focusing on generating some dummy da
 
 * [Basic Examples](#basic-examples)
 * [Cheat Sheet](#cheat-sheet)
+* [Sponsors](#sponsors)
 * <a href="http://django-dynamic-fixture.readthedocs.org/en/latest/index.html" target="_blank">Full Documentation</a>
 
 
@@ -126,3 +127,7 @@ succeeded, errors = ddf_check_models()
 succeeded, errors = ddf_check_models(print_csv=True)
 succeeded, errors = ddf_check_models(csv_filename='ddf_compatibility_report.csv')
 ```
+
+Sponsors
+--------------
+- https://github.com/thnxdev
